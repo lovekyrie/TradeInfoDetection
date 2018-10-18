@@ -1,0 +1,134 @@
+#container {
+  background-color: rgb(241, 241, 241);
+
+  //顶部
+  #header {
+    height: 36px;
+    min-width: 1199px;
+    background-color: rgb(241, 241, 241);
+    ul {
+      display: block;
+      float: right;
+      margin-right: 250px;
+
+      li {
+        display: inline-block;
+        padding: 9px 0;
+        a {
+          display: block;
+          font-size: 14px;
+          margin-right: 20px;
+        }
+        //登录注册中间的竖线
+        .login {
+          border-right: 1px solid rgb(204, 204, 204);
+          padding-right: 20px;
+        }
+
+      }
+    }
+  }
+
+  //图标行
+  #icon {
+    border-top: 1px solid rgb(204, 204, 204);
+    border-bottom: 1px solid rgb(204, 204, 204);
+    height: 110px;
+    background-color: white;
+    line-height: 110px;
+    img {
+      margin-left: 250px;
+    }
+  }
+
+  //中间主体部分
+  #main {
+    width: 960px;
+    min-width: 900px;
+    background-color: white;
+    margin: 0 auto;
+    margin-top: 25px;
+    margin-bottom: 80px;
+    text-align: center;
+    padding: 40px;
+
+    ul {
+
+      li {
+        display: inline-block;
+        height: 20px;
+
+        span {
+          display: block;
+          width: 150px;
+          height: 1px;
+          background-color: rgb(204, 204, 204);
+        }
+      }
+      .line {
+        padding-top: 10px;
+      }
+      //标题字体
+      .title {
+        font-size: 24px;
+        font-weight: 400;
+        margin-left: 40px;
+        margin-right: 40px;
+      }
+    }
+
+    //表单
+    form {
+
+      div{
+        margin: 30px 0;
+
+        input{
+          width: 270px;
+          height: 40px;
+          margin-left: 10px;
+          border: 1.5px solid rgb(204, 204, 204);
+          padding-left: 12px;
+        }
+        //webkit内核浏览器
+        input::-webkit-input-placeholder{
+          color: rgb(204,204,204);
+        }
+        //firefox
+        input::-moz-placeholder{
+          color: rgb(204,204,204);
+        }
+        // IE
+        input:-ms-input-placeholder{
+          color: rgb(204,204,204);
+        }
+
+        a{
+          display: block;
+          margin-left: 200px;
+
+        }
+
+      }
+    }
+
+  }
+
+  //页脚
+  #footer {
+    background-color: white;
+    text-align: center;
+    border-top: 1px solid rgb(204, 204, 204);
+    padding-top: 20px;
+    //页脚字体
+    p {
+      display: block;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-weight: 300;
+      font-family: "Microsoft Sans Serif";
+      color: rgb(133, 133, 133);
+    }
+  }
+
+}
