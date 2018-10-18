@@ -12,11 +12,10 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'element-ui/lib/theme-default/index.css';
 import ElementUI from 'element-ui';
 
-import "babel-polyfill";// 解决 IE11 Promise对象未定义
+ import "babel-polyfill";// 解决 IE11 Promise对象未定义
 // import axios from 'axios';
 import './vueFilter';  	//全局过滤器
 import {until,reg,app} from 'assets/js/until'
-import {msg,confirm,loading} from 'hero'
 import 'assets/js/wconfig.js';
 import './iconfont'  //字体库
 import './wconfig.js'
@@ -35,9 +34,6 @@ export default{
     Vue.prototype.until = new until();
     Vue.prototype.app=new app();
     Vue.prototype.reg = new reg();
-    Vue.use(msg);
-    Vue.use(confirm);
-    Vue.use(loading);
     Vue.prototype.Query = Query;
 
   }
