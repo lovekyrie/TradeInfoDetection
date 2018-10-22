@@ -100,7 +100,7 @@ export default {
 
 <style lang='less'>
 .header-wrap {
-  width: 1130px;
+  width: 1400px;
   margin: 0 auto;
   background-color: #fff;
   .account-wrap {
