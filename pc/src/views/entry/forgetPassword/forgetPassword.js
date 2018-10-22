@@ -1,11 +1,11 @@
-import Vue from 'vue';
+import Vue from 'vue'
 import init from 'assets/js/init'
 import App from './components/App'
 
 Vue.use(init);
-require('./css/register.less');
-
+require('../login/css/login.less');
 
 new Vue({
   render:h=>h(App)
-}).$mount('#container')
+
+}).$mount('#container');

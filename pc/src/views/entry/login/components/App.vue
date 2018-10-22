@@ -3,8 +3,8 @@
   <!--顶部-->
   <div id="header">
     <ul>
-      <li><a class="login" href="javascript:void(0)">登录</a> </li>
-      <li><a href="javascript:void(0)">注册</a> </li>
+      <li><a class="login" href="./login.html">登录</a> </li>
+      <li><a href="./register.html">注册</a> </li>
     </ul>
   </div>
   <!--图标-->
@@ -28,7 +28,7 @@
           <p>TESTAA</p>
         </span>
       </div>
-      <div style="margin-top: 10px"><a href="javascript:void (0)">忘记密码？</a></div>
+      <div style="margin-top: 10px"><a href="./forgetPassword.html">忘记密码？</a></div>
       <div style="margin-left: 30px"><button class="loginBtn" type="submit">登录</button>
         <button class="cancelBtn">取消</button>
       </div>
