@@ -1,15 +1,38 @@
 <template>
   <div id="app">
-    首页测试
+    <div class="header">
+      <trade-header></trade-header>
+    </div>
+    <div class="swipper">
+    </div>
   </div>
 </template>
 
 <script>
-export default {
+import tradeHeader from 'components/tradeHeader'
 
+export default {
+  data(){
+    return {
+
+    }
+  },
+  methods:{
+
+  },
+  components:{
+    tradeHeader,
+  }
 }
 </script>
 
-<style>
-
+<style lang='less'>
+html,body{
+  height: 100%;
+  background-color: #F4F4F4;
+  #app{
+    height: 100%;
+  
+  }
+}
 </style>
