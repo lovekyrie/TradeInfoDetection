@@ -215,7 +215,7 @@ class until{
     if(!state){
       self.$hero.msg.show({text: '未登录'});
       setTimeout(()=>{
-        location.href = '../system/login.html';
+        location.href = '../system/register.html';
       },1000)
       return false;
     }
