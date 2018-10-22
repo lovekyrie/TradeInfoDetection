@@ -28,8 +28,49 @@
       </ul>
       <!--信息表格-->
       <div class="infoTable">
-        <div></div>
+        <table>
+          <tr>
+            <td>真实姓名：</td>
+            <td>加加米</td>
+          </tr>
+          <tr>
+            <td>联系电话：</td>
+            <td>13000000000</td>
+          </tr>
+          <tr>
+            <td>职称：</td>
+            <td>高级质检师</td>
+          </tr>
+          <tr>
+            <td>QQ：</td>
+            <td>1235920132</td>
+          </tr>
+          <tr>
+            <td>微信：</td>
+            <td>vxvx</td>
+          </tr>
+          <tr>
+            <td>邮箱地址：</td>
+            <td>xxx@163.com</td>
+          </tr>
+          <tr>
+            <td>技能特长：</td>
+            <td>技能质检一级</td>
+          </tr>
+          <tr>
+            <td>资历证书：</td>
+            <td> </td>
+          </tr>
+          <tr>
+            <td>培训经历：</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td>个人简介：</td>
+            <td>个人简介个人简介个人简介个人简介</td>
+          </tr>
 
+        </table>
       </div>
 
 
