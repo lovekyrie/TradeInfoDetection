@@ -22,10 +22,14 @@
       <!--表单-->
       <form>
         <div><img src="../img/账号.png"><input type="text" placeholder="请输入账号"> </div>
-        <div><img src="../img/手机.png"><input type="text" placeholder="请输入注册手机号码"> </div>
-        <div><img src="../img/邮箱.png"><input type="text" placeholder="请输入注册邮箱地址">
+        <div><img src="../img/手机.png"><input v-model="phone" @blur.prevent="phoneCheck()" type="number" placeholder="请输入注册手机号码">
+          <span v-model="Tips.tip1" style="position:absolute;top:11px;color: red">{{Tips.tip1}}</span>
         </div>
-        <div style="margin-left: 30px"><button class="loginBtn" type="submit">登录</button>
+
+        <div><img src="../img/邮箱.png"><input v-model="email" @blur.prevent="emailCheck()" type="text" placeholder="请输入注册邮箱地址">
+          <span v-model="Tips.tip2" style="position:absolute;top:11px;color: red">{{Tips.tip2}}</span>
+        </div>
+        <div style="margin-left: 30px"><button class="loginBtn" type="submit">确定</button>
           <button class="cancelBtn">取消</button>
         </div>
       </form>
@@ -44,7 +48,44 @@
 
 <script>
   export default {
-    name: ""
+    data(){
+      return{
+        phone:'',
+        email:'',
+        Tips:{
+          tip1:'',
+          tip2:''
+        }
+      }
+    },
+    methods:{
+      phoneCheck:function () {
+        let reg=11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/;
+        if(this.phone==''){
+          this.Tips.tip1="*请输入手机号码";
+        }
+        else if(!reg.test(this.phone)){
+          this.Tips.tip1="*请输入正确的手机号码格式";
+        }
+        else {
+          this.Tips.tip1="";
+        }
+      },
+      emailCheck:function () {
+        let reg=/^[\w,\d]+[_|\.]?[\w,\d]*@[\w,\d]+[\.]{1}[\w]{1,3}$/;
+        if(this.email==''){
+          this.Tips.tip2="请输入注册邮箱地址";
+        }
+        else if(!reg.test(this.email)){
+          this.Tips.tip2="请输入正确的邮箱格式";
+        }
+        else {
+          this.Tips.tip2="";
+        }
+
+      }
+
+    }
   }
 </script>
 
