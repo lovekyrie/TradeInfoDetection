@@ -62,7 +62,7 @@
       phoneCheck:function () {
         let reg=11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/;
         if(this.phone==''){
-          this.Tips.tip1="*请输入手机号码";
+          this.Tips.tip1="*请输入注册手机号码";
         }
         else if(!reg.test(this.phone)){
           this.Tips.tip1="*请输入正确的手机号码格式";
@@ -74,10 +74,10 @@
       emailCheck:function () {
         let reg=/^[\w,\d]+[_|\.]?[\w,\d]*@[\w,\d]+[\.]{1}[\w]{1,3}$/;
         if(this.email==''){
-          this.Tips.tip2="请输入注册邮箱地址";
+          this.Tips.tip2="*请输入注册邮箱地址";
         }
         else if(!reg.test(this.email)){
-          this.Tips.tip2="请输入正确的邮箱格式";
+          this.Tips.tip2="*请输入正确的邮箱格式";
         }
         else {
           this.Tips.tip2="";
