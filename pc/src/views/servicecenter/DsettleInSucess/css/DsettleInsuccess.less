@@ -52,6 +52,13 @@
     margin-bottom: 60px;
     text-align: center;
 
+    //入驻成功提示
+    #successLogo{
+      color: rgb(13,85,210);
+      font-size: 23px;
+      margin-bottom: 22px;
+    }
+
     ul {
 
       li {
@@ -70,80 +77,31 @@
       }
       //标题字体
       .title {
-        font-size: 20px;
+        font-size: 22px;
         margin-left: 40px;
         margin-right: 40px;
       }
     }
 
-    //表单
-    .inForm {
-      text-align: center;
+    //信息表格
+    .infoTable{
+      margin: 0 auto;
       margin-top: 20px;
-      margin-bottom: 20px;
-      .el-form-item {
-        margin-bottom: 11px;
-        //表单标签位置
-        label {
-          font-weight: 300;
-          color: rgb(121, 121, 121);
-          position: relative;
-          left: 240px;
+      width: 500px;
+      min-width: 480px;
+      display: table;
 
+      //信息表格样式
+      table{
+        color: rgb(151,151,151);
+        font-size: 16px;
+        text-align: left;
+        border-collapse: collapse;
+        td{
+          padding: 8px;
         }
 
       }
-
-      //表单位置细调
-      .el-input {
-        width: 320px;
-        height: 38px;
-        position: relative;
-        left: -34px;
-
-        .el-input__inner {
-          border-radius: 0;
-          border: 2px solid rgb(234, 234, 234);
-        }
-      }
-      //  企业简介框样式
-      .el-textarea{
-        width: 320px;
-        min-width: 320px;
-        position: relative;
-        left: -33px;
-
-        .el-textarea__inner{
-          height: 76px;
-          border-radius: 0;
-        }
-      }
-
-    //  上传图片表单样式
-      .el-upload{
-        position: relative;
-        left: -118px;
-        border-radius: 0;
-        border: 2px solid rgb(234, 234, 234);
-      }
-
-      .el-upload__input{
-        display: none;
-
-      }
-
-    }
-
-    //底部按钮样式
-    .formButton{
-      width: 110px;
-      height: 36px;
-      font-size: 14px;
-      background-color: rgb(13, 85, 210);
-      color: white;
-      position: relative;
-      top: -1px;
-      margin-right: 20px;
     }
 
   }
