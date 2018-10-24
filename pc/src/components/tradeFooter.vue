@@ -21,10 +21,7 @@
     text-align: center;
     border-top: 2px solid rgb(241, 241, 241);
     padding-top: 20px;
-  }
-
-  /*页脚字体*/
-  #tradeFooter p {
+  p {
     display: block;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -33,5 +30,10 @@
     font-family: "Microsoft Sans Serif";
     color: rgb(133, 133, 133);
   }
+
+  }
+
+  /*页脚字体*/
+
 
 </style>
