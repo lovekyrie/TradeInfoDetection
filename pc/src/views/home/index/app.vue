@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="header">
-      <trade-header></trade-header>
+      <trade-header :showSearch="showSearch"></trade-header>
     </div>
     <div class="swipper">
       <el-carousel :interval="5000" arrow="always">
@@ -64,11 +64,15 @@
         </div>
       </div>
     </div>
+    <div class="footer">
+      <trade-footer></trade-footer>
+    </div>
   </div>
 </template>
 
 <script>
 import tradeHeader from "components/tradeHeader";
+import tradeFooter from 'components/tradeFooter';
 import swipper from "./images/swiper.png";
 import quality from "./images/质控管理.png";
 import purchase from "./images/采购查询.png";
@@ -79,6 +83,7 @@ import buyerdetection from "./images/检测认证及服务指引.png";
 export default {
   data() {
     return {
+      showSearch:true,
       swipperList: [
         { ID: 1, swipper },
         { ID: 2, swipper },
@@ -94,7 +99,8 @@ export default {
   },
   methods: {},
   components: {
-    tradeHeader
+    tradeHeader,
+    tradeFooter,
   }
 };
 </script>
@@ -103,11 +109,12 @@ export default {
 html,
 body {
   height: 100%;
+  width: 100%;
   background-color: #f4f4f4;
   #app {
+    width: 100%;
     height: 100%;
     .header {
-      width: 1400px;
       margin: 0 auto;
       background-color: #fff;
     }

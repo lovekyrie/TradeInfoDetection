@@ -12,7 +12,7 @@
         <div class="log">
           <img :src="tradeLog" alt="">
         </div>
-        <div class="search-wrap">
+        <div class="search-wrap" v-if="showSearch">
           <div class="select">
             <div>
               <select >
@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div class="header-sidebar">
+    <div class="header-sidebar" v-if="showSearch">
       <div class="sidebar">
         <div :class="{active:state==item.content}" v-for="(item) in sidebarList" :key="item.ID" @click="choose(item.content)">
           <span >{{item.content}}</span>
@@ -43,6 +43,7 @@
 import tradeLog from "./images/logo.png";
 
 export default {
+  props:['showSearch'],
   data() {
     return {
       state:'买家中心',
@@ -100,7 +101,6 @@ export default {
 
 <style lang='less'>
 .header-wrap {
-  width: 1400px;
   margin: 0 auto;
   background-color: #fff;
   .account-wrap {

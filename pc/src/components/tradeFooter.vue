@@ -1,5 +1,5 @@
 <template>
-  <div id="footer-wrap">
+  <div class="footer-wrap">
     <div>
       <span>版权所有：宁波贸信检测技术服务有限公司 信息产业部备案/许可证编号：浙ICP备16007937号</span>
     </div>
@@ -23,9 +23,22 @@ export default {
 </script>
 
 <style lang='less'>
-  .foot-wrap{
+  .footer-wrap{
     position: fixed;
+    left: 50%;
     bottom: 0;
-    
+    height: 110px;
+    width: 100%;
+    display: -webkit-flex;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    transform: translateX(-50%);
+    background-color: #fff;
+    >div{
+      width: 100%;
+      text-align: center;
+    }
   }
 </style>
