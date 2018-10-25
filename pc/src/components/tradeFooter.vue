@@ -35,6 +35,7 @@ export default {
     justify-content: space-around;
     align-items: center;
     transform: translateX(-50%);
+    border-top: 1px solid #EEEEEE;
     background-color: #fff;
     >div{
       width: 100%;

@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <div class="header-sidebar" v-if="showSearch">
+    <div class="header-sidebar" v-if="showNav">
       <div class="sidebar">
         <div :class="{active:state==item.content}" v-for="(item) in sidebarList" :key="item.ID" @click="choose(item.content)">
           <span >{{item.content}}</span>
@@ -43,7 +43,16 @@
 import tradeLog from "./images/logo.png";
 
 export default {
-  props:['showSearch'],
+  props:{
+    showSearch:{
+      type:Boolean,
+      default:false
+    },
+    showNav:{
+      type:Boolean,
+      default:false
+    }
+  },
   data() {
     return {
       state:'买家中心',
@@ -101,8 +110,14 @@ export default {
 
 <style lang='less'>
 .header-wrap {
+  position: fixed;
+  z-index: 199;
+  top: 0;
+  left: 0;
+  width: 100%;
   margin: 0 auto;
   background-color: #fff;
+  border-bottom: 1px solid #F1F1F1;
   .account-wrap {
     background-color: #f1f1f1;
     .account {
