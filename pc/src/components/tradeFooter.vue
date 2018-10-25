@@ -26,7 +26,7 @@
     margin-top: 10px;
     margin-bottom: 10px;
     font-weight: 300;
-    font-size: 10px;
+    font-size: 12px;
     font-family: "Microsoft Sans Serif";
     color: rgb(133, 133, 133);
   }
