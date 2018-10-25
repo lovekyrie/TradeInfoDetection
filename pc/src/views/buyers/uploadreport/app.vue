@@ -5,14 +5,6 @@
     </div>
     <div class="content">
       <div class="content-concept">
-         <!-- <div class="upload-file">
-          <div @click="triggerUpload">
-            <span>上传报告</span>
-            <input ref="upload" type="file" name="file" id="">
-          </div>
-          <p>每成功上传一份文档，可获取金币奖励</p>
-          <p>注意事项：您可以上传≤10MB的PDF报告。</p>
-        </div> -->
         <el-upload
           class="upload-demo"
           drag
