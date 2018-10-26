@@ -3,7 +3,7 @@ import init from 'assets/js/init';
 import App from './components/App';
 
 Vue.use(init);
-require('./css/memberCenter.less');
+require('./css/memberInfo.less');
 
 new Vue({
   render:h=>h(App)

@@ -15,7 +15,7 @@
   }
 </script>
 
-<style lang="less">
+<style lang="less" type="text/less">
   #tradeFooter {
     background-color: white;
     text-align: center;
