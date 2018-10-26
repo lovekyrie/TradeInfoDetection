@@ -6,7 +6,6 @@
     <div class="content">
       <el-form>
         <trade-title :title="title"></trade-title>
-         <trade-title :title="title"></trade-title>
          <el-form-item label="需求类型：">
             <el-select v-model="form.requireStyle" placeholder="检测需求">
               <el-option label="检测需求" value="shanghai"></el-option>

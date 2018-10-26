@@ -5,27 +5,21 @@
     </div>
     <div class="content">
       <div class="content-title"> 
-        <span>{{requireDetail.reportName}}</span>
-        <span>{{requireDetail.reportTime}}</span>
+        <span>{{detail.job}}</span>
+        <span>{{detail.salary}}</span>
+        <span>{{detail.company}}</span>
+        <span>联系电话：{{detail.linkedPhone}}</span>
+        <span>邮箱地址：{{detail.email}}</span>
       </div>
       <div>
         <div>
           <span></span>
-          <span>需求描述</span>
+          <span>职位描述</span>
         </div>
-        <div>
-          <span>{{requireDetail.desc}}</span>
-        </div>
-      </div>
-      <div>
-        <div>
-          <span></span>
-          <span>联系方式</span>
-        </div>
-        <div><span>联系人：{{requireDetail.linkedMan}}</span></div>
-        <div><span>联系电话：{{requireDetail.phone}}</span></div>
-        <div><span>邮箱地址：{{requireDetail.email}}</span></div>
-        <div><span>联系方式：{{requireDetail.linked}}</span></div>
+        <div><span>1、{{detail.first}}</span></div>
+        <div><span>2、{{detail.second}}</span></div>
+        <div><span>3、{{detail.third}}</span></div>
+        <div><span>4、{{detail.fourth}}</span></div>
       </div>
     </div>
     <div class="footer">
@@ -41,14 +35,16 @@ import tradeFooter from "components/tradeFooter";
 export default {
   data() {
     return {
-      requireDetail: {
-        reportName: "服装服饰男装女装类目质检报告",
-        reportTime: "2018年6月26日",
-        desc: "服装服饰男装女装类目质检报告",
-        linkedMan: "张收纳",
-        phone: "13599990000",
-        email: "25235594@qq.com",
-        linked: ""
+      detail: {
+        job: "实验室经理助理",
+        salary: "4000-5000元/月",
+        company: "浙江宁波华信质检",
+        linkedPhone:'0574-88889999',
+        email:'2738237829@qq.com',
+        first:'化学专业大学以上学历；',
+        second:'操作过ICP，GC-MS等分析仪器；',
+        third:'英语CET4及以上',
+        fourth:'能熟练的操作办公软件',
       }
     };
   },
@@ -78,28 +74,28 @@ body {
         width: 100%;
         display: flex;
         flex-direction: row;
-        flex-wrap: nowrap;
+        flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
         &:nth-of-type(1) {
-          span{
-            &:nth-of-type(1){
-              width: 50%;
-              font-size: 22px;
-            }
-            &:nth-of-type(2){
-              text-align: right;
-              width: 40%;
-              font-size: 16px;
-              color: #999;
-            }
-          }
+         >span{
+           width: 50%;
+           margin-bottom: 25px;
+           font-size: 16px;
+           &:nth-of-type(1),
+           &:nth-of-type(2){
+             font-size: 22px;
+           }
+           &:nth-of-type(2n){
+             text-align: right;
+           }
+         }
         }
-        &:nth-of-type(2),
-        &:nth-of-type(3){
+        &:nth-last-of-type(1){
           flex-wrap: wrap;
           >div{
             width: 100%;
+            margin-bottom: 25px;
             &:nth-of-type(1){
               display: flex;
               flex-direction: row;
@@ -118,16 +114,8 @@ body {
                }  
               }
             }
-            &:nth-of-type(2){
-              font-size: 16px;
-            }
-          }
-        }
-        &:nth-of-type(3){
-          >div{
             &:not(:nth-of-type(1)){
               font-size: 16px;
-              margin-bottom: 10px;
             }
           }
         }
