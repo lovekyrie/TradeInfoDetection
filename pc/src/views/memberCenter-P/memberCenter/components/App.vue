@@ -10,17 +10,17 @@
         <!--中间左侧单边栏-->
         <div class="mainLeft">
           <ul>
-            <li><a style="font-size: 18px" href="#">会员中心</a></li>
-            <li><a href="#">我的金币</a></li>
-            <li><a href="#">我的订单</a></li>
-            <li><a href="#">我的报告</a></li>
-            <li><a href="#">我的推荐</a></li>
-            <li><a href="#">我的兑换</a></li>
-            <li><a href="#">我的收藏</a></li>
+            <li><a style="font-size: 18px" href="./memberCenter.html">会员中心</a></li>
+            <li><a href="./memberCoin.html">我的金币</a></li>
+            <li><a href="./memberOrder.html">我的订单</a></li>
+            <li><a href="./memberReport.html">我的报告</a></li>
+            <li><a href="./memberRecommend.html">我的推荐</a></li>
+            <li><a href="./memberExchange.html">我的兑换</a></li>
+            <li><a href="./memberCollect.html">我的收藏</a></li>
             <li><a href="./memberInfo.html">人才信息</a></li>
-            <li><a href="#">设备信息</a></li>
-            <li><a href="#">收货地址管理</a></li>
-            <li><a href="#">修改密码</a></li>
+            <li><a href="./deviceMsg.html">设备信息</a></li>
+            <li><a href="./addressManager.html">收货地址管理</a></li>
+            <li><a href="./changePwd.html">修改密码</a></li>
 
           </ul>
         </div>
@@ -38,7 +38,7 @@
               <p>账号：麻花</p>
               <p>手机号：13541231231</p>
               <p>邮箱：424242@163.com&nbsp;&nbsp;&nbsp;&nbsp;
-                <a href="#" style="color: rgb(90,127,219);">账号管理 ></a>
+                <a href="./memberaccountManage.html" style="color: rgb(90,127,219);">账号管理 ></a>
               </p>
 
             </div>

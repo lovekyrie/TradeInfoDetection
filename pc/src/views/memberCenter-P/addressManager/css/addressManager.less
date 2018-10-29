@@ -1,0 +1,127 @@
+#container {
+
+  //中间内容
+  #main {
+    padding: 20px 0 50px 0;
+    background-color: rgb(241, 241, 241);
+
+    //中间白色部分
+    .inMain {
+      display: flex;
+      flex-direction: row;
+      width: 900px;
+      min-width: 800px;
+      margin: 0 auto;
+
+      //左边列表
+      .mainLeft {
+        text-align: center;
+        padding: 20px 0;
+        flex: 1;
+        background-color: white;
+        margin-right: 12px;
+        max-height: 450px;
+
+        ul {
+
+          li {
+            height: 30px;
+            line-height: 30px;
+            margin-bottom: 8px;
+            padding: 1px 21px;
+
+            a {
+              display: block;
+              border-radius: 4px;
+            }
+          }
+        }
+      }
+
+      //右边信息
+      .mainRight {
+        flex: 5.5;
+        background-color: white;
+        padding-top: 20px;
+        padding-bottom: 50px;
+
+        //添加收货地址
+        .mainHead{
+          text-align: left;
+          padding: 0 15px;
+          margin-bottom: 20px;
+
+          a{
+            display: inline-block;
+            text-align: center;
+            width: 130px;
+            height: 36px;
+            line-height: 36px;
+            margin-left: 25px;
+            border: 1px solid rgb(201,201,201);
+            border-radius: 4px;
+            color: white;
+            background-color: rgb(13,85,210);
+
+          }
+
+        }
+        //表格
+        .el-table{
+          margin: 0 auto;
+          margin-bottom: 100px;
+          border: none;
+          font-size: 14px;
+          color: rgb(144,144,144);
+
+          //表头背景颜色
+          .el-table__footer-wrapper thead div, .el-table__header-wrapper thead div{
+            background-color: rgb(241,241,241);
+          }
+
+          //表头行高
+          th{
+            background-color: rgb(241,241,241);
+            height: 48px;
+          }
+
+          //表头字体颜色
+          tr .cell{
+            color: rgb(134,134,134);
+          }
+
+          //表格底边框
+          td,th.is-leaf{
+            border-bottom: 2px solid rgb(241, 241, 241);
+          }
+          //除表头外行高
+          td {
+            height: 62px;
+            .el-table_1_column_1 .cell{
+              color: rgb(13,85,210);
+            }
+          }
+
+          //编辑删除按钮样式
+          .el-button--small{
+            font-size: 14px;
+            width: 60px;
+          }
+
+        }
+        //elui表格后的细线消除
+        .el-table::after{
+          width: 0;
+        }
+        //表格内颜色消除
+        .el-table--enable-row-hover .el-table__body tr:hover>td{
+          background-color: white;
+        }
+
+
+
+      }
+    }
+  }
+
+}
