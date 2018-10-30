@@ -56,7 +56,7 @@
               <!--插入第一列标题链接,scope相当于table，可以访问表内数据-->
               <template slot-scope="scope">
                 <a :href="tableData[scope.$index].address"
-                   target="_blank"
+                   target="_self"
                    class="buttonText">{{tableData[scope.$index].Ttitle}}</a>
               </template>
             </el-table-column>

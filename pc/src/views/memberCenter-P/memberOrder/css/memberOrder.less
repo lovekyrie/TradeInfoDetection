@@ -43,14 +43,52 @@
       .mainRight {
         flex: 5.5;
         background-color: white;
-        padding-top: 20px;
+        padding-top: 30px;
         padding-bottom: 50px;
 
+        //搜索框
+        .mainSearch{
+          text-align: left;
+          padding: 0 20px;
 
+          .el-input__inner{
+            border-radius: 0;
+          }
+
+          //表单宽度
+          .searchInput_a{
+            width: 130px;
+
+          }
+
+          //选择器表单宽度
+          .el-select{
+            width: 145px;
+
+          }
+          label{
+            color: rgb(144,144,144);
+            font-weight: 200;
+          }
+
+          .el-button{
+            width: 145px;
+          }
+
+          .el-button--primary{
+            background-color: rgb(13,85,210);
+          }
+
+          .searchButton{
+            float: right;
+            position: relative;
+            right: 20px;
+          }
+
+        }
         //表格
         .el-table{
           margin: 0 auto;
-          margin-bottom: 100px;
           border: none;
           font-size: 14px;
           color: rgb(144,144,144);
@@ -66,9 +104,10 @@
             height: 48px;
           }
 
-          //表头字体颜色
+          //字体颜色
           tr .cell{
             color: rgb(134,134,134);
+            word-break: break-all;
           }
 
           //表格底边框
@@ -78,16 +117,23 @@
           //除表头外行高
           td {
             height: 62px;
+
+
             .el-table_1_column_1 .cell{
               color: rgb(13,85,210);
             }
           }
 
-          //编辑删除按钮样式
-          .el-button--small{
-            font-size: 14px;
-            width: 60px;
+          //支付、取消按钮样式
+          .payA{
+            display: block;
+            text-decoration: none;
+            padding: 3px;
+            width: 68px;
+            border-radius: 2px;
+            border: 1px solid rgb(201,201,201);
           }
+
 
         }
         //elui表格后的细线消除

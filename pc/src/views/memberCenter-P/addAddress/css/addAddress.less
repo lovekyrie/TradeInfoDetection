@@ -43,10 +43,11 @@
       .mainRight {
         flex: 5.5;
         background-color: white;
-        padding: 50px 20px;
+        padding: 20px 20px;
         text-align: center;
 
         .mainTitle {
+          margin-top: 20px;
           li {
             display: inline-block;
             height: 20px;
@@ -70,8 +71,8 @@
           }
         }
 
-        //  修改密码表单
-        .changeForm {
+        //  编辑收货地址表单
+        .editAddress {
           width: 440px;
           margin: 0 auto;
           margin-top: 30px;
@@ -79,8 +80,7 @@
           text-align: left;
 
           .el-form-item {
-            margin-bottom: 20px;
-            height: 50px;
+            margin-bottom: 25px;
 
             //表单样式
             .el-input {
@@ -99,6 +99,17 @@
               line-height: unset;
             }
 
+            //详细地址框样式
+            .el-textarea{
+              height: 80px;
+            }
+
+            .el-textarea__inner{
+              border-radius: 0;
+              border: 2px solid #eaeaea;
+              height: 80px;
+            }
+
           //  按钮样式
             .el-button{
               width: 120px;
@@ -109,8 +120,8 @@
               background-color: rgb(13,85,210);
             }
 
-          }
 
+          }
 
         }
 

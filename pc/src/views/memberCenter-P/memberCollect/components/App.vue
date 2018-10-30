@@ -56,7 +56,7 @@
             <el-table-column
               prop="id"
               label="序列号"
-              width="180"
+              width="200"
               >
             </el-table-column>
             <el-table-column

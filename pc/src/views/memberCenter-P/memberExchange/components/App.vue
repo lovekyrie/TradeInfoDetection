@@ -53,11 +53,6 @@
                 <span class="excDes">河北纺织品有限公司四件套检测报告</span>
                 <span class="price">200金币</span>
               </li>
-              <li>
-                <span class="excImg"><a href="#"> <img src="../img/我的兑换.png" alt="物品图"></a></span>
-                <span class="excDes">河北纺织品有限公司四件套检测报告</span>
-                <span class="price">200金币</span>
-              </li>
 
 
             </ul>

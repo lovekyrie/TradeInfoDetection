@@ -9,7 +9,7 @@
     .inMain {
       display: flex;
       flex-direction: row;
-      width: 900px;
+      width: 70%;
       min-width: 800px;
       margin: 0 auto;
 
@@ -21,6 +21,7 @@
         background-color: white;
         margin-right: 12px;
         max-height: 450px;
+        min-width: 128px;
 
         ul {
 
@@ -45,16 +46,18 @@
         padding-top: 20px;
         padding-bottom: 50px;
 
+
         //添加收货地址
         .mainHead{
           text-align: left;
           padding: 0 15px;
-          margin-bottom: 20px;
+          padding-bottom: 20px;
+          border-bottom: 2px solid rgb(241, 241, 241);
 
           a{
             display: inline-block;
             text-align: center;
-            width: 130px;
+            width: 120px;
             height: 36px;
             line-height: 36px;
             margin-left: 25px;
@@ -74,29 +77,22 @@
           font-size: 14px;
           color: rgb(144,144,144);
 
-          //表头背景颜色
-          .el-table__footer-wrapper thead div, .el-table__header-wrapper thead div{
-            background-color: rgb(241,241,241);
-          }
 
-          //表头行高
-          th{
-            background-color: rgb(241,241,241);
-            height: 48px;
-          }
-
-          //表头字体颜色
-          tr .cell{
-            color: rgb(134,134,134);
+          //表头隐藏
+          tr{
+            th{
+              display: none;
+            }
           }
 
           //表格底边框
           td,th.is-leaf{
             border-bottom: 2px solid rgb(241, 241, 241);
           }
+
           //除表头外行高
           td {
-            height: 62px;
+            height: 90px;
             .el-table_1_column_1 .cell{
               color: rgb(13,85,210);
             }
@@ -105,7 +101,17 @@
           //编辑删除按钮样式
           .el-button--small{
             font-size: 14px;
-            width: 60px;
+            width: 67px;
+            height: 38px;
+          }
+
+          //表格内字体
+          .tableMsg{
+            margin-right: 60px;
+          }
+
+          span,p{
+            line-height: 2em;
           }
 
         }

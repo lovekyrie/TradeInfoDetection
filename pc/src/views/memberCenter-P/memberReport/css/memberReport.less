@@ -43,14 +43,61 @@
       .mainRight {
         flex: 5.5;
         background-color: white;
-        padding-top: 20px;
+        padding-top: 30px;
         padding-bottom: 50px;
 
+        //搜索框
+        .mainSearch{
+          text-align: left;
+          padding: 0 20px;
 
+          .el-input__inner{
+            border-radius: 0;
+          }
+
+          //表单宽度
+          .searchInput_a{
+            width: 180px;
+
+          }
+
+          //选择器表单宽度
+          .el-select{
+            width: 140px;
+
+          }
+          label{
+            color: rgb(144,144,144);
+            font-weight: 200;
+          }
+
+          .el-button{
+            width: 100px;
+          }
+
+          .el-button--primary{
+            background-color: rgb(13,85,210);
+          }
+
+          //上传报告按钮
+          .upReport{
+            display: inline-block;
+            float: right;
+            text-align: center;
+            width: 120px;
+            height: 36px;
+            line-height: 36px;
+            border: 1px solid rgb(201,201,201);
+            border-radius: 4px;
+            position: relative;
+            right: 20px;
+
+          }
+
+        }
         //表格
         .el-table{
           margin: 0 auto;
-          margin-bottom: 100px;
           border: none;
           font-size: 14px;
           color: rgb(144,144,144);
@@ -66,9 +113,10 @@
             height: 48px;
           }
 
-          //表头字体颜色
+          //字体颜色
           tr .cell{
             color: rgb(134,134,134);
+            word-break: break-all;
           }
 
           //表格底边框
@@ -84,9 +132,9 @@
           }
 
           //编辑删除按钮样式
-          .el-button--small{
+          .el-button--mini{
+            border: none;
             font-size: 14px;
-            width: 60px;
           }
 
         }

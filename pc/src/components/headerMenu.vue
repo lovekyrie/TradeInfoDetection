@@ -33,14 +33,15 @@
   #header {
 
     height: 30px;
-    min-width: 1199px;
+    min-width: 800px;
     background-color: rgb(241, 241, 241);
 
     /*登录注册样式*/
     ul {
       display: block;
       float: right;
-      margin-right: 20%;
+      margin-right: 15%;
+
 
       li {
         display: inline-block;
@@ -67,24 +68,24 @@
     border-top: 1px solid rgb(204, 204, 204);
     border-bottom: 2px solid rgb(241, 241, 241);
     height: 120px;
-
-    min-width: 900px;
+    min-width: 800px;
     background-color: white;
 
     /*头部菜单样式*/
     img {
       width: 90px;
       margin-top: 25px;
-      margin-left: 20%;
+      margin-left: 15%;
     }
 
     ul {
       margin-top: 30px;
-      margin-left: 18%;
+      padding-left:9%;
+
 
       li {
         display: inline-block;
-        margin: 0 5%;
+        margin-left: 10%;
 
         /*菜单字体*/
         a{
