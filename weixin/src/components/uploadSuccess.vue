@@ -7,7 +7,7 @@
         </div>
         <div>
           <span>
-            上传成功！
+          预约成功！
           </span>
         </div>
         <div>

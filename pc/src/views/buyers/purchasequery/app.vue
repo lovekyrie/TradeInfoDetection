@@ -20,7 +20,6 @@
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSearch">查询</el-button>
-              <el-button>报告上传</el-button>
             </el-form-item>
             <!-- 布局用 -->
             <div></div>
@@ -183,7 +182,7 @@ body {
             > div {
               width: 60%;
               input{
-                padding: 23px 0 23px 10px;
+                 padding: 23px 0 23px 10px;
               }
             }
           }

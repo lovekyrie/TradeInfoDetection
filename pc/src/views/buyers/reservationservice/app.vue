@@ -63,10 +63,34 @@
       </div>
         <address-manage :addressList="addressList"></address-manage>
         <el-row>
-          <el-button>提交订单</el-button>
+          <el-button @click="submitOrder">提交订单</el-button>
           <el-button>取消</el-button>
         </el-row>
     </div>
+    <el-dialog
+  :visible.sync="centerDialogVisible"
+  width="30%"
+  center>
+   <div class="upload-content">
+    <div>
+      <img :src="code" alt="">
+    </div>
+    <div>
+      <span>
+      预约成功！
+      </span>
+    </div>
+    <div>
+      <span>检测订单二维码已生成，您可随时扫描</span>
+    </div>
+    <div>
+      <span>二维码查看检测进度。</span>
+    </div>
+  </div>
+  <span slot="footer" class="dialog-footer">
+  </span>
+</el-dialog>
+
     <div class="footer">
       <trade-footer></trade-footer>
     </div>
@@ -77,11 +101,15 @@
 import tradeHeader from "components/tradeHeader";
 import tradeFooter from "components/tradeFooter";
 import reservation from "./images/reservation_03.png";
-import addressManage from 'components/addressManage';
+import addressManage from "components/addressManage";
+import code from "./images/code_03.png";
+import { setTimeout } from 'timers';
 
 export default {
   data() {
     return {
+      code,
+      centerDialogVisible: false,
       reservation,
       orderInfo: {
         serviceName: "CFDA食堂餐厅饭店酒店自制餐饮食品检测",
@@ -98,30 +126,35 @@ export default {
       addressList: [
         {
           name: "章三",
-          phone:'13588880000',
-          address:`浙江省宁波市鄞州区首南街道
-                     蝶缘路280号 安邦大厦 2001-1`
+          phone: "13588880000",
+          address: `浙江省宁波市鄞州区首南街道蝶缘路280号 安邦大厦 2001-1`
         },
         {
           name: "章三",
-          phone:'13588880000',
-          address:`浙江省宁波市鄞州区首南街道
-                     蝶缘路280号 安邦大厦 2001-1`
+          phone: "13588880000",
+          address: `浙江省宁波市鄞州区首南街道蝶缘路280号 安邦大厦 2001-1`
         },
         {
           name: "章三",
-          phone:'13588880000',
-          address:`浙江省宁波市鄞州区首南街道
-                     蝶缘路280号 安邦大厦 2001-1`
-        },
+          phone: "13588880000",
+          address: `浙江省宁波市鄞州区首南街道蝶缘路280号 安邦大厦 2001-1`
+        }
       ]
     };
   },
-  methods: {},
+  methods: {
+    submitOrder(){
+
+      this.centerDialogVisible=true;
+      setTimeout(()=>{
+        this.centerDialogVisible=false;
+      },2000)
+    }
+  },
   components: {
     tradeHeader,
     tradeFooter,
-    addressManage,
+    addressManage
   }
 };
 </script>
@@ -241,6 +274,44 @@ body {
             }
             textarea {
               height: 80px;
+            }
+          }
+        }
+      }
+    }
+    .el-dialog {
+      width: 490px;
+      border-radius: 10px;
+      .el-dialog__header,
+      .el-dialog__footer {
+        display: none;
+      }
+      .el-dialog__body {
+        padding: 0;
+        width: 100%;
+        height: 490px;
+        .upload-content {
+          width: 100%;
+          height: 100%;
+          > div {
+            display: -webkit-flex;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            width: 100%;
+            justify-content: space-around;
+            align-items: center;
+            &:nth-of-type(1){
+              padding-top: 55px;
+            }
+            &:nth-of-type(2) {
+              padding: 30px 0;
+             font-size: 20px;
+            }
+            &:nth-of-type(3),
+            &:nth-last-of-type(1) {
+              font-size: 16px;
+              color: #a0a0a0;
             }
           }
         }
