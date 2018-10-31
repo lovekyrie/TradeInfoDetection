@@ -193,7 +193,7 @@
         tableData: [{
           orderNum:'12349099',
           serviceName:'CFDA食堂餐厅饭店酒店自制餐饮食品检测',
-          reportAddress:'./orderDetail.html',
+          reportAddress:'./memberorderDetail.html',
           number:'1',
           orderTime:'2018-06-06 12:00',
           status:'待付款',
@@ -203,7 +203,7 @@
         },{
           orderNum:'12349099',
           serviceName:'CFDA食堂餐厅饭店酒店自制餐饮食品检测',
-          reportAddress:'./orderDetail.html',
+          reportAddress:'./memberorderDetail.html',
           number:'1',
           orderTime:'2018-06-06 12:00',
           status:'已下单',
@@ -213,7 +213,7 @@
         },{
           orderNum:'12349099',
           serviceName:'CFDA食堂餐厅饭店酒店自制餐饮食品检测',
-          reportAddress:'./orderDetail.html',
+          reportAddress:'./memberorderDetail.html',
           number:'1',
           orderTime:'2018-06-06 12:00',
           status:'已付款',
@@ -223,7 +223,7 @@
         },{
           orderNum:'12349099',
           serviceName:'CFDA食堂餐厅饭店酒店自制餐饮食品检测',
-          reportAddress:'./orderDetail.html',
+          reportAddress:'./memberorderDetail.html',
           number:'1',
           orderTime:'2018-06-06 12:00',
           status:'已完成',

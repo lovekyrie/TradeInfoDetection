@@ -55,16 +55,18 @@
             <!--右下第一行-->
             <div class="rightBottom_a">
 
-              <div class="rightBottom_a_left"><img src="../img/我的金币.png" alt="我的金币" align="left" style="margin-right: 30px">
+              <div class="rightBottom_a_left"><a href="./memberCoin.html">
+                <img src="../img/我的金币.png" alt="我的金币" align="left" style="margin-right: 30px"></a>
                 <div style="padding-top: 10px">
                 <p style="margin-bottom: 5px;font-size: 16px">我的金币</p>
-                <p><a href="#" style="font-size: 14px">查看消费详情 ></a></p>
+                <p><a href="./memberCoin.html" style="font-size: 14px">查看消费详情 ></a></p>
                 </div>
               </div>
-              <div class="rightBottom_a_right"><img src="../img/我的订单.png" alt="我的订单" align="left" style="margin-right: 30px">
+              <div class="rightBottom_a_right"><a href="./memberOrder.html">
+                <img src="../img/我的订单.png" alt="我的订单" align="left" style="margin-right: 30px"></a>
                 <div style="padding-top: 10px">
                   <p style="margin-bottom: 5px;font-size: 16px">我的订单</p>
-                  <p><a href="#" style="font-size: 14px">查看订单状态 ></a></p>
+                  <p><a href="./memberOrder.html" style="font-size: 14px">查看订单状态 ></a></p>
                 </div>
               </div>
 
@@ -72,27 +74,30 @@
 
             <!--右下第二行-->
             <div class="rightBottom_b">
-              <div class="rightBottom_b_left"><img src="../img/我的报告.png" alt="我的报告" align="left" style="margin-right: 30px">
+              <div class="rightBottom_b_left"><a href="./memberReport.html">
+                <img src="../img/我的报告.png" alt="我的报告" align="left" style="margin-right: 30px"></a>
                 <div style="padding-top: 10px">
                   <p style="margin-bottom: 5px;font-size: 16px">我的报告</p>
-                  <p><a href="#" style="font-size: 14px">查看报告状态 ></a></p>
+                  <p><a href="./memberReport.html" style="font-size: 14px">查看报告状态 ></a></p>
                 </div>
               </div>
 
-              <div class="rightBottom_b_right"><img src="../img/人才信息.png" alt="人才信息" align="left" style="margin-right: 30px">
+              <div class="rightBottom_b_right"><a href="./memberInfo.html">
+                <img src="../img/人才信息.png" alt="人才信息" align="left" style="margin-right: 30px"></a>
                 <div style="padding-top: 10px">
                   <p style="margin-bottom: 5px;font-size: 16px">人才信息</p>
-                  <p><a href="#" style="font-size: 14px">查看人才信息 > ></a></p>
+                  <p><a href="./memberInfo.html" style="font-size: 14px">查看人才信息 > ></a></p>
                 </div>
               </div>
             </div>
 
             <!--右下第三行-->
             <div class="rightBottom_c">
-              <div class="rightBottom_c_left"><img src="../img/我的入驻.png" alt="我的入驻" align="left" style="margin-right: 30px">
+              <div class="rightBottom_c_left"><a href="../../views/servicecenter/settleInsuccess.html">
+                <img src="../img/我的入驻.png" alt="我的入驻" align="left" style="margin-right: 30px"></a>
                 <div style="padding-top: 10px">
                   <p style="margin-bottom: 5px;font-size: 16px">我的入驻</p>
-                  <p><a href="#" style="font-size: 14px">查看入驻情况 ></a></p>
+                  <p><a href="../../views/servicecenter/settleInsuccess.html" style="font-size: 14px">查看入驻情况 ></a></p>
                 </div>
               </div>
               <div class="rightBottom_c_right"></div>
