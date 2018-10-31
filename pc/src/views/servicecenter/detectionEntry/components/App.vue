@@ -105,7 +105,7 @@
 </template>
 
 <script>
-  import tradeFooter from 'components/tradeFooter'
+  import tradeFooter from 'components/tradeFooterl'
 
   export default {
     data() {

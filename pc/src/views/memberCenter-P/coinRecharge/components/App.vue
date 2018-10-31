@@ -65,7 +65,7 @@
 
 <script>
   import headerMenu from 'components/headerMenu';
-  import tradeFooter from 'components/tradeFooter';
+  import tradeFooter from 'components/tradeFooterl';
 
   export default {
     data() {
