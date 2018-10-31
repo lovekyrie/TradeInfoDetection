@@ -35,11 +35,13 @@
         <div>
           <span></span><span>生产工艺宣传</span>
         </div>
-        <div v-for="(item, index) in processArr" :key="index">
-          <img :src="item" alt="">
+        <div>
+          <div v-for="(item, index) in processArr" :key="index">
+            <img :src="item" alt="">
+        </div>
         </div>
         <div>
-          <span></span>
+          <span>{{desc}}</span>
         </div>
       </div>
     </div>
@@ -71,7 +73,9 @@ export default {
       tax: "0574-8889999",
       email: "239934203@163.com",
       address: "浙江省宁波市鄞州区彩虹南路12号",
-      processArr: [process1, process2, process3]
+      processArr: [process1, process2, process3],
+      desc:`最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告，最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告
+      ，最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告，最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告`
     };
   },
   methods: {},
@@ -85,7 +89,6 @@ export default {
 <style lang='less'>
 html,
 body {
-  height: 100%;
   width: 100%;
   background-color: #fff;
   #app {
@@ -166,6 +169,51 @@ body {
           }
           &:not(:nth-last-of-type(1)){
             margin-bottom: 30px;
+          }
+        }
+      }
+      .propaganda{
+        padding: 30px 0;
+        display: -webkit-flex;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        >div{
+          width: 100%;
+          display: -webkit-flex;
+          display: flex;
+          flex-direction: row;
+          &:nth-of-type(1){
+            margin-bottom: 20px;
+            justify-content: space-between;
+            align-items: center;
+            >span{
+              &:nth-of-type(1){
+                width: 10px;
+                height: 25px;
+                background-color: #0d55d2;
+              }
+              &:nth-of-type(2){
+                width: 98%;
+              }
+            }
+          }
+          &:nth-of-type(2){
+            margin-bottom: 20px;
+            flex-wrap: nowrap;
+            >div{
+              width: 200px;
+              &:not(:nth-last-of-type(1)){
+                margin-right: 20px;
+              }
+              img{
+                width: auto;
+                height: auto;
+                max-width: 100%;
+                max-height: 100%;
+                vertical-align: middle;
+              }
+            }
           }
         }
       }
