@@ -1,0 +1,151 @@
+#container {
+
+  //中间内容
+  #main {
+    padding: 20px 0 50px 0;
+    background-color: rgb(241, 241, 241);
+
+    //中间白色部分
+    .inMain {
+      display: flex;
+      flex-direction: row;
+      width: 70%;
+      min-width: 800px;
+      margin: 0 auto;
+
+      //左边列表
+      .mainLeft {
+        text-align: center;
+        padding: 20px 0;
+        flex: 1;
+        background-color: white;
+        margin-right: 12px;
+        max-height: 450px;
+        min-width: 128px;
+
+        ul {
+
+          li {
+            height: 30px;
+            line-height: 30px;
+            margin-bottom: 8px;
+            padding: 1px 21px;
+
+            a{
+              display: block;
+              //color: white;
+              //background-color: rgb(13,85,210);
+            }
+          }
+        }
+      }
+
+      //右边信息
+      .mainRight {
+        display: flex;
+        flex-direction: column;
+        flex: 5.5;
+        background-color: white;
+        padding: 25px 30px;
+
+        //右边上半部分
+        .rightTop {
+          display: flex;
+          flex-direction: row;
+          border-bottom: 2px solid rgb(241, 241, 241);
+          padding-bottom: 30px;
+
+          //右上第一行
+          .right_a {
+            flex: 1;
+            justify-content: flex-end;
+
+          }
+          //右上第二行
+          .right_b {
+            display: flex;
+            flex-direction: column;
+            flex: 3;
+            justify-content: center;
+            padding-left: 10px;
+            font-size: 16px;
+            color: rgb(151,151,151);
+
+            p{
+              margin-bottom: 15px;
+            }
+          }
+          //右上第三行
+          .right_c{
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            align-items: center;
+            padding-right: 10px;
+
+            img{
+              margin-bottom: 5px;
+            }
+          }
+        }
+
+        //右边下半部分
+        .rightBottom{
+          display: flex;
+          flex-direction: column;
+          padding: 25px 0;
+
+        }
+
+        .rightBottom_a,.rightBottom_b,.rightBottom_c{
+          display: flex;
+          flex-direction: row;
+          flex: 1;
+          padding: 20px 0;
+          padding-left: 30px;
+
+
+
+        }
+
+        //右下第一行
+        .rightBottom_a{
+
+          .rightBottom_a_left{
+            flex: 1;
+          }
+          .rightBottom_a_right{
+            flex: 1;
+          }
+
+
+        }
+
+        //右下第二行
+        .rightBottom_b{
+
+          .rightBottom_b_left{
+            flex: 1;
+          }
+          .rightBottom_b_right{
+            flex: 1;
+          }
+        }
+
+        //右下第三行
+        .rightBottom_c{
+
+          .rightBottom_c_left{
+            flex: 1;
+          }
+          .rightBottom_c_right{
+            flex: 1;
+          }
+
+
+        }
+      }
+    }
+  }
+
+}

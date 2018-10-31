@@ -1,0 +1,111 @@
+#container {
+
+  //中间内容
+  #main {
+    padding: 20px 0 50px 0;
+    background-color: rgb(241, 241, 241);
+
+    //中间白色部分
+    .inMain {
+      display: flex;
+      flex-direction: row;
+      width: 70%;
+      min-width: 800px;
+      margin: 0 auto;
+
+      //左边列表
+      .mainLeft {
+        text-align: center;
+        padding: 20px 0;
+        flex: 1;
+        background-color: white;
+        margin-right: 12px;
+        max-height: 450px;
+        min-width: 128px;
+
+        ul {
+
+          li {
+            height: 30px;
+            line-height: 30px;
+            margin-bottom: 8px;
+            padding: 1px 21px;
+
+            a {
+              display: block;
+              border-radius: 4px;
+            }
+          }
+        }
+      }
+
+      //右边信息
+      .mainRight {
+        flex: 5.5;
+        background-color: white;
+        padding: 20px 20px;
+        text-align: center;
+
+        //子标题
+        .dTitle {
+          display: inline-block;
+          font-size: 18px;
+          margin-left: 10px;
+          margin-bottom: 20px;
+          height: 23px;
+        }
+
+        //  报告详情
+        .repDetail {
+          padding: 20px 0;
+          text-align: left;
+
+          h1 {
+            line-height: 2em;
+            margin-bottom: 12px;
+          }
+
+          .repDetail_p1,.repDetail_p2 {
+            color: rgb(99, 99, 99);
+            line-height: 2.5em;
+            float: left;
+          }
+
+          .repDetail_p1{
+            width: 280px;
+          }
+
+        }
+        //清除浮动
+        .repDetail::after{
+          clear: both;
+          content: '\200B';
+          height: 0;
+          display: block;
+        }
+
+        //  蓝色小块
+        .dIcon {
+          display: inline-block;
+          content: '';
+          height: 20px;
+          width: 8px;
+          position: relative;
+          top: 3px;
+          background-color: rgb(13, 85, 210);;
+
+        }
+
+        //pdf位置
+        .pdf{
+          width: 100%;
+          height: 500px;
+          line-height: 500px;
+          font-size: 28px;
+          background-color: rgb(211,211,211);
+        }
+      }
+    }
+  }
+
+}

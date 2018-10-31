@@ -76,8 +76,12 @@
     #outForm {
       position: relative;
       left: 8px;
-      .formButton_a {
+      //消除按钮之间的间隙
+      font-size: 0px;
+      word-spacing: -1px;
 
+      .formButton_a {
+        display: inline;
         width: 130px;
         height: 40px;
         background-color: rgb(13, 85, 210);
@@ -85,18 +89,17 @@
         font-size: 16px;
         border: 2px solid rgb(13, 85, 210);
         border-right: none;
-        position: relative;
-        right: -4px;
+        //position: relative;
+        //right: -4px;
       }
       .formButton_b {
-
+        display: inline;
         width: 130px;
         height: 40px;
         //background-color: rgb(13,85,210);
         color: #888888;
         font-size: 16px;
         border: 2px solid rgb(234, 234, 234);
-        border-left: none;
 
         position: relative;
         left: -1px;

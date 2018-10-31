@@ -1,0 +1,164 @@
+#container {
+  //顶部
+  #header {
+    height: 30px;
+    min-width: 800px;
+    background-color: rgb(241, 241, 241);
+    ul {
+      display: block;
+      float: right;
+      margin-right: 20%;
+
+      li {
+        display: inline-block;
+        padding: 6px 0;
+        a {
+          display: block;
+          font-size: 14px;
+          margin-right: 20px;
+        }
+        //登录注册中间的竖线
+        .login {
+          border-right: 1px solid rgb(204, 204, 204);
+          padding-right: 20px;
+        }
+
+      }
+    }
+  }
+
+  //图标行
+  #icon {
+    border-top: 1px solid rgb(204, 204, 204);
+    border-bottom: 2px solid rgb(241, 241, 241);
+    height: 70px;
+    min-width: 800px;
+    background-color: white;
+    line-height: 70px;
+    text-align: center;
+
+    img {
+      width: 90px;
+      position: relative;
+      left: -165px;
+    }
+
+  //  搜索框
+    .el-input{
+      width: 350px;
+      .el-input__inner{
+        border-radius: 0;
+      }
+    }
+
+  //  搜索按钮
+    .el-input-group__append{
+      border-radius: 0;
+      color: white;
+      background-color: rgb(13,85,210);
+    }
+
+  //  发布资源按钮
+    .releaseButton{
+      display: inline-block;
+      width: 90px;
+      height: 34px;
+      border-radius: 4px;
+      color: rgb(13,85,210);
+      border-color: rgb(13,85,210);
+      position: relative;
+      left: 120px;
+    }
+
+  }
+
+  //中间主体部分
+  #main {
+    width: 860px;
+    min-width: 800px;
+    //height: 460px;
+    min-height: 460px;
+    background-color: white;
+    margin: 0 auto;
+    margin-top: 25px;
+    margin-bottom: 60px;
+    text-align: center;
+
+    .inContent{
+      text-align: left;
+      border-bottom: 2px solid rgb(241, 241, 241);
+      padding: 0 0 10px 0;
+      margin-bottom: 10px;
+
+      table{
+        border-collapse: collapse;
+
+        td{
+          padding: 5px;
+          width: 270px;
+          font-size: 16px;
+          color: rgb(121,121,121);
+        }
+
+        //表格内字体位置，颜色样式
+        .tableRight_a{
+          color: rgb(13,85,210);
+        }
+
+        .tableRight_b{
+          color: rgb(188,188,188);
+          font-size: 14px;
+        }
+
+        .tableRight_a,.tableRight_b{
+          text-align: right;
+        }
+
+
+        .tableTitle{
+          ul{
+            li{
+              list-style: square;
+            }
+
+          }
+        }
+
+        //合作伙伴描述字体
+        .tableDec{
+          font-size: 14px;
+        }
+
+      }
+    }
+
+    .block{
+      padding-top: 30px;
+      .el-pager li.active{
+        background-color: rgb(13,85,210);
+        border-color: rgb(13,85,210);
+      }
+    }
+
+
+  }
+
+  //页脚
+  //#footer {
+  //  background-color: white;
+  //  text-align: center;
+  //  border-top: 2px solid rgb(241, 241, 241);
+  //  padding-top: 20px;
+  //  //页脚字体
+  //  p {
+  //    display: block;
+  //    margin-top: 10px;
+  //    margin-bottom: 10px;
+  //    font-weight: 300;
+  //    font-size: 10px;
+  //    font-family: "Microsoft Sans Serif";
+  //    color: rgb(133, 133, 133);
+  //  }
+  //}
+
+}
