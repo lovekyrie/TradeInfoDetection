@@ -34,7 +34,20 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data(){
+    return {
+
+    }
+  },
+  mounted(){
+    //get message verification code
+  
+  },
+  methods:{
+
+  }
+};
 </script>
 
 <style lang='less'>

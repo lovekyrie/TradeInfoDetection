@@ -77,6 +77,10 @@ export default {
       showNotify:false,
     }
   },
+  mounted(){
+
+    this.getVerificationCode();
+  },
   methods:{
     changeRegisterType(value){
       if(value==='企业注册'){

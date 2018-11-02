@@ -74,7 +74,7 @@ export default {
       email: "239934203@163.com",
       address: "浙江省宁波市鄞州区彩虹南路12号",
       processArr: [process1, process2, process3],
-      desc:`最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告，最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告
+      desc: `最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告，最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告
       ，最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告，最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告`
     };
   },
@@ -144,69 +144,75 @@ body {
           flex-direction: row;
           flex-wrap: nowrap;
           &:nth-of-type(1) {
-          justify-content: space-around;
+            align-items: center;
+            justify-content: space-between;
             > span {
               &:nth-of-type(1) {
                 width: 10px;
                 height: 25px;
                 background-color: #0d55d2;
               }
-              &:nth-of-type(2){
+              &:nth-of-type(2) {
                 width: 98%;
+                font-size: 18px;
+                font-weight: 700;
               }
             }
           }
-          &:not(:nth-of-type(1)){
-            >span{
+          &:not(:nth-of-type(1)) {
+            font-size: 16px;
+            > span {
               &:nth-of-type(1),
-              &:nth-of-type(3){
+              &:nth-of-type(3) {
                 width: 30%;
               }
-              &:nth-of-type(2){
+              &:nth-of-type(2) {
                 width: 40%;
               }
             }
           }
-          &:not(:nth-last-of-type(1)){
+          &:not(:nth-last-of-type(1)) {
             margin-bottom: 30px;
           }
         }
       }
-      .propaganda{
+      .propaganda {
         padding: 30px 0;
         display: -webkit-flex;
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
-        >div{
+        > div {
           width: 100%;
           display: -webkit-flex;
           display: flex;
           flex-direction: row;
-          &:nth-of-type(1){
+          &:nth-of-type(1) {
             margin-bottom: 20px;
             justify-content: space-between;
             align-items: center;
-            >span{
-              &:nth-of-type(1){
+            > span {
+              &:nth-of-type(1) {
                 width: 10px;
                 height: 25px;
                 background-color: #0d55d2;
               }
-              &:nth-of-type(2){
+              &:nth-of-type(2) {
                 width: 98%;
+                font-size: 18px;
+                font-weight: 700;
               }
             }
           }
-          &:nth-of-type(2){
+          &:nth-of-type(2) {
             margin-bottom: 20px;
             flex-wrap: nowrap;
-            >div{
+            > div {
               width: 200px;
-              &:not(:nth-last-of-type(1)){
+              &:not(:nth-last-of-type(1)) {
                 margin-right: 20px;
               }
-              img{
+              img {
                 width: auto;
                 height: auto;
                 max-width: 100%;
@@ -214,6 +220,9 @@ body {
                 vertical-align: middle;
               }
             }
+          }
+          &:nth-of-type(3) {
+            font-size: 16px;
           }
         }
       }
