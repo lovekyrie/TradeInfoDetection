@@ -26,7 +26,7 @@ export default {
   data() {
     return {
       industryDetail,
-      ipPk: "",
+      type: "",
       industryDetailObj: {
         title: "【动态分类】检测行业最新标准今早颁布",
         content: `检测行业最新标准今早颁布，所有检测标准都已更新，速看！检测行业最新标准今早颁布，所有检测标准都已更新，速看！检测行业最新标准今早颁布，所有检测标准都已更新，
@@ -38,7 +38,7 @@ export default {
     };
   },
   mounted() {
-    this.ipPk = this.$router.query.ipPk;
+    this.type = this.$route.query.type;
   },
   methods:{
     toPrevious(){

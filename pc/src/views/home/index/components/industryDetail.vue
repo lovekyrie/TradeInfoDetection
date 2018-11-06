@@ -38,7 +38,7 @@ export default {
     };
   },
   mounted() {
-    this.ipPk = this.$router.query.ipPk;
+    this.ipPk = this.$route.query.ipPk;
   },
   methods:{
     toPrevious(){
