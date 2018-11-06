@@ -31,8 +31,10 @@
     </div>
     <div class="header-sidebar" v-if="showNav">
       <div class="sidebar">
-        <div :class="{active:state==item.content}" v-for="(item) in sidebarList" :key="item.ID" @click="choose(item.content)">
-          <span >{{item.content}}</span>
+        <div v-for="(item) in sidebarList" :key="item.ID" :class="{active:state==item.content}" @click="choose(item.content)">
+          <router-link :to="item.itemLink" >
+            <span>{{item.content}}</span>
+          </router-link>
         </div>
       </div>
     </div>
@@ -78,23 +80,28 @@ export default {
       sidebarList:[
          {
           ID: 1,
-          content: "买家中心"
+          content: "买家中心",
+          itemLink:'/buyer',
         },
         {
           ID: 2,
-          content: "卖家中心"
+          content: "卖家中心",
+          itemLink:'/seller',
         },
         {
           ID: 3,
-          content: "服务中心"
+          content: "服务中心",
+          itemLink:'/service',
         },
         {
           ID: 4,
-          content: "行业动态"
+          content: "行业动态",
+          itemLink:'/industry',
         },
         {
           ID:5,
-          content:'平台指引'
+          content:'平台指引',
+          itemLink:'/platform'
         }
       ]
     };
@@ -110,10 +117,6 @@ export default {
 
 <style lang='less'>
 .header-wrap {
-  position: fixed;
-  z-index: 199;
-  top: 0;
-  left: 0;
   width: 100%;
   margin: 0 auto;
   background-color: #fff;
@@ -207,9 +210,14 @@ export default {
         width: 15%;
         padding: 10px 0;
         text-align: center;
+        .router-link-active{
+          text-decoration: none;
+          span{
+            color:  #0d55d2;
+          }
+        }
       }
       .active{
-        color: #0d55d2;
         border-bottom: 1px solid #0d55d2;
       }
     }

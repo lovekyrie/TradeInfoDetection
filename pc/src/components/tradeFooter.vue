@@ -24,22 +24,21 @@ export default {
 
 <style lang='less'>
   .footer-wrap{
-    position: fixed;
-    left: 50%;
-    bottom: 0;
-    height: 110px;
+    padding: 35px 0;
     width: 100%;
     display: -webkit-flex;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
-    transform: translateX(-50%);
     border-top: 1px solid #EEEEEE;
     background-color: #fff;
     >div{
       width: 100%;
       text-align: center;
+      &:not(:nth-last-of-type(1)){
+        margin-bottom: 20px;
+      }
     }
   }
 </style>
