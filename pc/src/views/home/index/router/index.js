@@ -12,6 +12,7 @@ import platformDetail from '../components/platformDetail.vue'
 
 export default new VueRouter({
   routes:[
+    {path:'',component:buyer},
     {path:'/buyer',component:buyer},
     {path:'/industry',component:industry},
     {path:'/platform',component:platform},
