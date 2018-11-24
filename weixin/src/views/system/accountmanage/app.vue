@@ -3,27 +3,27 @@
     <div class="content">
       <div>
         <span>注册账号：</span>
-        <div><input type="text">{{account}}</div>
+        <div><input type="text" v-model="info.usNm"></div>
       </div>
       <div>
         <span>手机号码：</span>
-        <div><input type="text">{{phoneNum}}</div>
+        <div><input type="number" v-model="info.mob"></div>
       </div>
       <div>
         <span>邮箱地址：</span>
-        <div><input type="text">{{email}}</div>
+        <div><input type="text" v-model="info.email"></div>
       </div>
        <div>
         <span>企业名称：</span>
-        <div><input type="text" placeholder="请输入企业名称"></div>
+        <div><input type="text" placeholder="请输入企业名称" v-model="info.nkNm"></div>
       </div>
       <div>
         <span>企业地址：</span>
-        <div><input type="text" placeholder="请输入企业地址"></div>
+        <div><input type="text" placeholder="请输入企业地址" v-model="info.arg2"></div>
       </div>
       <div>
         <div>
-          <button>确定</button>
+          <button @click="submit">确定</button>
         </div>
       </div>
     </div>
@@ -34,11 +34,57 @@
 export default {
   data(){
     return {
-      account:'张三',
-      phoneNum:'15188881111',
-      email:'1111222255@qq.com'
+      info:{
+          sysUserPk:'',
+          usNm:'',
+          mob:'',
+          email:'',
+          nkNm:'',
+          arg2:''
+      },
+
     }
-  }
+  },
+    mounted(){
+        let info=JSON.parse(this.until.loGet('userInfo'))
+        if(info){
+            this.info.sysUserPk = info.sysUserPk
+            this.info.usNm = info.usNm
+            this.info.mob = info.mob
+            this.info.email = info.email
+            this.info.nkNm = info.nkNm
+            this.info.arg2 = info.arg2
+        }else {
+            this.$hero.msg.show({
+                text:'您还未登录，请选登录！',
+                times:1500
+            });
+            setTimeout(()=>{
+                window.location.href = '../system/login.html'
+            },1500)
+        }
+    },
+    methods:{
+        submit(){
+            this.until.postData('/prod/mxentp/edit',JSON.stringify(this.info))
+                .then(res=>{
+                    if(res.status=='200'){
+                        this.$hero.msg.show({
+                            text:'修改成功！',
+                            times:1500
+                        });
+                        setTimeout(()=>{
+                            window.location.href = '../home/index.html'
+                        },1500)
+                    }else {
+                        this.$hero.msg.show({
+                            text:res.message,
+                            times:1500
+                        });
+                    }
+                })
+        }
+    }
 }
 </script>
 

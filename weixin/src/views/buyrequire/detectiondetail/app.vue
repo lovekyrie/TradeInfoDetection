@@ -2,8 +2,8 @@
   <div id="app">
     <div class="content">
       <div class="report-title">
-        <h3>{{title}}</h3>
-        <div>发布日期：{{releaseDate}}</div>
+        <h3>{{info.nm}}</h3>
+        <div>发布日期：{{info.crtTm}}</div>
       </div>
       <div class="require-des">
         <div>
@@ -11,7 +11,7 @@
           <span>需求描述</span>
         </div>
         <div>
-          {{description}}
+          {{info.rmks}}
         </div>
       </div>
       <div class="linked">
@@ -20,16 +20,16 @@
           <span>联系方式</span>
         </div>
         <div>
-          联系人：{{linkedMan}}
+          联系人：{{info.contNm}}
         </div>
         <div>
-          联系电话：{{linkedPhone}}
+          联系电话：{{info.contMob}}
         </div>
         <div>
-          邮箱地址：{{email}}
+          邮箱地址：{{info.email}}
         </div>
         <div>
-          联系方式：{{linked}}
+          联系方式：{{info.contOther}}
         </div>
       </div>
     </div>
@@ -40,15 +40,29 @@
 export default {
   data() {
     return {
-      title: "服装服饰男装女装类目质检报告",
-      releaseDate: "2018-06-26",
-      description: "服装服饰男装女装类目质检报告。",
-      linkedMan: "张三",
-      linkedPhone: "13599990000",
-      email: "34723847923@qq.com",
-      linked: "13599990000"
+      pk:'',
+      info:{}
     };
-  }
+  },
+    mounted(){
+      this.pk = this.until.getQueryString('pk')
+        this.getInfo()
+    },
+    methods:{
+      getInfo(){
+          this.until.get('/prod/mxpubreq/info/'+this.pk)
+              .then(res=>{
+                  if(res.status == '200'){
+                      this.info = res.data
+                  }else {
+                      this.$hero.msg.show({
+                          text:res.message,
+                          times:1500
+                      });
+                  }
+              })
+      }
+    }
 };
 </script>
 

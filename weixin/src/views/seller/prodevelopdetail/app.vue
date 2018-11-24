@@ -3,14 +3,14 @@
     <div class="header">
       <div class="job-hunter">
           <div>
-            <div>{{job}}</div>
-            <div>{{hunterName}}</div>
+            <div>{{info.talePost}}</div>
+            <div>{{info.persNm}}</div>
           </div>
           <div>
-            <span>联系电话：{{phoneNumber}}</span>
+            <span>联系电话：{{info.taleMob}}</span>
           </div>
           <div>
-            <span>邮箱地址：{{email}}</span>
+            <span>邮箱地址：{{info.taleEmail}}</span>
           </div>
       </div>
     </div>
@@ -19,32 +19,28 @@
         <div>
           <span></span><span>个人简介</span>
         </div>
-        <div v-for="(item, index) in personalList" :key="index">
-          <span>{{item}}</span>
+        <div v-html="info.taleIntro">
         </div>
       </div>
       <div class="hobby">
         <div>
           <span></span><span>技能特长</span>
         </div>
-        <div v-for="(item, index) in personalList" :key="index">
-          <span>{{item}}</span>
+        <div v-html="info.taleSpecSkill">
         </div>
       </div>
       <div class="certificate">
         <div>
           <span></span><span>资历证书</span>
         </div>
-        <div v-for="(item, index) in certificateList" :key="index">
-          <span>{{item}}</span>
+        <div v-html="info.taleQualCert">
         </div>
       </div>
       <div class="train">
         <div>
           <span></span><span>培训经历</span>
         </div>
-        <div v-for="(item, index) in trainList" :key="index">
-          <span>{{item}}</span>
+        <div v-html="info.taleTrainExpes">
         </div>
       </div>
     </div>
@@ -55,6 +51,9 @@
 export default {
   data(){
     return {
+
+        info:'',
+        pk:'',
       job:'无机分析工程师工作',
       hunterName:'张三',
       phoneNumber:'13599990000',
@@ -73,8 +72,17 @@ export default {
       ]
     }
   },
+    mounted(){
+        this.userPk = this.until.getQueryString('pk')
+        this.getInfo()
+    },
   methods:{
-
+      getInfo(){
+          this.until.get('/prodx/mxpubtale/info/'+this.userPk)
+              .then(res=>{
+                  this.info = res.data
+              })
+      }
   },
   components:{
 

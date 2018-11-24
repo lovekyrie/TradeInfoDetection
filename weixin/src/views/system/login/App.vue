@@ -3,30 +3,30 @@
     <div class="content">
       <div>
         <span>账号名称：</span>
-        <div><input type="text"></div>
+        <div><input type="text" v-model="user"></div>
       </div>
       <div>
         <span>登录密码：</span>
-        <div><input type="text"></div>
+        <div><input type="password" v-model="password"></div>
       </div>
       <div>
         <span>验证码</span>
         <div>
-          <input type="text">
-          <span>EUGY76</span>
+          <input type="text" v-model="code">
+          <span>{{myCode}}</span>
         </div>
       </div>
       <p>
-        <span>忘记密码？</span>
+        <span @click="forgetPassword">忘记密码？</span>
       </p>
       <div class="operate">
         <div>
-          <button>登录</button>
+          <button @click="login">登录</button>
         </div>
       </div>
       <div class="operate">
         <div>
-          <button>注册</button>
+          <button @click="register">注册</button>
         </div>
       </div>
     </div>
@@ -34,18 +34,79 @@
 </template>
 
 <script>
+
 export default {
   data(){
     return {
-
+      user:'admin',
+      password:'1124',
+      code:'',
+      myCode:'',
+      codeRight:false,
     }
   },
   mounted(){
-    //get message verification code
-  
+      this.getCode()
   },
   methods:{
+      login(){
+          console.log(this.code.toUpperCase)
+          if(this.code.toUpperCase()!=this.myCode.toUpperCase()){
+              this.$hero.msg.show({
+                  text:'请输入正确的验证码！',
+              });
+          }else {
+              this.codeRight = true
+              let param = {
+                username:this.user,
+                password:this.password,
+                remberMe:this.codeRight
+              }
+              this.until.post('/general/access/appLogin',param)
+                  .then(res=>{
+                      if(res.status == 200){
+                          let myInfo = res.data.userInfo
+                          this.until.loSave('user',JSON.stringify(myInfo));
+                          this.$hero.msg.show({
+                              text:'登录成功！',
+                              times:1500
+                          });
+                          setTimeout(()=>{
+                              window.location.href='../home/index.html'
+                          },1500)
 
+                      }else {
+                          this.$hero.msg.show({
+                              text:res.data,
+                          });
+                      }
+                  },err=>{});
+
+          }
+      },
+      register(){
+          window.location.href='../system/register.html'
+      },
+      forgetPassword(){
+          window.location.href='../system/forgetpassword.html'
+      },
+      getCode(){
+          //首先默认code为空字符串
+          let code = '';
+          //设置长度，这里看需求，我这里设置了4
+          var codeLength = 6;
+          //设置随机字符
+          var random = new Array(0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R', 'S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');
+          //循环codeLength 我设置的4就是循环4次
+          for(var i = 0; i < codeLength; i++){
+              //设置随机数范围,这设置为0 ~ 36
+              var index = Math.floor(Math.random()*36);
+              //字符串拼接 将每次随机的字符 进行拼接
+              code += random[index];
+          }
+          //将拼接好的字符串赋值给展示的Value
+          this.myCode = code;
+      },
   }
 };
 </script>

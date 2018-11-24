@@ -1,11 +1,11 @@
 <template>
   <div class="product-info">
-    <div class="product-item" v-for="(item, index) in productList" :key="index">
+    <div class="product-item" v-for="(item, index) in productList" :key="index" @click="toDetail(item.mxPubCheckPk)">
       <div>
-        <img :src="item.src" alt="">
+        <img :src="item.imgUrl" alt="">
       </div>
-      <p v-if="item.content">{{item.content}}</p>
-      <span v-if="item.price">销量：{{item.price}}</span>
+      <p>{{item.nm}}</p>
+      <span>销量：{{item.sela}}</span>
       <h3 v-if="item.gold">{{item.gold}}金币</h3>
       <button v-if="pageName==='金币兑换'">立即兑换</button>
     </div>
@@ -19,7 +19,12 @@ export default {
     return {
 
     }
-  }  
+  },
+  methods:{
+      toDetail(val){
+          window.location.href = 'platformdetectiondetail.html?pk='+val
+      }
+  }
 }
 </script>
 
@@ -50,6 +55,12 @@ export default {
       }
       div{
         justify-content: space-around;
+        width: 100%;
+        height: 3rem;
+        display: flex;
+        display: -webkit-flex;
+        align-items: center;
+        justify-content: center;
         >img{
           height: auto;
           width: auto;

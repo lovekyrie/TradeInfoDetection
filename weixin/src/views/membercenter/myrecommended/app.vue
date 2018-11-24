@@ -5,14 +5,14 @@
         <span></span><span>推荐记录</span>
       </div>
       <div class="title">
-       <div><span>一级人数</span></div>
+       <div><span>一级人员</span></div>
        <div><span>二级人数</span></div>
-       <div><span>三级人数</span></div>
+       <div><span>推荐时间</span></div>
       </div>
-      <div class="detail" v-for="(item, index) in recommendedList" :key="index">
-        <div><span>{{item.first}}</span></div>
-        <div><span>{{item.second}}</span></div>
-        <div><span>{{item.time}}</span></div>
+      <div class="detail" v-for="(item, index) in list" :key="index">
+        <div><span>{{item.recoUserNm}}</span></div>
+        <div><span>{{item.recoQty}}</span></div>
+        <div><span>{{item.recoTm}}</span></div>
       </div>
     </div>
   </div>
@@ -22,25 +22,20 @@
 export default {
   data() {
     return {
-      recommendedList: [
-        {
-          first: "MX001",
-          second: 5,
-          time: "2017-11-12"
-        },
-        {
-          first: "MX002",
-          second: 5,
-          time: "2017-11-12"
-        },
-        {
-          first: "MX003",
-          second: 5,
-          time: "2017-11-12"
-        }
-      ]
+        list: []
     };
-  }
+  },
+    mounted(){
+      this.getList()
+    },
+    methods:{
+      getList(){
+          this.until.get('/prodx/mxuserreco/listSelfReco')
+              .then(res=>{
+                  this.list = res.data.items
+              })
+      }
+    }
 };
 </script>
 
@@ -78,8 +73,11 @@ body {
         border-top: 1px solid #EAEAEA;
         > div {
           padding: .3rem 0;
-          flex: 3;
+          flex: 1;
           text-align: center;
+          &:last-child{
+            flex: 2;
+          }
         }
       }
       .title {

@@ -2,27 +2,27 @@
   <div class="order">
     <div class="order-wrap" v-for="(item, index) in myOrderList" :key="index">
       <div class="orderno">
-        <div><span>订单编号：{{item.orderNo}}</span></div>
-        <div :class="{active:item.state==='已完成'}"><span>{{item.state}}</span></div>
+        <div><span>订单编号：{{item.mxOrdDetePk}}</span></div>
+        <div :class="{active:item.statNm==='已完成'}"><span>{{item.statNm}}</span></div>
       </div>
       <div class="order-info">
-        <h3>{{item.title}}</h3>
-        <p><span>报告状态：{{item.uploadState}}</span></p>
+        <h3>{{item.mxPubCheckNm}}</h3>
+        <p><span>报告状态：{{item.repoStatNm}}</span></p>
         <p><span>订单二维码：</span></p>
         <div>
           <img :src="item.twoCode" alt="">
         </div>
       </div>
       <div class="order-total">
-         <div><span>发布时间：{{item.releaseDate}}</span></div>
+         <div><span>下单时间：{{item.rcdTm}}</span></div>
         <div><span>价格：￥{{item.price}}</span></div>
       </div>
       <div class="order-operate">
         <div>
-          <button>查看详情</button>
-          <button class="pay" v-if="item.state==='代付款'">支付</button>
-          <button class="cancel" v-if="item.state==='已下单'">取消订单</button>
-          <button class="delete" v-if="item.state==='已完成'">删除</button>
+          <button @click="toDetail(item.mxOrdDetePk)">查看详情</button>
+          <button class="pay" v-if="item.statCd==='80020.002'">支付</button>
+          <button @click="cancel(item)" v-if="item.statCd==='80020.001'">取消订单</button>
+          <!--<button class="delete(item.mxOrdDetePk,index)" v-if="item.statCd==='80020.004'">删除</button>-->
         </div>
       </div>
     </div>
@@ -36,7 +36,32 @@ export default {
     return {
 
     }
-  }
+  },
+    methods:{
+      toDetail(val){
+          window.location.href = 'myorderdetail.html?pk='+val
+      },
+        cancel(info){
+          console.log(info)
+          info.statCd = '80020.005'
+            info.statNm = '已取消'
+            this.until.postData('/prod/mxordete/edit',JSON.stringify(info))
+                .then(res=>{
+                    if(res.status=='200'){
+                        this.$hero.msg.show({
+                            text:'取消成功',
+                            times:1500
+                        });
+                    }else {
+                        this.$hero.msg.show({
+                            text:res.message,
+                            times:1500
+                        });
+                    }
+
+                })
+        }
+    }
 }
 </script>
 

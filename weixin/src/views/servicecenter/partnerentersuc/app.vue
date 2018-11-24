@@ -15,67 +15,75 @@
       <div>
         <span>企业名称：</span>
         <div>
-          <span>{{enterpriseName}}</span>
+          <span>{{info.nm}}</span>
         </div>
       </div>
        <div>
         <span>法人姓名：</span>
         <div>
-          <span>{{legalName}}</span>
+          <span>{{info.legal}}</span>
         </div>
       </div>
        <div>
         <span>邮箱地址：</span>
         <div>
-          <span>{{eamil}}</span>
+          <span>{{info.eamil}}</span>
         </div>
       </div>
       <div>
         <span>联系人：</span>
         <div>
-          <span>{{linked}}</span>
+          <span>{{info.contNm}}</span>
         </div>
       </div>
       <div>
         <span>联系电话：</span>
         <div>
-          <span>{{linkedPhone}}</span>
+          <span>{{info.contMob}}</span>
         </div>
       </div>
       <div>
         <span>联系地址：</span>
         <div>
-          <span>{{linkedAddress}}</span>
+          <span>{{info.contAddr}}</span>
         </div>
       </div>
       <div class="file-type">
         <span>营业执照：</span>
         <div>
-         <img :src="businessLicense">
+            <div class="img"  v-for="item in busLicUrl">
+                <img :src="item">
+            </div>
         </div>
       </div>
        <div class="file-type">
         <span>CMA资质证书：</span>
         <div>
-         <img :src="CMACertificate">
+            <div class="img" v-for="item in cmaQualUrl">
+                <img :src="item">
+            </div>
         </div>
       </div>
        <div class="file-type">
         <span>CNAS资质证书：</span>
         <div>
-         <img :src="CNASCertificate">
+            <div class="img" v-for="item in cnasQualRul">
+                <img :src="item">
+            </div>
         </div>
       </div>
       <div class="file-type">
         <span>其他资质证书：</span>
         <div>
-         <img :src="otherCertificate">
+            <div class="img" v-for="item in otherQualRul">
+                <img :src="item" />
+            </div>
         </div>
       </div>
       <div>
         <span>公司简介：</span>
         <div>
-          <span>{{companyIntroduce}}</span>
+          <span>{{info.intro}}</span>
         </div>
       </div>
     </div>
@@ -85,28 +93,55 @@
 <script>
 import successlog from './images/提交成功.png'
 import headerTitle from 'components/headerTitle'
-import businessLicense from './images/businessLicense.png'
+// import businessLicense from './images/businessLicense.png'
 
 export default {
   data(){
     return {
       successlog,
-      title:'合作伙伴入驻',
-      enterpriseName:'宁波玩家制作有限公司',
-      legalName:'孙华',
-      eamil:'13566667777@qq.com',
-      linked:'沈军',
-      linkedPhone:'13566667777',
-      linkedAddress:'浙江省宁波市镇海区329创业社区212室',
-      businessLicense,
-      CMACertificate:businessLicense,
-      CNASCertificate:businessLicense,
-      otherCertificate:businessLicense,
-      companyIntroduce:'',
+        title:'合作伙伴入驻',
+        userPk:'',
+        info:{},
+        busLicUrl:[],
+        cmaQualUrl:[],
+        cnasQualRul:[],
+        otherQualRul:[]
     }
   },
+    mounted(){
+        let info=JSON.parse(this.until.loGet('userInfo'))
+        if(info){
+            this.userPk = info.sysUserPk
+        }
+        this.getInfo()
+    },
   methods:{
+      getInfo(){
+          this.until.get('/prodx/mxentp/info/'+this.userPk)
+              .then(res=>{
+                  if(res.status=='200'){
+                      this.info = res.data
+                      if(this.info.busLicUrl){
+                          this.busLicUrl = this.info.busLicUrl.split(',')
+                      }
+                      if(this.info.cmaQualUrl){
+                          this.cmaQualUrl = this.info.cmaQualUrl.split(',')
+                      }
+                      if(this.info.cnasQualRul){
+                          this.cnasQualRul = this.info.cnasQualRul.split(',')
+                      }
+                      if(this.info.otherQualRul){
+                          this.otherQualRul = this.info.otherQualRul.split(',')
+                      }
+                  }else {
+                      this.$hero.msg.show({
+                          text:res.message,
+                          times:1500
+                      });
+                  }
 
+              })
+      }
   },
   components:{
     headerTitle,
@@ -173,35 +208,39 @@ body {
           width: 75%;
         }
         
-        &:nth-last-of-type(1){
-          >div{
-            background-color: #2A8AF2;
-            text-align: center;
-            border-radius: 5px;
-            >button{
-              font-size: 16px;
-              color: #fff;
-              background-color: #2A8AF2;
-            }
-          }
-        }
+
         &:not(:nth-last-of-type(1)) {
           margin-bottom: 0.3rem;
         }
       }
       > .file-type {
+          clear: both;
         > span {
-          margin-top: -1.2rem;
-          width: 35%;
+          width: 30%;
         }
         > div {
           padding: 0;
-          margin-right: 30%;
-          width: 2rem;
-          height: 2rem;
-          border: 1px solid #efefef;
-          background-size: 0.6rem 0.6rem;
+          /*margin-right: 30%;*/
           overflow: hidden;
+            .img{
+                float: left;
+                margin-right: 5px;
+                margin-bottom: 5px;
+                width: 2rem;
+                height: 2rem;
+                border: 1px solid #f4f4f4;
+                border-radius: 3px;
+                display: flex;
+                display: -webkit-flex;
+                align-items: center;
+                justify-content: center;
+                img{
+                    width: auto;
+                    height: auto;
+                    max-width: 100%;
+                    max-height: 100%;
+                }
+            }
         }
       }
     }

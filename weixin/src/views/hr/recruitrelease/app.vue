@@ -4,39 +4,39 @@
       <div>
         <span>职位名称：</span>
         <div>
-          <input type="text" placeholder="无机分析工程师">
+          <input type="text" placeholder="无机分析工程师" v-model="info.nm">
         </div>
       </div>
       <div>
         <span>薪资：</span>
         <div>
-          <input type="text" placeholder="4000">
+          <input type="text" placeholder="4000" v-model="info.frSala">
           <span>~</span>
-          <input type="text" placeholder="6000">
+          <input type="text" placeholder="6000" v-model="info.toSala">
           <span>元／月</span>
         </div>
       </div>
       <div>
         <span>联系电话：</span>
         <div>
-          <input type="text" placeholder="13599990000">
+          <input type="number" placeholder="13599990000" v-model="info.mob">
         </div>
       </div>
       <div>
         <span>邮箱地址：</span>
         <div>
-          <input type="text" placeholder="请输入邮箱地址">
+          <input type="text" placeholder="请输入邮箱地址" v-model="info.email">
         </div>
       </div>
       <div>
         <span>职位描述：</span>
         <div>
-          <textarea name="" id="" placeholder="1、操作过ICP，GC-MS等分析仪器；2、英语CET4及以上；3、能熟练的操作办公软件。">
+          <textarea name="" id="" placeholder="1、操作过ICP，GC-MS等分析仪器；2、英语CET4及以上；3、能熟练的操作办公软件。" v-model="info.intro">
 
           </textarea>
         </div>
       </div>
-      <div>
+      <div @click="submit">
         <button>发布</button>
       </div>
     </div>
@@ -45,7 +45,52 @@
 
 <script>
 export default {
-  
+    data(){
+        return{
+            info:{
+                nm:'',
+                frSala:'',
+                toSala:'',
+                mob:'',
+                email:'',
+                intro:'',
+                sysUserPk:'',//用户主键
+                entpPk:'',//企业主键
+                entpNm:'',//企业名称
+            }
+        }
+    },
+    mounted(){
+        let info=JSON.parse(this.until.loGet('userInfo'))
+        console.log(info)
+        if(info){
+            this.info.sysUserPk = info.sysUserPk
+            this.info.entpPk = info.entpPk
+            this.info.entpNm = info.entpNm
+        }
+        console.log(this.info)
+    },
+    methods:{
+        submit(){
+            this.until.postData('/prod/mxpubrecr/edit',JSON.stringify(this.info))
+                .then(res=>{
+                    if(res.status=='200'){
+                        this.$hero.msg.show({
+                            text:res.message,
+                            times:1500
+                        });
+                        setTimeout(()=>{
+                            window.location.href = 'humanresource.html'
+                        },1500)
+                    }else {
+                        this.$hero.msg.show({
+                            text:res.message,
+                            times:1500
+                        });
+                    }
+                })
+        }
+    }
 }
 </script>
 

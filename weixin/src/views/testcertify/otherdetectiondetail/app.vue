@@ -1,16 +1,16 @@
 <template>
   <div id="app">
     <div class="header">
-      <img :src="productInfo" alt="">
+      <img :src="info.imgUrl" alt="">
     </div>
     <div class="content">
       <div class="detection-name">
-        <span>{{detectionName}}</span>
+        <span>{{info.nm}}</span>
       </div>
       <div class="detection-info">
         <div><span></span><span>服务内容</span></div>
         <div>
-          <p>{{serviceContent}}</p>
+          <p>{{info.intro}}</p>
         </div>
       </div>
     </div>
@@ -18,18 +18,18 @@
       <div class="organization">
         <div><span></span><span>检测机构介绍</span></div>
         <div>
-          <div><img :src="productLog" alt=""></div>
+          <div><img :src="info.entpLogoUrl" alt=""></div>
           <div>
             <div>检测机构名称：</div>
-            <div>{{organizationName}}</div>
+            <div>{{info.entpNm}}</div>
           </div>
         </div>
         <div>
-          <p>{{orgIntroduce}}</p>
+          <p>{{info.entpIntro}}</p>
         </div>
-        <div><span>联系人：{{linkedMan}}</span></div>
-        <div><span>联系电话：{{linkedPhone}}</span></div>
-        <div><span>联系邮箱：{{linkedEmail}}</span></div>
+        <div><span>联系人：{{info.entpContNm}}</span></div>
+        <div><span>联系电话：{{info.entpContMob}}</span></div>
+        <div><span>联系邮箱：{{info.entpEmail}}</span></div>
       </div>
     </div>
   </div>
@@ -42,22 +42,22 @@ import productInfo from "./images/productinfo.png";
 export default {
   data() {
     return {
-      productLog,
-      productInfo,
-      detectionName: "儿童家具质量评审儿童家具质检",
-      serviceContent: `最全面儿童家具质量评审儿童家具质检，可检测儿童家具中的甲醛、
-      乙烯等有害物质，严格按照国家标准。最全面儿童家具质量评审儿童家具质检，可检测儿童家具中的甲醛、
-      乙烯等有害物质，严格按照国家标准。最全面儿童家具质量评审儿童家具质检，可检测儿童家具中的甲醛、
-      乙烯等有害物质，严格按照国家标准。`,
-      organizationName: "宁波华信检测有限公司",
-      orgIntroduce: `宁波华信检测有限公司是一家专注检测并有十年以上行业检测经验的公司，
-      曾服务过各大制造厂商。宁波华信检测有限公司是一家专注检测并有十年以上行业检测经验的公司，
-      曾服务过各大制造厂商。`,
-      linkedMan: "张三",
-      linkedPhone: "13599990000",
-      linkedEmail: "83906@163.com"
+        pk:'',
+        info:''
     };
-  }
+  },
+    mounted(){
+        this.pk = this.until.getQueryString('pk')
+        this.getInfo()
+    },
+    methods: {
+        getInfo() {
+            this.until.get('/prod/mxpubthrser/info/' + this.pk)
+                .then(res => {
+                    this.info = res.data
+                })
+        },
+    }
 };
 </script>
 

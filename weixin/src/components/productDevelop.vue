@@ -1,10 +1,10 @@
 <template>
 <div class="hr-content">
-  <div class="hr-item" @click="toDetailLink()" v-for="(item, index) in developList" :key="index">
+  <div class="hr-item" @click="toDetailLink(item.taleMxPubTalePk)" v-for="(item, index) in developList" :key="index">
     <div class="hr-theme">
-      <div>{{item.title}}</div>
+      <div>{{item.jobName}}</div>
       <div></div>
-      <div>{{item.name}}</div>
+      <div>{{item.candidate}}</div>
     </div>
     <div class="hr-info">
       <div>联系电话：{{item.phone}}</div>
@@ -22,8 +22,8 @@ export default {
     }
   },
   methods:{
-    toDetailLink(){
-      // window.location.href='../hr/hrdetailinfo.html'
+    toDetailLink(val){
+      window.location.href='prodevelopdetail.html?pk='+val
     }
   }
 }

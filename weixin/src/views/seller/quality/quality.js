@@ -1,7 +1,8 @@
 import Vue from 'vue';
 import init from 'assets/js/init.js'
-import {Area, Popup} from 'vant'
+import {Area, Popup,List} from 'vant'
 
+Vue.use(List);
 Vue.use(Area);
 Vue.use(Popup);
 Vue.use(init);

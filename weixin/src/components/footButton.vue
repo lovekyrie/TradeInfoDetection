@@ -21,7 +21,7 @@ export default {
 <style lang="less">
  .footer-btn{
     padding: .2rem 0;
-    position: fixed;
+    /*position: fixed;*/
     bottom: 0;
     width: 100%;
     font-size: 16px;

@@ -1,14 +1,14 @@
 <template>
 <div class="hr-content">
-  <div class="hr-item" @click="toDetailLink()" v-for="(item, index) in hrInfoList" :key="index">
+  <div class="hr-item" @click="toDetailLink(item.mxPubRecrPk)" v-for="(item, index) in hrInfoList" :key="index">
     <div class="hr-theme">
-      <div>{{item.title}}</div>
+      <div>{{item.nm}}</div>
       <div></div>
-      <div>{{item.company}}</div>
+      <div>{{item.entpNm}}</div>
     </div>
     <div class="hr-info">
-      <div>{{item.salary}}</div>
-      <div>联系电话：{{item.phone}}</div>
+      <div>{{item.frSala}}-{{item.toSala}}元/月</div>
+      <div>联系电话：{{item.mob}}</div>
     </div>
   </div>
 </div>
@@ -23,8 +23,8 @@ export default {
     }
   },
   methods:{
-    toDetailLink(){
-      window.location.href='../hr/hrdetailinfo.html'
+    toDetailLink(val){
+      window.location.href='../hr/hrdetailinfo.html?pk='+val
     }
   }
 }
@@ -46,27 +46,32 @@ export default {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
-        justify-content: space-between;
+        /*justify-content: space-between;*/
         >div{
-          width: 50%;
+          /*width: 50%;*/
         }
       }
       >.hr-theme{
         >div:nth-of-type(1){
-          width: 38%;
           color: #4C9AF4;
         }
         >div:nth-of-type(2){
           background-color: #D2D2D2;
-          width: .3%;
+          width: 1px;
+          margin: 0 8px;
         }
         >div:nth-of-type(3){
-          width: 49.9%;
+          /*width: 49.9%;*/
         }
         margin-bottom: .2rem;
       }
       >.hr-info{
         font-size: 12px;
+        >div:nth-of-type(1){
+          width: 45%;
+        }
+        >div:nth-of-type(2){
+        }
       }
     }
   }

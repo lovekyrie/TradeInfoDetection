@@ -1,123 +1,161 @@
 <template>
   <div id="app">
     <header-title :title="title" :littleTitle="littleTitle"></header-title>
+    <key-search @search="search"></key-search>
     <div class="detection-bar">
       <span></span>
       <span>{{siderName}}</span>
-      <button @click="changeRelease(buttonName)">
+      <button @click="changeRelease()">
         {{buttonName}}
       </button>
     </div>
-    <detection-product v-if="showEnterpriseRelease" :productList="productList"></detection-product>
-    <equipment-personal v-else :personalReleaseList="personalReleaseList"></equipment-personal>
-    <div class="load-more">
-      <span>加载更多</span>
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icon-gengduo"></use>
-      </svg>
+    <div class="list">
+      <van-list
+              v-model="loading"
+              :finished="finished"
+              :immediate-check="false"
+              @load="onLoad"
+      >
+        <div class="equimpentList" v-if="showEnterpriseRelease" v-for="item in productList" @click="toDetail(item.mxPubDevPk)">
+          <div class="img">
+            <img :src="item.imgUrl"/>
+          </div>
+          <p>{{item.nm}}</p>
+        </div>
+        <equipment-personal v-if="!showEnterpriseRelease" :personalReleaseList="personalReleaseList"></equipment-personal>
+
+      </van-list>
+
+      <div class="load-more" v-if="dataNo">
+        <span>无查询结果</span>
+      </div>
+      <div class="load-more" v-if="dataFinish">
+        <span>全部加载完</span>
+      </div>
     </div>
+
   </div>  
 </template>
 
 <script>
 import headerTitle from "components/headerTitle";
 import product from "./images/product.png";
-import detectionProduct from "components/detectionProduct";
+import detectionProduct from "components/equipmentList";
 import equipmentPersonal from 'components/equipmentPersonal';
-
+import keySearch from "components/keySearch";
 export default {
   data() {
     return {
       title: "设备分享",
+        type:false,  //false为企业发布
       siderName:'企业发布',
       buttonName:'查看个人发布',
       showEnterpriseRelease:true,
+      dataNo:false,
+      dataFinish:false,
+        finished:false,
+        loading:false,
+      pageNo:1,
+      pageSize:15,
+      total:'',
       littleTitle: "",
-      productList: [
-        {
-          src: product,
-          content: "[转租]河北纺织品制造有限公司四件套检测报告"
-        },
-        {
-          src: product,
-          content: "[转租]河北纺织品制造有限公司四件套检测报告"
-        },
-        {
-          src: product,
-          content: "[转租]河北纺织品制造有限公司四件套检测报告"
-        },
-        {
-          src: product,
-          content: "[转租]河北纺织品制造有限公司四件套检测报告"
-        },
-        {
-          src: product,
-          content: "[转租]河北纺织品制造有限公司四件套检测报告"
-        },
-        {
-          src: product,
-          content: "[转租]河北纺织品制造有限公司四件套检测报告"
-        },
-        {
-          src: product,
-          content: "[转租]河北纺织品制造有限公司四件套检测报告"
-        }
-      ],
-      personalReleaseList:[
-        {
-          title:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linked:'张先生',
-          linkedPhone:15990110000,
-          releaseDate:'2018年6月17日'
-        },
-        {
-          title:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linked:'张先生',
-          linkedPhone:15990110000,
-          releaseDate:'2018年6月17日'
-        },
-        {
-          title:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linked:'张先生',
-          linkedPhone:15990110000,
-          releaseDate:'2018年6月17日'
-        },
-        {
-          title:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linked:'张先生',
-          linkedPhone:15990110000,
-          releaseDate:'2018年6月17日'
-        },
-        {
-          title:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linked:'张先生',
-          linkedPhone:15990110000,
-          releaseDate:'2018年6月17日'
-        }
-      ]
+      productList: [],
+      personalReleaseList:[]
     };
   },
+    mounted(){
+      this.getList()
+    },
   methods: {
-    changeRelease(buttonName){
-      
-      if(buttonName==='查看个人发布'){
-
+      toDetail(val){
+        window.location.href='enterprisereleasedetail.html?pk='+val
+      },
+    changeRelease(){
+        if(!this.type){
         this.siderName='个人发布'
         this.buttonName='查看企业发布'
-        this.showEnterpriseRelease=false;
+
       }
       else{
-
         this.siderName='企业发布'
         this.buttonName='查看个人发布'
-        this.showEnterpriseRelease=true
+
       }
-    }
+        this.dataFinish = false
+        this.dataNo = false
+        this.productList = []
+        this.personalReleaseList = []
+        this.pageNo = 1
+        this.type = !this.type
+        this.showEnterpriseRelease=!this.showEnterpriseRelease
+        this.getList()
+
+    },
+      //查询
+      search(val){
+          this.dataFinish = false
+          this.dataNo = false
+          this.key = val
+          this.productList = []
+          this.personalReleaseList = []
+          this.pageNo = 1
+          this.getList()
+      },
+      getList(){
+          this.loading = true;
+          let query = new this.Query();
+          query.buildPageClause(this.pageNo,this.pageSize);
+          let param = {
+              value:this.key,
+              query:query.getParam()
+          }
+          let url = this.type ? '/prodx/mxpubdev/page':'/prodx/mxpubdev/pageentp'
+          this.until.get(url,param)
+              .then(res=>{
+                  this.loading = false;
+                  if(res.status == 200){
+                      this.total = res.page.total
+                      if(this.total==0){
+                          this.dataNo = true
+                      }else {
+                          this.dataNo = false
+                          if(this.type){
+                              this.personalReleaseList.push(...res.data.items)
+                          }else {
+                              this.productList.push(...res.data.items)
+                          }
+
+                      }
+
+                  }else {
+                      this.$hero.msg.show({
+                          text:res.message,
+                          times:1500
+                      });
+                  }
+              },err=>{});
+      },
+      //加载更多
+      onLoad(){
+          // 异步更新数据
+          setTimeout(() => {
+              let length = this.type ? this.personalReleaseList.length:this.productList.length
+              if(this.total>length){
+                  this.pageNo++
+                  this.getList()
+              }else {
+                  this.dataFinish = true
+                  this.loading = false;
+                  this.finished = true;
+              }
+          }, 500);
+      },
   },
   components: {
     headerTitle,
     detectionProduct,
     equipmentPersonal,
+      keySearch
   }
 };
 </script>
@@ -129,6 +167,44 @@ body {
   height: 100%;
   #app {
     height: 100%;
+    display: -webkit-flex;
+    display: flex;
+    overflow: hidden;
+    flex-direction: column;
+
+    .list{
+      flex: 1;
+      overflow: auto;
+      background: #ffffff;
+      .van-list{
+        overflow: hidden;
+      }
+      .equimpentList{
+        width: 40%;
+        float: left;
+        &:nth-of-type(2n+1){
+          margin-left: 8%;
+          margin-right: 2%;
+        }
+        .img{
+          width: 100%;
+          height: 3rem;
+          display: flex;
+          display: -webkit-flex;
+          align-items: center;
+          justify-content: center;
+          img{
+            width: auto;
+            height: auto;
+            max-height: 100%;
+            max-width: 100%;
+          }
+        }
+      }
+      .van-list__loading{
+        clear: both;
+      }
+    }
     .detection-bar {
       background-color: #fff;
       padding: 0.2rem 0.4rem 0;

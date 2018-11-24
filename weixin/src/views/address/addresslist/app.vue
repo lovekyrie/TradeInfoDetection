@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <address-manage :addressList="addressList"></address-manage>
+    <address-manage :addressList="list" @delete="deleteAddr"></address-manage>
     <div class="footer">
       <div @click="toAddAddress">
         <img :src="addAddress" alt="">
@@ -20,6 +20,10 @@ export default {
   data() {
     return {
       addAddress,
+        info:{
+
+        },
+        list:[],
       addressList: [
         {
           receiver: "李泳",
@@ -34,9 +38,24 @@ export default {
       ]
     };
   },
+    mounted(){
+      this.info = JSON.parse(this.until.loGet('userInfo'))
+      this.getAddr()
+    },
   methods:{
+      deleteAddr(index){
+          this.list.splice(index,1)
+      },
+      getAddr(){
+          this.until.get('/sys/addr/listSelf')
+              .then(res=>{
+                  this.list = res.data.items
+              })
+      },
     toAddAddress(){
-      window.location.href='./addaddress.html'
+          // console.log(this.info)
+          // console.log(this.info.nkNm)
+       window.location.href='./addaddress.html?pk='+this.info.sysUserPk+'&nm='+this.info.nkNm
     }
   },
   components: {
@@ -51,9 +70,16 @@ export default {
     background-color: #F7F7F7;
     #app{
       height: 100%;
+      display: flex;
+      display: -webkit-flex;
+      overflow: hidden;
+      flex-direction: column;
+      .address{
+        flex: 1;
+        overflow: auto;
+      }
       .footer{
         width: 100%;
-        position: fixed;
         bottom: 0;
         background-color: #2A8AF2;
         text-align: center;

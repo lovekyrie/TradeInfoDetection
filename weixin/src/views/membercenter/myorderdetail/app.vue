@@ -2,14 +2,14 @@
   <div id="app">
     <div class="content">
       <div class="order-info">
-        <div><span>订单编号：{{orderInfo.orderNo}}</span></div>
-        <div><span>服务名称：{{orderInfo.serviceName}}</span></div>
-        <div><span>数量：{{orderInfo.count}}</span></div>
-        <div><span>联系电话：{{orderInfo.linkedPhone}}</span></div>
-        <div><span>下单时间：{{orderInfo.createTime}}</span></div>
-        <div><span>订单状态：{{orderInfo.orderState}}</span></div>
-        <div><span>价格：￥{{orderInfo.price}}</span></div>
-        <div><span>报告状态：{{orderInfo.reportState}}</span></div>
+        <div><span>订单编号：{{info.mxOrdDetePk}}</span></div>
+        <div><span>服务名称：{{info.mxPubCheckNm}}</span></div>
+        <div><span>数量：{{info.qty}}</span></div>
+        <div><span>联系电话：{{info.mob}}</span></div>
+        <div><span>下单时间：{{info.rcdTm}}</span></div>
+        <div><span>订单状态：{{info.statNm}}</span></div>
+        <div><span>价格：￥{{info.price}}</span></div>
+        <div><span>报告状态：{{info.repoStatNm}}</span></div>
         <div>
           <span>订单二维码</span>
           <div><img :src="twoCode" alt=""></div>
@@ -17,23 +17,23 @@
       </div>
       <div class="linked">
         <div><span></span><span>联系方式</span></div>
-        <div><span>供应商名称：{{linked.customerName}}</span></div>
-        <div><span>样品名称：{{linked.sampleName}}</span></div>
-        <div><span>联系人：{{linked.linkedMan}}</span></div>
-        <div><span>联系电话：{{linked.linkedPhone}}</span></div>
-        <div><span>备注：{{linked.note}}</span></div>
+        <div><span>供应商名称：{{info.supply}}</span></div>
+        <div><span>样品名称：{{info.prodNm}}</span></div>
+        <div><span>联系人：{{info.contNm}}</span></div>
+        <div><span>联系电话：{{info.contMob}}</span></div>
+        <div><span>备注：{{info.rmks}}</span></div>
       </div>
       <div class="address">
         <div><span></span><span>收货地址</span></div>
-        <div><span>收货人：{{address.receiver}}</span><span>手机号码：{{address.phoneNum}}</span></div>
-        <div><span>详细地址：{{address.detail}}</span></div>
+        <div><span>收货人：{{info.addresReceNm}}</span><span>手机号码：{{info.addresReceMob}}</span></div>
+        <div><span>详细地址：{{info.addresAddrDtl}}</span></div>
       </div>
       <div class="report">
         <div><span></span><span>检测报告</span></div>
-        <div><span>序列号：{{report.serialNo}}</span></div>
-        <div><span>检测机构：{{report.organization}}</span></div>
-        <div><span>供应商名称：{{report.customerName}}</span></div>
-        <div><span>样品名称：{{report.sampleName}}</span></div>
+        <!--<div><span>序列号：{{info.checkNum}}</span></div>-->
+        <!--<div><span>检测机构：{{info.organization}}</span></div>-->
+        <!--<div><span>供应商名称：{{info.customerName}}</span></div>-->
+        <!--<div><span>样品名称：{{info.sampleName}}</span></div>-->
       </div>
     </div>
     <div class="pdf-content">
@@ -52,6 +52,8 @@ export default {
   data(){
     return {
       twoCode,
+        pk:'',
+        info:{},
       orderInfo:{
         orderNo:'12349099',
         serviceName:'CFDA食堂餐厅饭店酒店自制餐饮食品检测',
@@ -82,7 +84,18 @@ export default {
       }
     }
   },
-  
+  mounted(){
+      this.pk = this.until.getQueryString('pk')
+      this.getInfo()
+  },
+    methods:{
+      getInfo(){
+          this.until.get('/prod/mxordete/info/'+this.pk)
+              .then(res=>{
+                this.info = res.data
+              })
+      }
+    }
 }
 </script>
 

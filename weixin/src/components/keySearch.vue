@@ -1,10 +1,11 @@
 <template>
 <div id="search">
   <div class="input-key">
-    <input type="text" placeholder="关键词搜索">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icon-search"></use>
-      </svg>
+    <input type="text" placeholder="关键词搜索" v-model="key">
+    <svg class="icon" aria-hidden="true" @click="search()">
+      <use xlink:href="#icon-search"></use>
+    </svg>
+
   </div>
 </div>  
 </template>
@@ -13,11 +14,13 @@
 export default {
   data() {
     return {
-
+      key:'',
     }
   },
   methods:{
-
+      search(){
+          this.$emit('search',this.key);
+      }
   }
 };
 </script>

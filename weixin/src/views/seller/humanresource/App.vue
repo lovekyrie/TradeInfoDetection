@@ -7,8 +7,16 @@ body {
 
 #container{
   height: 100%;
-  .load-more{
-    margin-top: .2rem;
+  display: flex;
+  display: -webkit-flex;
+  overflow: hidden;
+  flex-direction: column;
+  .van-list{
+    flex: 1;
+    overflow: auto;
+  }
+  .noResult{
+    margin: .2rem 0;
     text-align: center;
   }
  
@@ -18,15 +26,17 @@ body {
 <template>
     <div id="container">
       <header-title :title="title"></header-title>
-      <key-search></key-search>
-      <div class="noResult" :style="{ display:show2 }">无查询结果</div>
-      <hr-list :hrInfoList="hrInfoList"></hr-list>
-      <div class="load-more">
-        <span>加载更多</span>
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-gengduo"></use>
-        </svg>
-      </div>
+      <key-search @search="search"></key-search>
+      <div class="noResult"  v-if="dataNo">无查询结果</div>
+      <van-list
+              v-model="loading"
+              :finished="finished"
+              :immediate-check="false"
+              @load="onLoad"
+      >
+        <hr-list :hrInfoList="hrInfoList"></hr-list>
+        <div class="noResult"  v-if="dataFinish">全部加载完</div>
+      </van-list>
     </div>
 </template>
 
@@ -34,54 +44,74 @@ body {
 import headerTitle from 'components/headerTitle';
 import keySearch from "components/keySearch";
 import hrList from "components/hrList";
-import footButton from "components/footButton";
-
 export default {
   data() {
     return {
       title:'质控人才',
-      startTime: "",
-      endTime: "",
-      show: "block",
-      show2: "none",
-      hrInfoList: [
-        {
-          title: "实验室经理助理1名",
-          company: "浙江宁波华信质检",
-          salary: "4000-5000元／月",
-          phone: "0574-88889999",
-        },
-        {
-          title: "实验室经理助理1名",
-          company: "浙江宁波华信质检",
-          salary: "4000-5000元／月",
-          phone: "0574-88889999",
-        },
-        {
-          title: "实验室经理助理1名",
-          company: "浙江宁波华信质检",
-          salary: "4000-5000元／月",
-          phone: "0574-88889999",
-        },
-        {
-          title: "实验室经理助理1名",
-          company: "浙江宁波华信质检",
-          salary: "4000-5000元／月",
-          phone: "0574-88889999",
-        },
-        {
-          title: "实验室经理助理1名",
-          company: "浙江宁波华信质检",
-          salary: "4000-5000元／月",
-          phone: "0574-88889999",
-        },
-      ],
-      strPageCount: 1,
-      strPageRows: 10
+      hrInfoList: [],
+        key:'',
+      pageNo: 1,
+      pageSize: 10,
+        total:'',
+        dataNo:false,
+        dataFinish:false,
+        finished:false,
+        loading:false
     };
   },
-  mounted() {},
-  methods: {},
+  mounted() {
+      this.getList()
+  },
+  methods: {
+      //查询
+      search(val){
+          this.dataFinish = false
+          this.dataNo = false
+          this.key = val
+          this.hrInfoList = []
+          this.pageNo = 1
+          this.getList()
+      },
+      getList(){
+          this.loading = true;
+          let query = new this.Query();
+          query.buildPageClause(this.pageNo,this.pageSize);
+          let param = {
+              value:this.key,
+              query:query.getParam()
+          }
+          this.until.get('/prod/mxpubrecr/page',param)
+              .then(res=>{
+                  this.loading = false;
+                  if(res.status == 200){
+                      this.total = res.page.total
+                      if(this.total==0){
+                          this.dataNo = true
+                      }else {
+                          this.dataNo = false
+                          this.hrInfoList.push(...res.data.items)
+
+                      }
+
+                  }
+              },err=>{});
+      },
+      //加载更多
+      onLoad(){
+          console.log(this.total)
+          // 异步更新数据
+          setTimeout(() => {
+              if(this.total>this.hrInfoList.length){
+                  this.pageNo++
+                  this.getList()
+              }else {
+                  this.dataFinish = true
+                  this.loading = false;
+                  this.finished = true;
+              }
+          }, 500);
+      },
+  },
   components: {
     keySearch,
     hrList,

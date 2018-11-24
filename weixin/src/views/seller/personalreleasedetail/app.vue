@@ -2,26 +2,26 @@
   <div id="app">
     <div class="header">
       <div>
-        <span>{{detectionName}}</span>
+        <span>{{info.nm}}</span>
       </div>
       <div>
-        <span>发布日期：{{releaseDate}}</span>
+        <span>发布日期：{{info.rcdTm}}</span>
       </div>
     </div>
     <div class="content">
       <div class="detection-info">
         <div><span></span><span>产品描述</span></div>
         <div>
-          <p>{{serviceContent}}</p>
+          <p>{{info.intro}}</p>
         </div>
       </div>
     </div>
     <div class="introduce">
       <div class="organization">
         <div><span></span><span>联系方式</span></div>
-        <div><span>联系人：{{linkedMan}}</span></div>
-        <div><span>联系电话：{{linkedPhone}}</span></div>
-        <div><span>联系邮箱：{{linkedEmail}}</span></div>
+        <div><span>联系人：{{info.contNm}}</span></div>
+        <div><span>联系电话：{{info.contMob}}</span></div>
+        <div><span>联系邮箱：{{info.contEmail}}</span></div>
       </div>
     </div>
   </div>
@@ -32,17 +32,29 @@
 export default {
   data() {
     return {
-      detectionName: "【转租】高价租最新服装衬衫全效检测设备一台",
-      releaseDate:'2018-06-01',
-      serviceContent: `最新水质检测设备，九成新，可检测水的PH值，水的酸碱度。最新水质检测设备，九成新，可检测水的PH值，水的酸碱度。
-      最新水质检测设备，九成新，可检测水的PH值，水的酸碱度。最新水质检测设备，
-      九成新，可检测水的PH值，水的酸碱度。最新水质检测设备，九成新，可检测水的PH值，
-      水的酸碱度。`,
-      linkedMan: "张三",
-      linkedPhone: "13599990000",
-      linkedEmail: "83906@163.com"
+      info:{},
+        pk:''
     };
-  }
+  },
+    mounted(){
+      this.pk = this.until.getQueryString('pk')
+        this.getInfo()
+    },
+    methods:{
+      getInfo(){
+          this.until.get('/prod/mxpubdev/info/'+this.pk)
+              .then(res=>{
+                  if(res.status=='200'){
+                      this.info = res.data
+                  }else {
+                      this.$hero.msg.show({
+                          text:res.message,
+                          times:1500
+                      });
+                  }
+              })
+      }
+    }
 };
 </script>
 

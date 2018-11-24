@@ -1,14 +1,14 @@
 <template>
   <div class="person-release">
-    <div class="person-wrap" v-for="(item, index) in personalReleaseList" :key="index">
+    <div class="person-wrap" v-for="(item, index) in personalReleaseList" :key="index" @click="toDetail(item.mxPubDevPk)">
       <div>
         <span></span>
-        <span>{{item.title}}</span>
+        <span>{{item.nm}}</span>
       </div>
       <div>
-        <span>{{item.linked}}</span>
-        <span>{{item.linkedPhone}}</span>
-        <span>{{item.releaseDate}}</span>
+        <span>{{item.contNm}}</span>
+        <span>{{item.contMob}}</span>
+        <span>{{item.rcdTm}}</span>
       </div>
     </div>
   </div>
@@ -21,7 +21,12 @@ export default {
     return {
 
     }
-  }
+  },
+    methods:{
+        toDetail(val){
+            window.location.href = 'personalreleasedetail.html?pk='+val
+        }
+    }
 }
 </script>
 

@@ -1,36 +1,36 @@
 <template>
 <div id="report">
   <div class="wrap" v-for="(item, index) in reportList" :key="index">
-    <div class="header">
-      <span>序列号：{{item.numberID}}</span>
+    <div class="header" @click="gotoDetail(item.mxRepoPk)">
+      <span>序列号：{{item.no}}</span>
       <div v-if="edit">
         <img :src="edit" alt="">
       </div>
       <div class="time" v-if="!edit">
-        <span>上传时间：</span>{{item.release}}
+        <span>上传时间：</span>{{item.crtTm}}
       </div>
     </div>
-    <div class="content">
+    <div class="content" @click="gotoDetail(item.mxRepoPk)">
       <div>
-        <span>{{item.name}}</span>
+        <span>{{item.nm}}</span>
       </div>
       <div>
-         <span>检测机构：</span>{{item.orgName}}
+         <span>检测机构：</span>{{item.deteOrg}}
       </div>
       <div>
-         <span>质检产品名称：</span>{{item.productName}}
+         <span>质检产品名称：</span>{{item.prodNm}}
       </div>
       <div>
-         <span>质检产品地域：</span>{{item.address}}
+         <span>质检产品地域：</span>{{item.prodProvNm}}{{item.prodCityNm}}{{item.prodProvNm}}
       </div>
     </div>
     <div class="footer" v-if="edit">
       <div class="time">
-        <span>发布时间：</span>{{item.release}}
+        <span>发布时间：</span>{{item.crtTm}}
       </div>
       <div class="operate">
-        <div @click="gotoDetail">查看详情</div>
-        <div @click="delReport(item)">删除</div>
+        <div @click="gotoDetail(item.mxRepoPk)">查看详情</div>
+        <div @click="delReport(item.mxRepoPk,index)">删除</div>
       </div>
     </div>
   </div>
@@ -44,11 +44,25 @@ export default {
     return {};
   },
   methods:{
-    gotoDetail(){
-      window.location.href='../quality/reportdetail.html'
+    gotoDetail(pk){
+      window.location.href='../membercenter/reportdetail.html?pk='+pk
     },
-    delReport(item){
-      this.$emit('updateReport',item)
+    delReport(pk,index){
+        this.until.get('/prod/mxrepo/del?pks='+pk)
+            .then(res=>{
+                if(res.status=='200'){
+                    this.$emit('updateReport',index)
+                    this.$hero.msg.show({
+                        text:res.message,
+                        times:1500
+                    });
+                }else {
+                    this.$hero.msg.show({
+                        text:res.message,
+                        times:1500
+                    });
+                }
+            })
     }
   }
 };

@@ -1,16 +1,35 @@
 <style lang="less">
 @bdColor: #d9d9d9;
-body {
+body,html {
+    height: 100%;
   background-color: #f5f5f5;
+}
+footer{
+    background-color: #2a8af2;
+    color: #ffffff;
+    line-height: .8rem;
+    text-align: center;
+}
+#container{
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    .container{
+        flex: 1;
+        overflow: auto;
+    }
 }
 .noResult {
   text-align: center;
   color: #999;
-  margin-top: 0.4rem;
+  margin: 0.4rem 0;
 }
 .search {
   background-color: #fff;
   border-bottom: 1px solid @bdColor;
+
   > div {
     padding: 0.3rem;
     display: -webkit-flex;
@@ -84,6 +103,7 @@ body {
 }
 
 .content {
+
   background-color: #fff;
   border-top: 1px solid @bdColor;
   border-bottom: 1px solid @bdColor;
@@ -133,60 +153,67 @@ body {
 <template>
     <div id="container">
       <header-title :title="title"></header-title>
-        <div class="search">
-            <div>
-                <span>质检产品名称：</span>
+        <div class="container">
+            <div class="search">
                 <div>
-                  <input type="text" placeholder="产品名称" v-model="searchGdno">
-                </div>
-            </div>
-            <div>
-                <span>供应商名称：</span>
-                <div>
-                  <input type="text" placeholder="供应商名称" v-model="searchCustName">
-                </div>
-             </div>
-             <div>
-                <span>质检产品地域：</span>
-                <div>
-                  <input type="text" placeholder="省、市" v-model="address">
-                  <svg class="icon" aria-hidden="true" @click="openVantArea">
-                    <use xlink:href="#icon-gengduo"></use>
-                  </svg>
-                  <van-popup v-model="showArea" position="bottom" :overlay="false">
-                    <van-area @cancel="cancelChoose" @confirm="chooseAddress"  :area-list="areaList" :columns-num="2" title="选择质检产品地域" />
-                  </van-popup>
-                </div>
-             </div>
-             <div>
-                <span>序列号：</span>
-                <div>
-                  <input type="text" placeholder="序列号" v-model="searchSn">
-                </div>
-            </div>
-            <div>
-              <div>
-                <button class="s-btn">查询</button>
-              </div>
-            </div>
-        </div>
-        <div class="noResult" :style="{ display:show2 }">无查询结果</div>
-        <div class="content" :style="{ display:show }">
-            <tempApp :obj="obj" v-for="(item,i) in searchBot" :key="i">
-                <div slot="content" class="tempapp-cnt">
+                    <span>质检产品名称：</span>
                     <div>
-                        <p>
-                            <span>序列号：{{item.numberid}}</span>
-                            <span>上传时间：{{item.uploadtime}}</span>
-                        </p>
+                        <input type="text" placeholder="产品名称" v-model="searchGdno">
                     </div>
-                    <p>{{item.title}}</p>
-                    <p>检测机构：{{item.organization}}</p>
-                    <p>质检产品名称：{{item.productname}}</p>
-                    <p>质检产品地域：{{item.address}}</p>
                 </div>
-            </tempApp>
+                <div>
+                    <span>供应商名称：</span>
+                    <div>
+                        <input type="text" placeholder="供应商名称" v-model="searchCustName">
+                    </div>
+                </div>
+                <div>
+                    <span>质检产品地域：</span>
+                    <addr @setAddr="getAddr"></addr>
+
+                </div>
+                <div>
+                    <span>序列号：</span>
+                    <div>
+                        <input type="text" placeholder="序列号" v-model="searchSn">
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <button class="s-btn" @click="search">查询</button>
+                    </div>
+                </div>
+            </div>
+            <div class="noResult" v-if="dataNo">无查询结果</div>
+            <div class="content"  v-if="!dataNo">
+                <van-list
+                        v-model="loading"
+                        :finished="finished"
+                        :immediate-check="false"
+                        @load="onLoad"
+                >
+                    <tempApp :obj="obj" v-for="(item,i) in searchBot" :key="i">
+                        <div slot="content" class="tempapp-cnt" @click="toDetail(item.mxRepoPk)">
+                            <div>
+                                <p>
+                                    <span>序列号：{{item.no}}</span>
+                                    <span>上传时间：{{item.rcdTm}}</span>
+                                </p>
+                            </div>
+                            <p>{{item.nm}}</p>
+                            <p>检测机构：{{item.deteOrg}}</p>
+                            <p>质检产品名称：{{item.prodNm}}</p>
+                            <p>质检产品地域：{{item.prodProvNm}} {{item.prodCityNm}}</p>
+                        </div>
+                    </tempApp>
+                </van-list>
+
+            </div>
+            <div class="noResult" v-if="dataFinish">全部加载完</div>
         </div>
+        <footer @click="upLoad">
+            报告上传
+        </footer>
     </div>
 </template>
 
@@ -194,71 +221,112 @@ body {
 import tempApp from "components/tempApp";
 import areaList from "vant/packages/area/demo/area.js";
 import headerTitle from "components/headerTitle";
-
+import addr from "components/addr";
 export default {
   data() {
     return {
-      title: "产品质控",
-      areaList,
-      showArea: false,
-      obj: {
-        src: "./orderQueryDetail.html?"
-      },
+        loading:false,
+        finished:false,
+        dataFinish:false,
+        dataNo:false,
+        title: "产品质控",
+
+        areaList,
+        showArea: false,
+        obj: {
+          src: "./orderQueryDetail.html?"
+        },
       startTime: "",
       endTime: "",
-      show: "block",
-      show2: "none",
-      searchBot: [
-        {
-          title: "福州福州服饰有限公司防晒衣检测报告",
-          organization: "宁波贸信检测",
-          productname: "防晒衣",
-          address: "浙江 - 宁波",
-          numberid: "1234567890098765",
-          uploadtime: "2018-06-06"
-        },
-        {
-          title: "福州福州服饰有限公司防晒衣检测报告",
-          organization: "宁波贸信检测",
-          productname: "防晒衣",
-          address: "浙江 - 宁波",
-          numberid: "1234567890098765",
-          uploadtime: "2018-06-06"
-        }
-      ],
+        cityCode1:'',
+        cityCode2:'',
+      searchBot: [],
       searchGdno: "",
       searchSn: "",
       searchCustName: "",
-      seaType: "1",
-      address: "",
-      strPageCount: 1,
-      strPageRows: 10
+        pageNo: 1,
+        pageSize: 10,
+        total:''
     };
   },
-  mounted() {},
+  mounted() {
+      // this.getCity()
+  },
   methods: {
-    openVantArea() {
-      this.showArea = true;
-    },
-    chooseAddress(arr) {
-      this.showArea = false;
-      arr.forEach(item => {
-        Object.keys(item).forEach(element => {
-          if (element === "name") {
-            this.address += item[element];
+      getAddr:function(val){
+          let cd = JSON.parse(val)
+          this.cityCode1 = cd.cd1
+          this.cityCode2 = cd.cd2
+      },
+      //详情
+      toDetail(val){
+        window.location.href = '../membercenter/reportdetail.html?pk='+val
+      },
+      //上传
+      upLoad(){
+          window.location = '../quality/reportupload.html'
+      },
+      getList(){
+          this.loading = true;
+          let query = new this.Query();
+          query.buildPageClause(this.pageNo,this.pageSize);
+          let param = {
+              city:this.cityCode2,
+              type:1,
+              nm:this.searchGdno,
+              no:this.searchSn,
+              prov:this.cityCode1,
+              deteOrg:this.searchCustName,
+              query:query.getParam()
           }
-        });
-        this.address += "-";
-      });
-      this.address = this.address.slice(0, -1);
-    },
-    cancelChoose() {
-      this.showArea = false;
-    }
+          this.until.get('/prodx/mxrepo/page',param)
+              .then(res=>{
+                  this.loading = false;
+                  if(res.status == 200){
+                      this.total = res.page.total
+                      if(this.total==0){
+                          this.dataNo = true
+                      }else {
+                          this.dataNo = false
+                          this.searchBot.push(...res.data.items)
+
+                      }
+
+                  }else {
+                      this.$hero.msg.show({
+                          text:res.message,
+                          times:1500
+                      });
+                  }
+              },err=>{});
+      },
+      //查询
+      search(){
+          this.searchBot = []
+          this.pageNo = 1
+          this.dataFinish = false
+          this.dataNo = false
+          this.getList()
+      },
+      //加载更多
+      onLoad(){
+        // 异步更新数据
+          setTimeout(() => {
+              if(this.total>this.searchBot.length){
+                  this.pageNo++
+                  this.getList()
+              }else {
+                  this.dataFinish = true
+                  this.loading = false;
+                  this.finished = true;
+              }
+          }, 500);
+      },
   },
   components: {
     tempApp,
-    headerTitle
+    headerTitle,
+      addr
   }
 };
 </script>

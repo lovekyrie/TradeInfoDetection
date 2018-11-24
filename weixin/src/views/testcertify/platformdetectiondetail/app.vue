@@ -1,22 +1,29 @@
 <template>
   <div id="app">
-    <div class="header">
-      <img :src="productInfo" alt="">
-    </div>
-    <div class="detection-title">
-      <div>{{title}}</div>
-      <span>联系方式：{{linked}}</span>
-    </div>
-    <div class="product-detail">
-      <h3>商品详情</h3>
-      <div>
-        <span>产品参数：{{proParam}}</span>
+    <div class="main">
+      <div class="header">
+        <van-swipe :autoplay="3000">
+          <van-swipe-item v-for="(image, index) in images" :key="index">
+            <img :src="image" />
+          </van-swipe-item>
+        </van-swipe>
       </div>
-      <span>联系人：{{linkedMan}}</span>
-      <span>联系电话：{{linkedPhone}}</span>
+      <div class="detection-title">
+        <div>{{info.nm}}</div>
+        <span>联系方式：{{info.mob}}</span>
+      </div>
+      <div class="product-detail">
+        <h3>商品详情</h3>
+        <div>
+          <span>产品参数：{{proParam}}</span>
+        </div>
+        <span>联系人：{{info.cont}}</span>
+        <span>联系电话：{{info.mob}}</span>
+      </div>
     </div>
-    <div class="footer">
-      <foot-button :btnObj="btnObj"></foot-button>
+
+    <div class="footer" @click="submit">
+      <foot-button :btnObj="btnObj" ></foot-button>
     </div>
   </div>
 </template>
@@ -28,6 +35,9 @@ export default {
   data(){
     return {
       productInfo,
+        images:[],
+        info:{},
+        pk:'',
       title:'CFDA食堂餐厅饭店酒店自制餐饮食品检测',
       linked:'0574-88889999',
       proParam:'CFDA食堂餐厅饭店酒店自制餐饮食品检测',
@@ -39,8 +49,21 @@ export default {
       }
     }
   },
+    mounted(){
+        this.pk = this.until.getQueryString('pk')
+        this.getInfo()
+    },
   methods:{
-
+      getInfo(){
+          this.until.get('/prodx/mxpubcheck/info/'+this.pk)
+              .then(res=>{
+                  this.info = res.data
+                  this.images = this.info.imgUrl.split(',')
+              })
+      },
+      submit(){
+          window.location.href = 'reservationservice.html?pk='+this.pk+'&img='+this.images[0]+'&nm='+this.info.nm
+      }
   },
   components:{
     footButton,
@@ -54,6 +77,14 @@ export default {
     background-color: #F7F7F7;
     #app{
       height: 100%;
+      display: flex;
+      display: -webkit-flex;
+      overflow: hidden;
+      flex-direction: column;
+      .main{
+        flex: 1;
+        overflow: auto;
+      }
       .header{
         img{
           vertical-align: bottom;

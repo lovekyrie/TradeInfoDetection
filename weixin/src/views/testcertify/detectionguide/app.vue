@@ -6,23 +6,25 @@
     <div class="content">
       <div class="left">
         <div class="left-side">
-          <div @click="chooseType(item)" :class="{active:state==item}" v-for="(item, index) in bigClassifyList" :key="index">
-            <span>{{item}}</span>
+          <div @click="chooseType('')" :class="{active:code1==''}">
+            <span>全部</span>
+          </div>
+          <div @click="chooseType(item.cd)" :class="{active:code1==item.cd}" v-for="(item, index) in bigClassifyList" :key="index">
+            <span>{{item.nm}}</span>
           </div>
         </div>
       </div>
       <div class="right">
         <div class="right-side">
-          <div><span>生态纺织品测试</span></div>
-          <div><span>纺织品和服装测试</span></div>
+          <div v-for="item in smallClassifyList" @click="chooseType2(item.cd)" :class="{active:code2==item.cd}"><span>{{item.nm}}</span></div>
         </div>
       </div>
     </div>
     <div class="footer">
-      <div class="reset">
+      <div class="reset" @click="cancel">
         重置
       </div>
-      <div class="submit">
+      <div class="submit" @click="submit">
         确定
       </div>
     </div>
@@ -33,7 +35,8 @@
 export default {
   data(){
     return{
-      state:'',
+        code1:'',  //大类选中的编码
+        code2:'',  //小类选中的编码
       bigClassifyList:[
         '全部',
         '玩具 / 婴童用品检测',
@@ -46,17 +49,43 @@ export default {
         '检测认证服务',
         '验货服务',
         '咨询与培训',
-      ]
+      ],
+        smallClassifyList:[]
     }
   },
   mounted(){
-
+      this.getClass1()
   },
   methods:{
-    chooseType(item){
-      this.state=item;
-    }
-  }
+    getClass1(){
+      this.until.get('/general/cat/listByPrntCd?prntCd=70000')
+          .then(res=>{
+              this.bigClassifyList = res.data.items
+          })
+    },
+      getClass2(){
+          this.until.get('/general/cat/listByPrntCd?prntCd='+this.code1)
+              .then(res=>{
+                  this.smallClassifyList = res.data.items
+              })
+      },
+      chooseType(val){
+          this.code1 = val
+          this.getClass2()
+          this.code2 = ''
+      },
+      chooseType2(val){
+        this.code2 = val
+      },
+      submit(){
+          let code = this.code2=='' ? this.code1:this.code2
+
+          this.$emit('submit',code)
+      },
+      cancel(){
+          this.$emit('cancel')
+      }
+  },
 }
 </script>
 
@@ -105,8 +134,10 @@ export default {
             >div{
               border-bottom: none;
               &:nth-of-type(2){
-                color: #2F8CF2;
               }
+            }
+            div.active{
+              color: #2F8CF2;
             }
           }
         }

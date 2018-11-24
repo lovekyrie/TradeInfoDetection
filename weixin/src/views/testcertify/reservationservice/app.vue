@@ -1,49 +1,105 @@
 <template>
   <div id="app">
-    <div class="header">
-      <div><span></span><span>检测服务订单信息</span></div>
-      <div class="header-title">
-        <span>服务照片</span>
-        <span>服务名称</span>
-      </div>
-      <div>
-        <div><img :src="prosmall" alt=""></div>
+    <!--地址列表-->
+    <div class="addrList" v-if="addrShow">
+      <div class="addr" v-for="item in addrList">
         <div>
-          <span>{{detectionName}}</span>
+          <p :class="{select:item.sysAddrPk==addrPk}" @click="addrPk=item.sysAddrPk"></p>
+        </div>
+        <div>
+          <p>
+            <span>收货人：</span>
+            {{item.receNm}}
+          </p>
+          <p>
+            <span>手机号码：</span>
+            {{item.receMob}}
+          </p>
+          <p>
+            <span>详细地址：</span>
+            {{item.addrDtl}}
+          </p>
         </div>
       </div>
+      <div class="button">
+        <button @click="save">确定</button>
+        <button @click="cancel">取消</button>
+      </div>
+
     </div>
-    <div class="content">
-      <div><span></span><span>联系方式</span></div>
-      <div class="concept">
-        <div>
-          <span>供应商名称：</span>
-          <div><input type="text"></div>
+
+    <div class="main">
+      <div class="header">
+        <div><span></span><span>检测服务订单信息</span></div>
+        <div class="header-title">
+          <span>服务照片</span>
+          <span>服务名称</span>
         </div>
         <div>
-          <span>质检产品名称：</span>
-          <div><input type="text"></div>
-        </div>
-        <div>
-          <span>联系人：</span>
-          <div><input type="text"></div>
-        </div>
-        <div>
-          <span>联系电话：</span>
-          <div><input type="text"></div>
-        </div>
-        <div>
-          <span>备注：</span>
+          <div><img :src="img" alt=""></div>
           <div>
-            <textarea></textarea>
+            <span>{{info.mxPubCheckNm}}</span>
           </div>
         </div>
       </div>
+      <div class="content">
+        <div><span></span><span>联系方式</span></div>
+        <div class="concept">
+          <div>
+            <span>供应商名称：</span>
+            <div><input type="text" v-model="info.supply"></div>
+          </div>
+          <div>
+            <span>质检产品名称：</span>
+            <div><input type="text" v-model="info.prodNm"></div>
+          </div>
+          <div>
+            <span>数量：</span>
+            <div><input type="text" v-model="info.qty"></div>
+          </div>
+          <div>
+            <span>联系人：</span>
+            <div><input type="text" v-model="info.contNm"></div>
+          </div>
+          <div>
+            <span>联系电话：</span>
+            <div><input type="text" v-model="info.contMob"></div>
+          </div>
+          <div>
+            <span>备注：</span>
+            <div>
+              <textarea v-model="info.rmks"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="content">
+        <div><span></span><span>我的地址</span></div>
+        <div class="addr">
+          <p>
+            <span>收货人：</span>
+            {{addr.receNm}}
+          </p>
+          <p>
+            <span>手机号码：</span>
+            {{addr.receMob}}
+          </p>
+          <p>
+            <span>详细地址：</span>
+            {{addr.addrDtl}}
+          </p>
+          <svg class="icon" aria-hidden="true" @click="addrShows()">
+            <use xlink:href="#icon-gengduo"></use>
+          </svg>
+        </div>
+      </div>
     </div>
+
     <div class="footer" @click="submitOrder">
       <foot-button :btnObj="btnObj"></foot-button>
     </div>
     <upload-success v-show="showUpload"></upload-success>
+
   </div>
 </template>
 
@@ -57,6 +113,29 @@ export default {
   data() {
     return {
       prosmall,
+        img:'',
+        addrPk:'',
+        addr:{}, //选中的地址
+        addrList:[],  //地址列表
+        addrShow:false,
+        info:{
+            mxOrdDetePk:'',
+            sysUserPk:'',//用户主键
+            mxPubCheckNm:'', //服务名称
+            mxPubCheckPk:'', //服务主键
+            sysAddrPk:'', //收货地址主键
+            price:'', //价格
+            qty:'', //数量
+            catCd:'',//支付分类编码
+            statCd:'80020.001',//订单状态编码
+            rcdTm:'',//下单时间
+            supply:'',
+            prodNm:'',
+            contNm:'',
+            contMob:'',
+            rmks:''
+        },
+
       detectionName: "CFDA食堂餐厅饭店酒店自制餐饮食品检测",
       btnObj: {
         btnName: "提交订单",
@@ -66,16 +145,57 @@ export default {
     };
   },
   mounted(){
-    
+      this.info.mxPubCheckPk = this.until.getQueryString('pk')
+      this.info.mxPubCheckNm = this.until.getQueryString('nm')
+      this.img = this.until.getQueryString('img')
+      this.getAddr()
   },
   methods: {
+      getAddr(){
+        this.until.get('/sys/addr/listSelf')
+            .then(res=>{
+                this.addrList = res.data.items
+                this.addr = this.addrList[0]
+                this.addrPk = this.addr.sysAddrPk
+            })
+      },
+      addrShows(){
+          this.addrShow = true
+      },
+      cancel(){
+        this.addrPk = this.addr.sysAddrPk
+        this.addrShow = false
+      },
+      save(){
+          this.addrList.forEach(item=>{
+              if(item.sysAddrPk==this.addrPk){
+                  this.addr = item
+                  return
+              }
+          })
+          this.addrShow = false
+      },
     submitOrder(){
-      this.showUpload=true
-      setTimeout(()=>{
-        this.showUpload=false
-      },2000)
+          this.info.sysAddrPk = this.addrPk
+        this.until.postData('/prod/mxordete/edit',JSON.stringify(this.info))
+            .then(res=>{
+                if(res.status=='200'){
+                    this.showUpload=true
+                    setTimeout(()=>{
+                        this.showUpload=false
+                        window.location.href = '../membercenter/myorder.html'
+                    },2000)
+                }else {
+                    this.$hero.msg.show({
+                        text:res.message,
+                        times:1500
+                    });
+                }
+            })
+
     }
   },
+
   components: {
     footButton,
     uploadSuccess,
@@ -90,6 +210,59 @@ body {
   background-color: #f7f7f7;
   #app {
     height: 100%;
+    display: flex;
+    display: flex;
+    flex-direction: column;
+    .addrList{
+      position: fixed;
+      width:100%;
+      height: 100%;
+      overflow: auto;
+      background: #ffffff;
+      z-index: 99;
+      .button{
+        text-align: center;
+        padding:.4rem 0;
+        button{
+          width: 2rem;
+          padding: .2rem 0;
+          background: #f6f6f6;
+          border-radius: 4px;
+          margin: 0 .2rem;
+          &:first-child{
+            background: #004899;
+            color: #fff;
+          }
+        }
+      }
+      .addr{
+        border-bottom: 1px solid #d2d2d2;
+        display: flex;
+        display: -webkit-flex;
+        padding: .2rem 0;
+        div{
+          &:first-child{
+            padding-right: .2rem;
+            padding-left: .2rem;
+            padding-top: 5px;
+            p{
+              width: .2rem;
+              height: .2rem;
+              border-radius: 100%;
+              border: 1px solid #d2d2d2;
+            }
+            p.select{
+              border: 3px solid #004899;
+            }
+          }
+          &:last-child{
+            flex: 1;
+
+          }
+        }
+
+      }
+    }
     .header {
       background-color: #fff;
       margin-bottom: 0.3rem;
@@ -133,8 +306,24 @@ body {
         }
       }
     }
+    .main{
+      flex: 1;
+      overflow: auto;
+    }
     .content {
       background-color: #fff;
+      margin-bottom: .3rem;
+      .addr{
+        position: relative;
+        p{
+          width: 100%;
+        }
+        svg{
+          position: absolute;
+          right: .5rem;
+          top:46%
+        }
+      }
       > div {
         padding: .3rem;
         display: -webkit-flex;

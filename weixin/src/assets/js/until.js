@@ -1,6 +1,30 @@
-const postImgUrl = 'http://106.14.184.214:8999/mortgageImage/_upFile';
-const clubId = 90;
+// import Toast from "vue-ydui/dist/lib.rem/dialog/index";
+
+import {Alert, Confirm, Loading, Notify, Toast} from "vue-ydui/dist/lib.rem/dialog/index";
+
+const postImgUrl = 'http://118.178.121.34:8080/uploads/';
+const hostUrl = 'http://192.168.2.195';
+
+
+var $dialog={
+    confirm: Confirm,
+    alert: Alert,
+    toast: Toast,
+    notify: Notify,
+    loading: Loading,
+};
+
 class until{
+  // 截取小数
+
+  getCookie(name)
+    {
+        var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+        if(arr=document.cookie.match(reg))
+            return unescape(arr[2]);
+        else
+            return null;
+    }
   getPk(){
     let obj = this.loGet('JS_token');
     return JSON.parse(obj).accInfo.teachAccPk;;
@@ -42,6 +66,29 @@ class until{
     });
     return promise;
   }
+    upPDF(e){
+        let $q = new Promise((resolve,reject)=>{
+            let blob = e.target.files[0];
+            // if (!/^pdf/.test(blob.type)){
+            //     return reject('请选择PDF文件');
+            // }
+            let param = new FormData();
+            param.append('file',blob);
+            this.postImg('/general/file/upload',param)
+                .then(res=>{
+                    e.target.value = '';
+                    if(res.status == 500){
+                        reject(res.message)
+                    }else {
+                        resolve(res.data);
+                    }
+                },err=>{
+                    e.target.value = '';
+                    reject('上传失败');
+                })
+        });
+        return $q;
+    }
   upImg(e){
     let $q = new Promise((resolve,reject)=>{
       let blob = e.target.files[0];
@@ -83,6 +130,7 @@ class until{
       })
       this.postImg('/zhongbiao/app/upload/ups',param)
         .then(res=>{
+          console.log(res)
           e.target.value = '';
           if(res.resultCode == 500){
             reject(res.resultMessage)
@@ -105,7 +153,23 @@ class until{
         async:true,
         cache:false,
         dataType:'json',
+          // xhrFields: {withCredentials: true},
+          // crossDomain: true,
+          // headers:{
+          //     'Accept': 'application/json',
+          //         "token":"eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ4bTAwMSIsImlhdCI6MTUzNzk0MzY2NCwic3ViIjoiMzNlYmJhNzBmMzQ3NDQ0YWIzNTQzNDhjOGNjMDhiZjIiLCJleHAiOjE1MzgwMzAwNjR9.hNneE5LH2tUZKUTPMgL-PsiYMJ1zB2iAwRWmwYlEdQ8"
+          //     },
         success(data){
+          if(data.code=='300'){
+              $dialog.toast({
+              mes: data.msg,
+              timeout: 1500,
+              icon: 'error',
+              callback: () => {
+
+              }
+          });
+          }
           resolve(data);
         },
         error(data){
@@ -114,27 +178,7 @@ class until{
       })
     });
     return promise;
-  }postCard
-  postCard(url,data){
-        let promise = new Promise((resolve,reject)=> {
-            $.ajax({
-                type:'POST',
-                url,
-                data,
-                async:true,
-                cache:false,
-                dataType:'json',
-                headers:{"Content-Type":"application/json"},
-                success(data){
-                    resolve(data);
-                },
-                error(data){
-                    reject(data);
-                }
-            })
-        });
-        return promise;
-    }
+  }
   postData(url,data){
     let promise = new Promise((resolve,reject)=> {
       $.ajax({
@@ -145,6 +189,7 @@ class until{
         cache:false,
         contentType:'application/json;charset=UTF-8',
         dataType:'json',
+
         success(data){
           resolve(data);
         },
@@ -155,25 +200,24 @@ class until{
     });
     return promise;
   }
-  get(url,data,processData = true){
-    let promise = new Promise((resolve,reject)=>{
-      $.ajax({
-        type:'GET',
-        url,
-        data,
-        cache:false,
-        dataType:'json',
-        processData,
-        success(data){
-          resolve(data);
-        },
-        error(data){
-          reject(data);
-        }
-      })
-    });
-    return promise;
-  }
+    get(url,data,cache = false){
+        let promise = new Promise((resolve,reject)=>{
+            $.ajax({
+                type:'GET',
+                url,
+                data,
+                cache,
+                dataType:'json',
+                success(data){
+                    resolve(data);
+                },
+                error(data){
+                    reject(data);
+                }
+            })
+        });
+        return promise;
+    }
   //fetch请求
   async fetch(url,data){
     if(window.fetch){
@@ -298,8 +342,10 @@ class until{
   }
   //格式化日期,返回 年 月 日 星期
   formatDate(str=""){
-    str = str==""?new Date():new Date(str.replace(/-/g, "/"));
-    let week = ["星期天","星期一","星期二","星期三","星期四","星期五","星期六"];
+    // str = str==""?new Date():new Date(str.replace(/-/g, "/"));
+      str = str==""?new Date():new Date(str);
+
+      let week = ["星期天","星期一","星期二","星期三","星期四","星期五","星期六"];
     let year =str.getFullYear();
     let month = str.getMonth()+1<10?"0"+(str.getMonth()+1):str.getMonth()+1;
     let day = str.getDate()<10?"0"+str.getDate():str.getDate();
@@ -415,6 +461,25 @@ class until{
         el.setAttribute('disabled',true);
       }
     },1000);
+  }
+  /*版本检测*/
+  browser={
+    versions:function(){
+      var u = navigator.userAgent, app = navigator.appVersion;
+      return {//移动终端浏览器版本信息
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 , //是否为iPhone或者QQHD浏览器
+        iPad: u.indexOf('iPad') > -1, //是否iPad
+        webApp: u.indexOf('Safari') == -1 //是否web应该程序，没有头部与底部
+      };
+    }(),
+    language:(navigator.browserLanguage || navigator.language).toLowerCase()
   }
 }
 //touch判断方向
@@ -532,24 +597,23 @@ class app{
   constructor(){
     this.flag = false;
   }
-  NativeInterface(name,data){
-    let $q = new Promise(async(resolve,reject)=>{
-      if(!this.flag){
-        let result = await this.isReady();
-        this.flag = true;
-      }
-      window.WebViewJavascriptBridge.callHandler(
-        name,data,(res)=>{
-          if(res){
-            return resolve(JSON.parse(res));
-          }else {
-            return reject('err');
-          }
-        }
-      )
-    });
-    return $q;
-  }
+    InterfaceName(name,data){
+        let $q = new Promise((resolve,reject)=>{
+            window.WebViewJavascriptBridge.callHandler(
+                name,data,(res)=>{
+                    if(res){
+                        resolve(res);
+                        return;
+                    }else{
+                        reject('err');
+                        return;
+                    }
+                    // res = res?res:JSON.parse(res);
+                }
+            )
+        });
+        return $q;
+    }
   isReady(){
     let $q = new Promise((resolve,reject)=>{
       if(window.WebViewJavascriptBridge){
@@ -579,4 +643,4 @@ class app{
     return isWx;
   }
 }
-export { until,reg,app,postImgUrl,judge,clubId };
+export { until,reg,hostUrl,app,postImgUrl,judge};

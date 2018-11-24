@@ -13,7 +13,7 @@ import ElementUI from 'element-ui';
 import "babel-polyfill";// 解决 IE11 Promise对象未定义
 // import axios from 'axios';
 import './vueFilter';  	//全局过滤器
-import {until,reg} from 'assets/js/until'
+import {until,reg,hostUrl} from 'assets/js/until'
 import {msg,confirm,loading} from 'hero'
 import 'assets/js/wconfig.js';
 import './iconfont'  //字体库
@@ -38,6 +38,7 @@ export default{
     // Vue.prototype.axios = axios;
     Vue.prototype.until = new until();
     Vue.prototype.reg = new reg();
+      Vue.prototype.hostUrl = hostUrl;
     Vue.use(msg);
     Vue.use(confirm);
     Vue.use(loading);

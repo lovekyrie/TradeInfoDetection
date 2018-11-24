@@ -1,18 +1,18 @@
 <template>
   <div class="publish">
-    <div class="publish-item" v-for="(item, index) in releaseList" :key="index">
+    <div class="publish-item" v-for="(item, index) in releaseList" :key="index" @click="toDetail(item.mxPubReqPk)">
       <div class="row-first">
         <div></div>
-        <div>{{item.name}}</div>
-        <div>{{item.type}}</div>
+        <div>{{item.nm}}</div>
+        <div>{{item.catNm}}</div>
         <div v-show="!item.state">
           <img :src="overdue" alt="">
         </div>
       </div>
       <div class="row-second">
-        <div>{{item.linked}}</div>
-        <div>{{item.phone}}</div>
-        <div>{{item.date}}</div>
+        <div>{{item.contNm}}</div>
+        <div>{{item.contMob}}</div>
+        <div>{{item.rcdTm}}</div>
       </div>
     </div>
   </div>  
@@ -28,12 +28,18 @@ export default {
       overdue,
 
     }
-  }
+  },
+    methods:{
+        toDetail(val){
+            window.location.href = 'detectiondetail.html?pk='+val
+        }
+    }
 }
 </script>
 
 <style lang="less">
   .publish{
+
     background-color: #fff;
     .publish-item{
       padding: .3rem;

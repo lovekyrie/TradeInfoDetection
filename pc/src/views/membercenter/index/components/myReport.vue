@@ -41,55 +41,22 @@
             :data="tableData"
             style="width: 100%"
             align="left"
-            padding="5px">
-            <el-table-column
-              prop="reportTitle"
-              label="报告标题"
-            >
+            padding="5px"
+            @row-click="toReportDetail()">
+            <el-table-column prop="reportTitle" label="报告标题" >
               <template slot-scope="scope">
-               <a :href="tableData[scope.$index].reportAddress"
-                  target="_self"
-               >{{tableData[scope.$index].reportTitle}}
+               <a :href="tableData[scope.$index].reportAddress" target="_self">{{tableData[scope.$index].reportTitle}}
                </a>
               </template>
             </el-table-column>
 
-            <el-table-column
-              prop="id"
-              label="序列号"
-              >
-            </el-table-column>
-            <el-table-column
-              prop="testingAgency"
-              label="检测机构"
-              width="160px"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="testingName"
-              label="质检产品名称"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="property"
-              label="性质"
-              width="70"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="upTime"
-              label="上传时间"
-              align="center"
-            >
-            </el-table-column>
+            <el-table-column prop="id" label="序列号"> </el-table-column>
+            <el-table-column prop="testingAgency" label="检测机构" width="160px"> </el-table-column>
+            <el-table-column prop="testingName" label="质检产品名称" align="center"> </el-table-column>
+            <el-table-column prop="property" label="性质" width="70" align="center" ></el-table-column>
+            <el-table-column prop="upTime" label="上传时间" align="center"></el-table-column>
+            <el-table-column align="center" prop="Toperation" label="操作" >
 
-            <el-table-column
-              align="center"
-              prop="Toperation"
-              label="操作"
-            >
               <template slot-scope="scope">
                 <el-button
                   size="mini"
@@ -164,6 +131,13 @@ export default {
       handleDelete(index, row) {
         console.log(index, row);
       },
+      //跳转详情页面
+      toReportDetail(row, event, column){
+        // console.log(row, event, column)
+        this.$router.push({
+          path:'/reportdetail'
+        })
+      }
     }
 };
 </script>

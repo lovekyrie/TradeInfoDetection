@@ -3,15 +3,15 @@
     <div class="header">
       <div class="hr-info">
         <div class="hr-theme">
-          <div>{{title}}</div>
-          <div>{{company}}</div>
+          <div>{{info.nm}}</div>
+          <div>{{info.entpNm}}</div>
         </div>
         <div class="hr-linked">
-          <div>{{salary}}</div>
-          <div>联系电话：{{phone}}</div>
+          <div>{{info.frSala}}-{{info.toSala}}元/月</div>
+          <div>联系电话：{{info.mob}}</div>
         </div>
         <div class="email">
-          邮箱地址：{{email}}
+          邮箱地址：{{info.email}}
         </div>
       </div>
     </div>
@@ -21,11 +21,7 @@
           <span></span>
           <span>职位描述</span>
         </div>
-        <div class="require-item">
-          <div>1、化学专业大专以上学历；</div>
-          <div>2、操作过ICP，GC-MS等分析仪器；</div>
-          <div>3、英语CET4及以上；</div>
-          <div>4、能熟练的操作办公软件。</div>
+        <div class="require-item" v-html="info.intro">
         </div>
       </div>
     </div>
@@ -36,13 +32,27 @@
 export default {
   data() {
     return {
+        info:{},
       title: "实验室经理助理1名",
       company: "浙江宁波华信质检",
       salary: "4000-5000元／月",
       phone: "0574-88889999",
       email:"545577543453@qq.com"
     };
-  }
+  },
+    mounted(){
+      this.userPk = this.until.getQueryString('pk')
+      this.getInfo()
+    },
+    methods:{
+      getInfo(){
+          this.until.get('/prod/mxpubrecr/info/'+this.userPk)
+              .then(res=>{
+                  this.info = res.data
+                  this.info.intro=this.info.intro.replace(/\n/gm,"<br/>")
+              })
+      }
+    }
 };
 </script>
 

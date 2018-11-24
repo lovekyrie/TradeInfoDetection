@@ -1,7 +1,15 @@
 <template>
   <div id="app">  
     <div class="content">
-      <detection-order :myOrderList="myOrderList"></detection-order>
+      <van-list
+              v-model="loading"
+              :finished="finished"
+              :immediate-check="false"
+              @load="onLoad"
+      >
+        <detection-order :myOrderList="list"></detection-order>
+
+      </van-list>
     </div>
   </div>
 </template>
@@ -12,7 +20,14 @@ import twoCode from './images/twocode.png'
 export default {
   data(){
     return {
-      
+        loading:false,
+        finished:false,
+        dataNo:false,
+        dataFinish:false,
+        pageNo:1,
+        pageSize:10,
+        total:0,
+        list: [],
       myOrderList:[
         {
           orderNo:'1234909',
@@ -44,8 +59,56 @@ export default {
       ]
     }
   },
+    mounted(){
+      this.getList()
+    },
   methods:{
+      getList(){
+          this.loading = true;
+          let query = new this.Query();
+          query.buildPageClause(this.pageNo,this.pageSize);
+          let param = {
+              query:query.getParam()
+          }
+          let url = '/prod/mxordete/pageSelf'
+          this.until.get(url,param)
+              .then(res=>{
+                  this.loading = false;
+                  if(res.status == 200){
+                      this.total = res.page.total
+                      if(this.total==0){
+                          this.dataNo = true
+                      }else {
+                          this.dataNo = false
 
+                          this.list.push(...res.data.items)
+
+
+                      }
+
+                  }else {
+                      this.$hero.msg.show({
+                          text:res.message,
+                          times:1500
+                      });
+                  }
+              },err=>{});
+      },
+      //加载更多
+      onLoad(){
+          // 异步更新数据
+          setTimeout(() => {
+              let length = this.list.length
+              if(this.total>length){
+                  this.pageNo++
+                  this.getList()
+              }else {
+                  this.dataFinish = true
+                  this.loading = false;
+                  this.finished = true;
+              }
+          }, 500);
+      },
   },
   components:{
     detectionOrder,

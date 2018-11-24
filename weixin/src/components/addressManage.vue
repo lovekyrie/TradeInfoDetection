@@ -3,19 +3,19 @@
     <div class="address-wrap" v-for="(item, index) in addressList" :key="index">
       <div class="address-info">
         <div>
-          <span>收货人：{{item.receiver}}</span>
-          <span>手机号：{{item.phoneNumber}}</span>
+          <span>收货人：{{item.receNm}}</span>
+          <span>手机号：{{item.receMob}}</span>
         </div>
         <div>
           <span>
-            收货地址：{{item.address}}
+            收货地址：{{item.addrDtl}}
           </span>
         </div>
       </div>
       <div class="address-operate">
         <div>
-          <div>编辑</div>
-          <div>删除</div>
+          <div @click="edit(item)">编辑</div>
+          <div @click="deleteAdd(item.sysAddrPk,index)">删除</div>
         </div>
       </div>
     </div>
@@ -27,7 +27,29 @@ export default {
   props: ["addressList"],
   data() {
     return {};
-  }
+  },
+    methods:{
+        edit(item){
+            window.location.href = '../address/addaddress.html?info='+JSON.stringify(item)
+        },
+        deleteAdd(pk,index){
+            this.until.get('/sys/addr/del?pks='+pk)
+                .then(res=>{
+                    if(res.status=='200'){
+                        this.$emit('delete',index)
+                        this.$hero.msg.show({
+                            text:res.message,
+                            times:1500
+                        });
+                    }else {
+                        this.$hero.msg.show({
+                            text:res.message,
+                            times:1500
+                        });
+                    }
+                })
+        }
+    }
 };
 </script>
 

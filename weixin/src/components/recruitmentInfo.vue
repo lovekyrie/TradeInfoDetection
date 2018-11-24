@@ -2,8 +2,8 @@
   <div class="recruitment">
     <div class="recruitment-wrap" v-for="(item, index) in recruitmentList" :key="index">
       <div class="job-info">
-        <div><span>职位名称：{{item.jobName}}</span></div>
-        <div><span>薪资：{{item.salary}}</span></div>
+        <div><span>职位名称：{{item.nm}}</span></div>
+        <div><span>薪资：{{item.frSala}} - {{item.toSala}}</span></div>
         <div><span>审核状态：{{item.state}}</span></div>
       </div>
       <div class="release-time">
@@ -11,8 +11,8 @@
           <span>发布时间：{{item.releaseTime}}</span>
         </div>
         <div>
-          <button>查看详情</button>
-          <button>删除</button>
+          <button @click="detail(item.mxPubRecrPk)">查看详情</button>
+          <button @click="deleteJob(item.mxPubRecrPk,index)">删除</button>
         </div>
       </div>
     </div>
@@ -26,7 +26,29 @@ export default {
     return {
       
     }
-  }
+  },
+    methods:{
+      detail(pk){
+          window.location.href='../hr/hrdetailinfo.html?pk='+pk
+      },
+        deleteJob(pk,index){
+            this.until.get('/prod/mxpubrecr/del?pks='+pk)
+                .then(res=>{
+                    if(res.status=='200'){
+                        this.recruitmentList.splice(index,1)
+                        this.$hero.msg.show({
+                            text:'删除成功',
+                            times:1500
+                        });
+                    }else {
+                        this.$hero.msg.show({
+                            text:res.message,
+                            times:1500
+                        });
+                    }
+                })
+        }
+    }
 };
 </script>
 

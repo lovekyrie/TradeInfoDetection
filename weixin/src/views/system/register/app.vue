@@ -15,31 +15,31 @@
       </div>
       <div v-if="showEnterprise">
         <span>企业名称：</span>
-        <div><input type="text" placeholder="请输入企业名称"></div>
+        <div><input type="text" v-model="companyName" placeholder="请输入企业名称"></div>
       </div>
       <div>
         <span>账号名称：</span>
-        <div><input type="text" placeholder="请输入账号名称"></div>
+        <div><input type="text" v-model="userName" placeholder="请输入账号名称"></div>
       </div>
       <div>
         <span>手机号码：</span>
-        <div><input type="text" placeholder="请输入手机号码"></div>
+        <div><input type="text" v-model="phone" placeholder="请输入手机号码"></div>
       </div>
       <div class="verify">
         <span>手机验证码：</span>
-        <div><input type="text"><button><span>获取验证码</span></button></div>
+        <div><input type="text" v-model="verificationCode"><button><span>获取验证码</span></button></div>
       </div>
       <div>
         <span>邮箱地址：</span>
-        <div><input type="text" placeholder="请输入常用邮箱"></div>
+        <div><input type="text" v-model="email" placeholder="请输入常用邮箱"></div>
       </div>
       <div>
         <span>登录密码：</span>
-        <div><input type="text"></div>
+        <div><input type="password" v-model="password"></div>
       </div>
       <div>
         <span>确认密码：</span>
-        <div><input type="text"></div>
+        <div><input type="password" v-model="passwordConfirm"></div>
       </div>
       <div>
         <div class="notice">
@@ -75,11 +75,17 @@ export default {
       showEnterprise:true,
       registerType:'企业注册',
       showNotify:false,
+        companyName:'',
+        userName:'',
+        phone:'',
+        verificationCode:'',
+        email:'',
+        password:'',
+        passwordConfirm:''
     }
   },
   mounted(){
 
-    this.getVerificationCode();
   },
   methods:{
     changeRegisterType(value){
@@ -96,6 +102,17 @@ export default {
         this.showNotify=false;
       }, 2000);
     }
+  },
+  computed:{
+   passwordYZ:function(){
+       let judge=this.password==this.passwordConfirmue ? true:false
+       if(!judge){
+           this.$hero.msg.show({
+               text:'',
+           });
+       }
+        return judge
+      }
   },
   components:{
     registerSuccess,

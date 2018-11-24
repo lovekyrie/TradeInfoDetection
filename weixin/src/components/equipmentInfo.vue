@@ -2,15 +2,15 @@
   <div class="recruitment">
     <div class="recruitment-wrap" v-for="(item, index) in equipmentList" :key="index">
       <div class="job-info">
-        <div><span>{{item.title}}</span></div>
-        <div><span>设备性质：{{item.nature}}</span></div>
-        <div><span>价格：{{item.salary}}</span></div>
-        <div><span>审核状态：{{item.state}}</span></div>
+        <div><span>{{item.nm}}</span></div>
+        <div><span>设备性质：{{item.catNm}}</span></div>
+        <div><span>价格：{{item.price}}</span></div>
+        <div><span>审核状态：{{item.statNm}}</span></div>
       </div>
       <div class="release-time">
         <div>
-          <button>查看详情</button>
-          <button>删除</button>
+          <button @click="toDetail(item.mxPubDevPk)">查看详情</button>
+          <button @click="toDelete(item.mxPubDevPk,index)">删除</button>
         </div>
       </div>
     </div>
@@ -18,15 +18,46 @@
 </template>
 
 <script>
-import footButtom from 'components/footButton'
 
 export default {
   props: ["equipmentList"],
   data() {
     return {
-
+        type:'', // 1个人  2企业
     };
   },
+    mounted(){
+       let info=JSON.parse(this.until.loGet('userInfo'))
+        this.type = info.arg1
+    },
+    methods:{
+      toDetail(pk){
+          if(this.type==1){
+              window.location.href = '../seller/personalreleasedetail.html?pk='+pk
+
+          }else {
+              window.location.href = '../seller/enterprisereleasedetail.html?pk='+pk
+
+          }
+      },
+        toDelete(pk,index){
+            this.until.get('/prod/mxpubdev/del?pks='+pk)
+                .then(res=>{
+                    if(res.status=='200'){
+                        this.equipmentList.splice(index,1)
+                        this.$hero.msg.show({
+                            text:'删除成功！',
+                            times:1500
+                        });
+                    }else {
+                        this.$hero.msg.show({
+                            text:res.message,
+                            times:1500
+                        });
+                    }
+                })
+        }
+    },
   components:{
 
   },

@@ -3,19 +3,19 @@
     <div class="content">
       <div>
         <span>原密码：</span>
-        <div><input type="password"></div>
+        <div><input type="password" v-model="oldPWD"></div>
       </div>
       <div>
         <span>新密码：</span>
-        <div><input type="password"></div>
+        <div><input type="password" v-model="newPWD"></div>
       </div>
       <div>
         <span>确认密码：</span>
-        <div><input type="password"></div>
+        <div><input type="password" v-model="newPWD2"></div>
       </div>
       <div>
         <div>
-          <button>确定</button>
+          <button @click="submit">确定</button>
         </div>
       </div>
     </div>
@@ -24,7 +24,71 @@
 
 <script>
 export default {
+    data(){
+        return{
+            oldPWD:'',
+            newPWD:'',
+            newPWD2:''
+        }
+    },
+    methods:{
+        submit(){
+            if(this.oldPWD&&this.newPWD&&this.newPWD2){
+                let param={
+                    oldPwd:this.oldPWD,
+                    newPwd:this.newPWD
+                }
+                this.until.post('/general/auth/updPwd',param)
+                    .then(res=>{
+                        if(res.status=='200'){
+                            this.$hero.msg.show({
+                                text:'密码修改成功，请重新登录！',
+                                times:1500
+                            });
+                            setTimeout(()=>{
+                                // window.location.href = '../system/login.html'
+                            },1500)
+                        }else {
+                            this.$hero.msg.show({
+                                text:res.message,
+                                times:1500
+                            });
+                        }
+                    })
+            }else {
+                if(this.newPWD2&&this.newPWD!=this.newPWD2){
+                    this.$hero.msg.show({
+                        text:'请补全信息！',
+                        times:1500
+                    });
+                }
+            }
+        }
+    },
+    watch:{
+        newPWD:function () {
+            setTimeout(()=>{
+                if(this.newPWD2&&this.newPWD!=this.newPWD2){
+                    this.$hero.msg.show({
+                        text:'两次输入的密码不一致！',
+                        times:1500
+                    });
+                }
+            },1500)
 
+        },
+        newPWD2:function () {
+            setTimeout(()=>{
+                if(this.newPWD&&this.newPWD!=this.newPWD2){
+                    this.$hero.msg.show({
+                        text:'两次输入的密码不一致！',
+                        times:1500
+                    });
+                }
+            },1500)
+
+        }
+    }
 }
 </script>
 

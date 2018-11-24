@@ -6,7 +6,15 @@ body {
 }
 
 #container {
-  flex: 1;
+  display: flex;
+    display: -webkit-flex;
+    height: 100%;
+    overflow: hidden;
+    flex-direction: column;
+    .main{
+        flex: 1;
+        overflow: auto;
+    }
   .swipper {
     width: 100%;
     height: 25%;
@@ -257,8 +265,6 @@ body {
   .footer {
     width: 100%;
     padding: 0.2rem 0;
-    position: fixed;
-    bottom: 0;
     background-color: #fff;
     > ul {
       display: -webkit-flex;
@@ -283,258 +289,279 @@ body {
 
 <template>
     <div id="container">
-        <!-- head -->
-        <div class="header">
-            <div class="swipper">
-              <van-swipe :autoplay="3000">
-                <van-swipe-item v-for="(image, index) in images" :key="index">
-                 <img v-lazy="image" />
-                </van-swipe-item>
-              </van-swipe>
+        <div class="main">
+            <!-- head -->
+            <div class="header">
+                <div class="swipper">
+                    <van-swipe :autoplay="3000">
+                        <van-swipe-item v-for="(image, index) in images" :key="index">
+                            <img v-lazy="image" />
+                        </van-swipe-item>
+                    </van-swipe>
+                </div>
+            </div>
+            <div class="content">
+                <div class="buy" v-if="state==='买家中心'">
+                    <div class="top-operate">
+                        <!-- 质控管理 -->
+                        <div class="quality" @click="toQuanlity">
+                            <div class="img_icon">
+                                <img :src="qualityimg" alt="">
+                            </div>
+                            <span>质控管理</span>
+                        </div>
+                        <!-- 采购查询 -->
+                        <div class="purchase" @click="toPurchase">
+                            <div class="img-icon">
+                                <img :src="purchaseimg" alt="">
+                            </div>
+                            <span>采购查询</span>
+                        </div>
+                        <!-- 需求发布 -->
+                        <div class="publish" @click="toRequireRelease">
+                            <div class="img-icon">
+                                <img :src="publishimg" alt="">
+                            </div>
+                            <span>需求发布</span>
+                        </div>
+                    </div>
+                    <div class="mid-operate">
+                        <div class="mid-wrap">
+                            <div @click="toDetectionAndService">
+                                <div>
+                                    <img :src="guideimg">
+                                </div>
+                                <div>检测认证及服务指引</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                            <div @click="toHumanResource">
+                                <div>
+                                    <img :src="hrimg">
+                                </div>
+                                <div>人力资源</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="seller" v-if="state==='卖家中心'">
+                    <div class="seller-content">
+                        <div @click="toSellerQuality">
+                            <div><img :src="productquality" alt=""></div>
+                            <span>产品质控</span>
+                        </div>
+                        <div @click="toSellerRelease">
+                            <div><img :src="requirerelease" alt=""></div>
+                            <span>需求发布</span>
+                        </div>
+                        <div @click="toQualityTalent">
+                            <div><img :src="qualitytalent" alt=""></div>
+                            <span>质控人才</span>
+                        </div>
+                        <div @click="toEquipmentShare">
+                            <div><img :src="equimentshare" alt=""></div>
+                            <span>设备分享</span>
+                        </div>
+                    </div>
+                    <div class="mid-operate">
+                        <div class="mid-wrap">
+                            <div @click="toNewProduct">
+                                <div>
+                                    <img :src="newproductdevelop">
+                                </div>
+                                <div>新产品研发人才</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                            <div @click="toDetectionAndService">
+                                <div>
+                                    <img :src="guideimg">
+                                </div>
+                                <div>检测认证及服务指引</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="service" v-if="state==='服务中心'">
+                    <div class="service-content">
+                        <div @click.stop="toTalent">
+                            <div><img :src="talentimg" alt=""></div>
+                            <span>人才入驻</span>
+                        </div>
+                        <div @click="toPartner">
+                            <div><img :src="partnerimg" alt=""></div>
+                            <span>合作伙伴入驻</span>
+                        </div>
+                        <div @click="toDetectionEnter">
+                            <div><img :src="detectionimg" alt=""></div>
+                            <span>检测机构入驻</span>
+                        </div>
+                        <div @click="toPlatform">
+                            <div><img :src="platformimg" alt=""></div>
+                            <span>平台指引</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="center" v-if="state==='会员中心'">
+                    <div class="person-info">
+                        <div>
+                            <div>
+                                <div>
+                                    <input type="file">
+                                </div>
+                                <div>
+                                    <h3>{{myInfo.usNm}}</h3>
+                                    <span @click="countManger">账号管理></span>
+                                </div>
+                            </div>
+                            <div><span>手机号：{{myInfo.mob}}</span></div>
+                            <div><span>邮箱：{{myInfo.email}}</span></div>
+                        </div>
+                        <div>
+                            <div>
+                                <img :src="centercode" alt="">
+                            </div>
+                            <div><span>我的推荐码</span></div>
+                        </div>
+                    </div>
+                    <div class="top-operate">
+                        <!-- 我的金币 -->
+                        <div class="quality" @click="toGoldIcon">
+                            <div class="img_icon">
+                                <img :src="goldicon" alt="">
+                            </div>
+                            <span>我的金币</span>
+                        </div>
+                        <!-- 我的订单 -->
+                        <div class="purchase" @click="toOrder">
+                            <div class="img-icon">
+                                <img :src="order" alt="">
+                            </div>
+                            <span>我的订单</span>
+                        </div>
+                        <!-- 我的报告 -->
+                        <div class="publish" @click="toReport">
+                            <div class="img-icon">
+                                <img :src="report" alt="">
+                            </div>
+                            <span>我的报告</span>
+                        </div>
+                    </div>
+                    <div class="center-operate">
+                        <div class="mid-wrap">
+                            <div @click="toRecommended">
+                                <div>
+                                    <img :src="recommended">
+                                </div>
+                                <div>我的推荐</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                            <div @click="toExchange">
+                                <div>
+                                    <img :src="exchange">
+                                </div>
+                                <div>我的兑换</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                            <div @click="toCollect">
+                                <div>
+                                    <img :src="collect">
+                                </div>
+                                <div>我的收藏</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                            <div @click="toEntry">
+                                <div>
+                                    <img :src="entry">
+                                </div>
+                                <div>我的入驻</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                            <div @click="toMyJob" v-if="type==1">
+                                <div>
+                                    <img :src="talent">
+                                </div>
+                                <div>人才信息</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                            <div @click="toTalentInformation" v-if="type==2">
+                                <div>
+                                    <img src="img/我的发布.png">
+                                </div>
+                                <div>我的发布</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                            <div @click="toJob" v-if="type==2">
+                                <div>
+                                    <img :src="talent">
+                                </div>
+                                <div>招聘信息</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                            <div @click="toEquipment">
+                                <div>
+                                    <img :src="equipment">
+                                </div>
+                                <div>设备信息</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                            <div @click="toAddress">
+                                <div>
+                                    <img :src="address">
+                                </div>
+                                <div>收货地址管理</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                            <div @click="toChangepwd">
+                                <div>
+                                    <img :src="changepwd">
+                                </div>
+                                <div>修改密码</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                            <div @click="toLoginout">
+                                <div>
+                                    <img :src="loginout">
+                                </div>
+                                <div>注销</div>
+                                <svg class="icon" aria-hidden="true">
+                                    <use xlink:href="#icon-gengduo"></use>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-        <div class="content">
-          <div class="buy" v-if="state==='买家中心'">
-            <div class="top-operate">
-                <!-- 质控管理 -->
-                <div class="quality" @click="toQuanlity">
-                    <div class="img_icon">
-                      <img :src="qualityimg" alt="">
-                    </div>
-                    <span>质控管理</span>
-                </div>
-                <!-- 采购查询 -->
-                <div class="purchase" @click="toPurchase">
-                    <div class="img-icon">
-                      <img :src="purchaseimg" alt="">
-                    </div>
-                    <span>采购查询</span>
-                </div>
-                <!-- 需求发布 -->
-                <div class="publish" @click="toRequireRelease">
-                    <div class="img-icon">
-                      <img :src="publishimg" alt="">
-                    </div>
-                    <span>需求发布</span>
-                </div>
-            </div>
-            <div class="mid-operate">
-              <div class="mid-wrap">
-                <div @click="toDetectionAndService">
-                  <div>
-                    <img :src="guideimg">
-                  </div>
-                  <div>检测认证及服务指引</div>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-gengduo"></use>
-                  </svg>
-                </div>
-                <div @click="toHumanResource">
-                  <div>
-                    <img :src="hrimg">
-                  </div>
-                  <div>人力资源</div>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-gengduo"></use>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="seller" v-if="state==='卖家中心'">
-             <div class="seller-content">
-              <div @click="toSellerQuality">
-                <div><img :src="productquality" alt=""></div>
-                <span>产品质控</span>
-              </div>
-              <div @click="toSellerRelease">
-                <div><img :src="requirerelease" alt=""></div>
-                <span>需求发布</span>
-              </div>
-              <div @click="toQualityTalent">
-                <div><img :src="qualitytalent" alt=""></div>
-                <span>质控人才</span>
-              </div>
-              <div @click="toEquipmentShare">
-                <div><img :src="equimentshare" alt=""></div>
-                <span>设备分享</span>
-              </div>
-            </div>
-             <div class="mid-operate">
-              <div class="mid-wrap">
-                <div @click="toNewProduct">
-                  <div>
-                    <img :src="newproductdevelop">
-                  </div>
-                  <div>新产品研发人才</div>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-gengduo"></use>
-                  </svg>
-                </div>
-                 <div @click="toDetectionAndService">
-                  <div>
-                    <img :src="guideimg">
-                  </div>
-                  <div>检测认证及服务指引</div>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-gengduo"></use>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="service" v-if="state==='服务中心'">
-            <div class="service-content">
-              <div @click="toTalent">
-                <div><img :src="talentimg" alt=""></div>
-                <span>人才入驻</span>
-              </div>
-              <div @click="toPartner">
-                <div><img :src="partnerimg" alt=""></div>
-                <span>合作伙伴入驻</span>
-              </div>
-              <div @click="toDetectionEnter">
-                <div><img :src="detectionimg" alt=""></div>
-                <span>检测机构入驻</span>
-              </div>
-              <div @click="toPlatform">
-                <div><img :src="platformimg" alt=""></div>
-                <span>平台指引</span>
-              </div>
-            </div>
-          </div>
-          <div class="center" v-if="state==='会员中心'">
-            <div class="person-info">
-              <div>
-                <div>
-                  <div>
-                    <input type="file">
-                  </div>
-                  <div>
-                    <h3>张三</h3>
-                    <span>账号管理></span>
-                  </div>
-                </div>
-                <div><span>手机号：13599990000</span></div>
-                <div><span>邮箱：424242@163.com</span></div>
-              </div>
-              <div>
-                <div>
-                  <img :src="centercode" alt="">
-                </div>
-                <div><span>我的推荐码</span></div>
-              </div>
-            </div>
-             <div class="top-operate">
-                <!-- 我的金币 -->
-                <div class="quality" @click="toGoldIcon">
-                    <div class="img_icon">
-                      <img :src="goldicon" alt="">
-                    </div>
-                    <span>我的金币</span>
-                </div>
-                <!-- 我的订单 -->
-                <div class="purchase" @click="toOrder">
-                    <div class="img-icon">
-                      <img :src="order" alt="">
-                    </div>
-                    <span>我的订单</span>
-                </div>
-                <!-- 我的报告 -->
-                <div class="publish" @click="toReport">
-                    <div class="img-icon">
-                      <img :src="report" alt="">
-                    </div>
-                    <span>我的报告</span>
-                </div>
-            </div>
-            <div class="center-operate">
-              <div class="mid-wrap">
-                <div @click="toRecommended">
-                  <div>
-                    <img :src="recommended">
-                  </div>
-                  <div>我的推荐</div>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-gengduo"></use>
-                  </svg>
-                </div>
-                <div @click="toExchange">
-                  <div>
-                    <img :src="exchange">
-                  </div>
-                  <div>我的兑换</div>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-gengduo"></use>
-                  </svg>
-                </div>
-                 <div @click="toCollect">
-                  <div>
-                    <img :src="collect">
-                  </div>
-                  <div>我的收藏</div>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-gengduo"></use>
-                  </svg>
-                </div>
-                <div @click="toEntry">
-                  <div>
-                    <img :src="entry">
-                  </div>
-                  <div>我的入驻</div>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-gengduo"></use>
-                  </svg>
-                </div>
-                 <div @click="toTalent">
-                  <div>
-                    <img :src="talent">
-                  </div>
-                  <div>人才信息</div>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-gengduo"></use>
-                  </svg>
-                </div>
-                <div @click="toEquipment">
-                  <div>
-                    <img :src="equipment">
-                  </div>
-                  <div>设备信息</div>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-gengduo"></use>
-                  </svg>
-                </div>
-                 <div @click="toAddress">
-                  <div>
-                    <img :src="address">
-                  </div>
-                  <div>收货地址管理</div>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-gengduo"></use>
-                  </svg>
-                </div>
-                <div @click="toChangepwd">
-                  <div>
-                    <img :src="changepwd">
-                  </div>
-                  <div>修改密码</div>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-gengduo"></use>
-                  </svg>
-                </div>
-                 <div @click="toLoginout">
-                  <div>
-                    <img :src="loginout">
-                  </div>
-                  <div>注销</div>
-                  <svg class="icon" aria-hidden="true">
-                    <use xlink:href="#icon-gengduo"></use>
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+
         <div class="footer">
             <ul>
                 <li v-for="(item, index) in footItems" :key="index" @click="chooseType(item)">  
@@ -596,6 +623,9 @@ export default {
   data() {
     return {
       state:"买家中心",
+        userPk:'',
+        type:'', //个人还是企业 1是个人 2是企业
+        myInfo:{},
       qualityimg,
       purchaseimg,
       publishimg,
@@ -661,8 +691,36 @@ export default {
       ]
     };
   },
-  mounted() {},
+  mounted() {
+      let info=JSON.parse(this.until.loGet('user'))
+      if(info){
+          this.userPk = info.sysUserPk
+           this.getInfo()
+      }else {
+          this.$hero.msg.show({
+              text:'您还未登录，请选登录！',
+              times:1500
+          });
+          window.location.href = '../system/login.html'
+      }
+  },
   methods: {
+      //获取个人信息
+      getInfo(){
+          this.until.get('/sys/user/info/'+this.userPk)
+              .then(res=>{
+                  if(res.status == '200'){
+                      this.myInfo = res.data
+                      this.type = this.myInfo.arg1
+                      this.until.loSave('userInfo',JSON.stringify(this.myInfo));
+                  }else {
+                      this.$hero.msg.show({
+                          text:res.message,
+                          times:1500
+                      });
+                  }
+              })
+      },
     chooseType(item){
       this.state=item.name;
       item.pick=item.selectedSrc
@@ -671,30 +729,128 @@ export default {
         itemI.pick=itemI.src;
       })
     },
+      countManger(){
+          window.location.href = '../system/accountmanage.html'
+      },
     toQuanlity(){
       window.location.href='../quality/quality.html'
     },
+      //人才信息
+      toMyJob(){
+            window.location.href = '../hr/myJob.html'
+      },
+      //我的入驻
+      toEntry(){
+          if(this.type==1){
+              window.location.href = '../servicecenter/talententersuc.html'
+          }else {
+              window.location.href = '../servicecenter/partnerentersuc.html'
+          }
+      },
     toPurchase(){
       window.location.href='../purchase/purchase.html'
     },
     toRequireRelease(){
-      window.location.href='../buyrequire/requirerelease.html'
+        //买家需求报告
+      window.location.href='../buyrequire/requirerelease.html?type=1'
     },
     //平台检测
     toDetectionAndService(){
       window.location.href='../testcertify/platformdetection.html'
     },
+      //招聘
+      toJob(){
+          window.location.href = '../membercenter/recruitmentinfo.html'
+      },
     toHumanResource(){
       window.location.href='../hr/humanresource.html'
     },
     toTalent(){
-      window.location.href='../servicecenter/talententer.html'
+        if(this.type==1){
+            this.until.get('/prodx/mxpers/info/'+this.userPk)
+                .then(res=>{
+                    if(res.status=='200'){
+                        if(res.data==''){
+                            window.location.href='../servicecenter/talententer.html'
+                        }else {
+                            this.$hero.msg.show({
+                                text:'已经提交过了！',
+                                times:1500
+                            });
+                        }
+
+                    }else {
+                        this.$hero.msg.show({
+                            text:res.msg,
+                            times:1500
+                        });
+                    }
+
+                })
+        }else {
+            this.$hero.msg.show({
+                text:'请选择企业入驻！',
+                times:1500
+            });
+        }
     },
     toPartner(){
-      window.location.href='../servicecenter/partnerenter.html'
+        if(this.type==2){
+            this.until.get('/prodx/mxentp/info/'+this.userPk)
+                .then(res=>{
+                    if(res.status=='200'){
+                        if(res.data==''){
+                            window.location.href='../servicecenter/partnerenter.html'
+                        }else {
+                            this.$hero.msg.show({
+                                text:'已经提交过了！',
+                                times:1500
+                            });
+                        }
+                    }else {
+                        this.$hero.msg.show({
+                            text:res.msg,
+                            times:1500
+                        });
+                    }
+
+                })
+        }else {
+            this.$hero.msg.show({
+                text:'请选择个人入驻！',
+                times:1500
+            });
+        }
     },
     toDetectionEnter(){
-      window.location.href='../servicecenter/detectionenter.html'
+        if(this.type==2){
+            this.until.get('/prodx/mxentp/info/'+this.userPk)
+                .then(res=>{
+                    if(res.status=='200'){
+                        if(res.data==''){
+                            window.location.href='../servicecenter/detectionenter.html'
+                        }else {
+                            this.$hero.msg.show({
+                                text:'已经提交过了！',
+                                times:1500
+                            });
+                        }
+                    }else {
+                        this.$hero.msg.show({
+                            text:res.msg,
+                            times:1500
+                        });
+                    }
+
+                })
+        }else {
+            this.$hero.msg.show({
+                text:'请选择个人入驻！',
+                times:1500
+            });
+        }
+
+
     },
     toPlatform(){
       window.location.href='../servicecenter/platformguide.html'
@@ -703,7 +859,8 @@ export default {
       window.location.href='../seller/quality.html'
     },
     toSellerRelease(){
-      window.location.href='../seller/equipmentshare.html'
+        //卖家需求
+        window.location.href='../buyrequire/requirerelease.html?type=2'
     },
     toQualityTalent(){
       window.location.href='../seller/humanresource.html'
@@ -742,9 +899,27 @@ export default {
       window.location.href='../system/changepwd.html'
     },
     toLoginout(){
-      window.location.href='../system/login.html'
+
+        this.until.get('/general/access/logout')
+            .then(res=>{
+                if(res.status=='200'){
+                    this.until.loRemove('userInfo')
+                    this.until.loRemove('user')
+                    this.$hero.msg.show({
+                        text:res.msg,
+                        times:1500
+                    });
+                    window.location.href='../system/login.html'
+                }else {
+                    this.$hero.msg.show({
+                        text:res.msg,
+                        times:1500
+                    });
+                }
+
+            })
     },
-    toTalent(){
+      toTalentInformation(){
       window.location.href='../membercenter/recruitmentinfo.html'
     }
   }

@@ -1,18 +1,18 @@
 <template>
   <div id="app">
     <div class="header">
-      <div>
-      <img :src="productInfo" alt="">
+      <div class="img">
+      <img :src="info.imgUrl" alt=""/>
       </div>
        <div class="detection-name">
        <div>
-         <span>{{detectionName}}</span><span>{{equipmentState}}</span>
+         <span>{{info.nm}}</span><span>{{info.catNm}}</span>
        </div>
        <div>
          <span>价格：
-           <i>{{price}}</i>
+           <i>{{info.price}}</i>
          </span>
-         <span>发布日期：{{releaseDate}}</span>
+         <span>发布日期：{{info.rcdTm}}</span>
        </div>
       </div>
     </div>
@@ -20,16 +20,16 @@
       <div class="detection-info">
         <div><span></span><span>产品描述</span></div>
         <div>
-          <p>{{serviceContent}}</p>
+          <p>{{info.intro}}</p>
         </div>
       </div>
     </div>
     <div class="introduce">
       <div class="organization">
         <div><span></span><span>联系方式</span></div>
-        <div><span>联系人：{{linkedMan}}</span></div>
-        <div><span>联系电话：{{linkedPhone}}</span></div>
-        <div><span>联系邮箱：{{linkedEmail}}</span></div>
+        <div><span>联系人：{{info.contNm}}</span></div>
+        <div><span>联系电话：{{info.contMob}}</span></div>
+        <div><span>联系邮箱：{{info.contEmail}}</span></div>
       </div>
     </div>
   </div>
@@ -41,6 +41,8 @@ import productInfo from "./images/productinfo.png";
 export default {
   data() {
     return {
+        pk:'',
+        info:{},
       productInfo,
       detectionName: "【转卖】转卖水质检测设备",
       equipmentState:'设备出售',
@@ -54,7 +56,19 @@ export default {
       linkedPhone: "13599990000",
       linkedEmail: "83906@163.com"
     };
-  }
+  },
+    mounted(){
+      this.pk = this.until.getQueryString('pk')
+      this.getInfo()
+    },
+    methods:{
+      getInfo(){
+          this.until.get('/prod/mxpubdev/info/'+this.pk)
+              .then(res=>{
+                  this.info = res.data
+              })
+      }
+    }
 };
 </script>
 

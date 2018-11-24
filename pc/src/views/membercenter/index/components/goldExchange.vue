@@ -6,7 +6,7 @@
           <!--标题-->
           <ul class="mainTitle">
             <li class="line"><span></span></li>
-            <li class="title">我的兑换</li>
+            <li class="title">金币兑换</li>
             <li class="line"><span></span></li>
           </ul>
 
