@@ -4,7 +4,7 @@
     <div class="content">
       <el-row>
         <el-button>企业发布</el-button>
-        <el-button>个人发布</el-button>
+        <el-button @click="toPersonal">个人发布</el-button>
       </el-row>
       <div class="equipment-list">
         <div v-for="(item, index) in equipmentList" :key="index">
@@ -48,6 +48,9 @@ export default {
       for (let index = 0; index < 16; index++) {
         this.equipmentList.push(this.equipment);
       }
+    },
+    toPersonal(){
+      window.location.href='/seller/personalEquipment.html'
     }
   }
 };
