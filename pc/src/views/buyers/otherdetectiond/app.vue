@@ -83,7 +83,7 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 155px auto 130px;
+      margin: 75px auto 0px;
       .service {
         display: -webkit-flex;
         display: flex;

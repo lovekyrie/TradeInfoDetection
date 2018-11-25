@@ -142,7 +142,7 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 150px auto 30px;
+      margin: 70px auto 0px;
       .search {
         margin-bottom: 20px ;
         padding: 0 25px;

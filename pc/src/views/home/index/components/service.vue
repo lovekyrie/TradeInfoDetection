@@ -3,7 +3,7 @@
     <swiper></swiper>
       <div class="top-wrap">
         <div class="operate-top">
-          <div>
+          <div @click="toTalent">
             <div>
               <img :src="talent" alt="">
             </div>
@@ -11,7 +11,7 @@
               <span>人才入驻</span>
             </div>
           </div>
-          <div>
+          <div @click="toPartner">
             <div>
               <img :src="partner" alt="">
             </div>
@@ -19,7 +19,7 @@
               <span>合作伙伴入驻</span>
             </div>
           </div>
-          <div>
+          <div @click="toOrgnization">
             <div>
               <img :src="orgnization" alt="">
             </div>
@@ -45,6 +45,17 @@ export default {
       partner,
       orgnization,
     };
+  },
+  methods:{
+    toTalent(){
+      window.location.href='../servicecenter/personalEntry.html'
+    },
+    toPartner(){
+      window.location.href='../servicecenter/partnerEntry.html'
+    },
+    toOrgnization(){
+      window.location.href='../servicecenter/detectionEntry.html'
+    }
   },
   components:{
     swiper,

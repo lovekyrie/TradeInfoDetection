@@ -119,11 +119,9 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 0 auto;
-      margin-top: 125px;
-      margin-bottom: 130px;
+      margin: 0px auto ;
       .block {
-        margin-top: 20px;
+        padding: 20px 0;
         width: 100%;
         display: -webkit-flex;
         display: flex;

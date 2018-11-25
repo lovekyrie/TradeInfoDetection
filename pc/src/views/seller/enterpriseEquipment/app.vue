@@ -62,7 +62,7 @@ html,body{
     width: 100%;
     .content{
       width: 1200px;
-      margin: 130px auto;
+      margin: 50px auto 0px;
       .equipment-list{
         display: -webkit-flex;
         display: flex;

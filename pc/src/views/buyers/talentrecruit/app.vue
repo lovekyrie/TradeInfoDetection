@@ -79,7 +79,7 @@ body {
     width: 100%;
     .content {
       width: 765px;
-      margin: 145px auto 130px;
+      margin: 65px auto 0px;
       .el-form {
         display: -webkit-flex;
         display: flex;

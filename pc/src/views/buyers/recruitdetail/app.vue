@@ -65,7 +65,7 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 135px auto 130px;
+      margin: 55px auto 0px;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;

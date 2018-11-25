@@ -1,8 +1,6 @@
 <template>
   <div id="app">
-    <div class="header">
-      <trade-header :showSearch="showSearch"></trade-header>
-    </div>
+    <trade-header :showSearch="showSearch"></trade-header>
     <div class="content">
       <div class="switch">
         <el-row>
@@ -22,9 +20,7 @@
         </div>
       </div>
     </div>
-    <div class="footer">
-      <trade-footer></trade-footer>
-    </div>
+    <trade-footer></trade-footer>
   </div>
 </template>
 
@@ -113,7 +109,7 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 130px auto;
+      margin: 50px auto 0px;
       .switch{
         border-bottom: 1px solid #ddd;
         button{

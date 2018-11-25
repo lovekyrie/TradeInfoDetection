@@ -94,7 +94,7 @@ body {
   #app {
     width: 100%;
     .content {
-      margin-bottom: 130px;
+      // margin-bottom: 130px;
       .el-form {
         width: 800px;
         margin: 0 auto;

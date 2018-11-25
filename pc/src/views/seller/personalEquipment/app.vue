@@ -1,0 +1,106 @@
+<template>
+  <div id="app">
+    <trade-header :showSearch="showSearch"></trade-header>
+    <div class="content">
+      <el-row>
+        <el-button>企业发布</el-button>
+        <el-button>个人发布</el-button>
+      </el-row>
+      <div class="equipment-list">
+        <div v-for="(item, index) in equipmentList" :key="index">
+          <span></span>
+          <span></span>
+          <span>{{item.equipmentName}}</span>
+        </div>
+      </div>
+    </div>
+    <trade-footer></trade-footer>
+  </div>
+</template>
+
+<script>
+export default {
+  data(){
+    return{
+      equipmentList:[
+        {
+          content:'',
+          linkedMan:'张先生',
+          phoneNum:'15900110011',
+          time:'2018年6月17日'
+        },
+        {
+          content:'',
+          linkedMan:'张先生',
+          phoneNum:'15900110011',
+          time:'2018年6月17日'
+        },
+        {
+          content:'',
+          linkedMan:'张先生',
+          phoneNum:'15900110011',
+          time:'2018年6月17日'
+        },
+        {
+          content:'',
+          linkedMan:'张先生',
+          phoneNum:'15900110011',
+          time:'2018年6月17日'
+        },
+        {
+          content:'',
+          linkedMan:'张先生',
+          phoneNum:'15900110011',
+          time:'2018年6月17日'
+        },
+        {
+          content:'',
+          linkedMan:'张先生',
+          phoneNum:'15900110011',
+          time:'2018年6月17日'
+        },
+        {
+          content:'',
+          linkedMan:'张先生',
+          phoneNum:'15900110011',
+          time:'2018年6月17日'
+        },
+        {
+          content:'',
+          linkedMan:'张先生',
+          phoneNum:'15900110011',
+          time:'2018年6月17日'
+        },
+        {
+          content:'',
+          linkedMan:'张先生',
+          phoneNum:'15900110011',
+          time:'2018年6月17日'
+        },
+        {
+          content:'',
+          linkedMan:'张先生',
+          phoneNum:'15900110011',
+          time:'2018年6月17日'
+        },
+        {
+          content:'',
+          linkedMan:'张先生',
+          phoneNum:'15900110011',
+          time:'2018年6月17日'
+        },
+        {
+          content:'',
+          linkedMan:'张先生',
+          phoneNum:'15900110011',
+          time:'2018年6月17日'
+        }
+      ]
+    }
+  }
+}
+</script>
+
+<style>
+
+</style>

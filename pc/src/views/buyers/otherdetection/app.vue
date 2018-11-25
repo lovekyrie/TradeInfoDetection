@@ -112,7 +112,7 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 130px auto;
+      margin: 50px auto 0px;
       .switch{
         border-bottom: 1px solid #ddd;
         button{

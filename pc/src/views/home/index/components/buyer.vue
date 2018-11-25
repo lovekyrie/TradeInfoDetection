@@ -3,7 +3,7 @@
     <swiper></swiper>
       <div class="top-wrap">
         <div class="operate-top">
-          <div>
+          <div @click="toQuality">
             <div>
               <img :src="quality" alt="">
             </div>
@@ -11,7 +11,7 @@
               <span>质控管理</span>
             </div>
           </div>
-          <div>
+          <div @click="toPurchase"> 
             <div>
               <img :src="purchase" alt="">
             </div>
@@ -19,7 +19,7 @@
               <span>采购查询</span>
             </div>
           </div>
-          <div>
+          <div @click="toRequireRelease">
             <div>
               <img :src="requirerelease" alt="">
             </div>
@@ -32,7 +32,7 @@
       <div class="buttom-wrap">
         <div class="operate-buttom">
           <div>
-            <div class="item-wrap">
+            <div class="item-wrap" @click="toHumanResource">
               <div>
                 <img :src="humanresource" alt="">
               </div>
@@ -42,7 +42,7 @@
             </div>
           </div>
           <div>
-            <div class="item-wrap">
+            <div class="item-wrap" @click="toDetection">
               <div>
                 <img :src="buyerdetection" alt="">
               </div>
@@ -71,6 +71,23 @@ export default {
       humanresource,
       buyerdetection
     };
+  },
+  methods:{
+    toQuality(){
+      window.location.href='../buyers/qualitymanage.html'
+    },
+    toPurchase(){
+      window.location.href='../buyers/purchasequery.html'
+    },
+    toRequireRelease(){ 
+      window.location.href='../buyers/requirelist.html'
+    },
+    toHumanResource(){
+      window.location.href='../buyers/recruitlist.html'
+    },
+    toDetection(){
+      window.location.href='../buyers/platformdetection.html'
+    }
   },
   components: {
     swiper

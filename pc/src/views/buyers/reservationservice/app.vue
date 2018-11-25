@@ -168,7 +168,7 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 130px auto 130px;
+      margin: 50px auto 0px;
       .order-info {
         padding-bottom: 35px;
         display: -webkit-flex;

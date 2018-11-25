@@ -105,7 +105,7 @@ body {
       margin: 0 auto;
     }
     .content {
-      margin-bottom: 130px;
+      // margin-bottom: 130px;
       .upload-demo {
         margin-top: 135px;
         .el-upload {

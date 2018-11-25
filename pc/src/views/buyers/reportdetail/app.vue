@@ -86,7 +86,7 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 155px auto 0;
+      margin: 75px auto 0;
       display: -webkit-flex;
       display: flex;
       flex-direction: row;

@@ -95,7 +95,7 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 140px auto;
+      margin:60px auto 10px;
       .introduce {
         padding-bottom: 30px;
         display: -webkit-flex;
