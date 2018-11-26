@@ -1,16 +1,31 @@
 <template>
   <div class="header-wrap">
     <div class="account-wrap">
-      <div class="account">
-        <span>登录</span>
+      <div class="account" v-if="!login">
+        <span><a href="../entry/login.html">登录</a></span>
         <span>|</span>
-        <span>注册</span>
+        <span><a href="../entry/register.html">注册</a></span>
+      </div>
+      <div class="account" v-else>
+        <span  v-if="showNav">
+          <router-link to="/membercenter" >
+            {{myInfo.usNm}}
+          </router-link>
+          <!--<a href="../membercenter/index.html">{{myInfo.usNm}}</a>-->
+        </span>
+        <span v-else>
+          <a href="../home/index.html#membercenter">{{myInfo.usNm}}</a>
+        </span>
+        <span>|</span>
+        <span><a href="#" @click="loginOut()">退出</a></span>
       </div>
     </div>
     <div class="header-log">
       <div class="log-wrap">
         <div class="log">
-          <img :src="tradeLog" alt="">
+          <a href="../home/index.html">
+            <img :src="tradeLog" alt="">
+          </a>
         </div>
         <div class="search-wrap" v-if="showSearch">
           <div class="select">
@@ -31,7 +46,7 @@
     </div>
     <div class="header-sidebar" v-if="showNav">
       <div class="sidebar">
-        <div v-for="(item) in sidebarList" :key="item.ID" :class="{active:state==item.content}" @click="choose(item.content)">
+        <div v-for="(item) in sidebarList" :key="item.ID" :class="{active:state==item.content}" @click="choose(item.content,item.itemLink)">
           <router-link :to="item.itemLink" >
             <span>{{item.content}}</span>
           </router-link>
@@ -58,7 +73,10 @@ export default {
   data() {
     return {
       state:'买家中心',
+      userPk:'',
       tradeLog,
+      login:false,
+      myInfo:{},
       findList: [
         {
           ID: 1,
@@ -106,10 +124,59 @@ export default {
       ]
     };
   },
+  mounted(){
+    let info=JSON.parse(this.until.loGet('user'))
+    if(info){
+      this.login = true
+      this.userPk = info.sysUserPk
+      this.getInfo()
+    }else {
+      this.login = false
+    }
+  },
   methods:{
-    
-    choose(item){
+    //获取个人信息
+    getInfo(){
+      this.until.get('/sys/user/info/'+this.userPk)
+        .then(res=>{
+          if(res.status == '200'){
+            this.myInfo = res.data
+            this.type = this.myInfo.arg1
+            this.until.loSave('userInfo',JSON.stringify(this.myInfo));
+          }else {
+            this.$hero.msg.show({
+              text:res.message,
+              times:1500
+            });
+          }
+        })
+    },
+    //注销
+    loginOut(){
+      this.until.get('/general/access/logout')
+        .then(res=>{
+          if(res.status=='200'){
+            this.until.loRemove('userInfo')
+            this.until.loRemove('user')
+            this.$message({
+              message: '注销成功！',
+              type: 'success'
+            });
+            window.location.href='../entry/login.html'
+          }else {
+            this.$message({
+              message: res.msg,
+              type: 'warning'
+            });
+          }
+
+        })
+    },
+    choose(item,url){
       this.state=item;
+      this.$router.push({//你需要接受路由的参数再跳转
+        path: url
+      });
     }
   }
 };

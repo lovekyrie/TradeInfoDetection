@@ -5,36 +5,40 @@
     </div>
     <div class="content">
       <div class="title">
-        <div>{{reportDetail.title}}</div>
-        <div>
-          <div>
+        <div>{{reportDetail.nm}}</div>
+        <div class="button">
+          <div @click="down()">
             <img :src="download" alt="">
             <span>下载报告</span>
           </div>
-          <div>
-            <img :src="collect" alt="">
+          <div v-if="state==0" @click="collect">
+            <img :src="collectNo" alt="">
             <span>收藏</span>
+          </div>
+          <div v-if="state==1" @click="collect">
+            <img :src="hasCollect" alt="">
+            <span>已收藏</span>
           </div>
         </div>
       </div>
       <div>
-        <span>上传者：{{reportDetail.uploader}}</span>
+        <span>上传者：{{reportDetail.crtBy}}</span>
       </div>
       <div>
-        <span>序列号：{{reportDetail.serialNo}}</span>
-        <span>检测机构：{{reportDetail.organization}}</span>
-        <span>供应商名称：{{reportDetail.vendor}}</span>
+        <span>序列号：{{reportDetail.no}}</span>
+        <span>检测机构：{{reportDetail.deteOrg}}</span>
+        <span>供应商名称：{{reportDetail.supply}}</span>
       </div>
       <div>
-        <span>质检产品名称：{{reportDetail.productName}}</span>
-        <span>质检产品地域：{{reportDetail.address}}</span>
+        <span>质检产品名称：{{reportDetail.prodNm}}</span>
+        <span>质检产品地域：{{reportDetail.prodProvNm}} {{reportDetail.prodCityNm}}</span>
       </div>
       <div>
-        <span>检测项目：{{reportDetail.project}}</span>
+        <span>检测项目：{{reportDetail.description}}</span>
       </div>
     </div>
     <div class="pdf-reader">
-
+      <img :src="item" v-for="item in imgList"/>
     </div>
     <div class="footer">
       <trade-footer></trade-footer>
@@ -45,16 +49,19 @@
 <script>
 import tradeHeader from "components/tradeHeader";
 import tradeFooter from "components/tradeFooter";
-import collect from "./images/收藏.png";
+import collectNo from "./images/收藏.png";
 import hasCollect from "./images/已收藏.png";
 import download from "./images/下载小.png";
 
 export default {
   data() {
     return {
-      collect,
+      state:0,
+      userPk:'',
+      collectNo,
       hasCollect,
       download,
+      imgList:[],
       reportDetail: {
         title: "福州福州服饰有限公司防晒衣检测报告",
         uploader: "张三",
@@ -67,7 +74,51 @@ export default {
       }
     };
   },
-  methods: {},
+  mounted(){
+    this.pk = this.until.getQueryString('pk')
+    this.userPk = JSON.parse(this.until.loGet('userInfo')).sysUserPk
+    this.getInfo();
+    this.ifCollect()
+  },
+  methods: {
+    getInfo(){
+      this.until.get('/prodx/mxrepo/info/'+this.pk)
+        .then(res=>{
+          this.reportDetail = res.data
+          this.imgList = this.detail.pdfUrl.split(',')
+        })
+    },
+    down(){
+
+    },
+    //判断收藏状态
+    ifCollect(){
+      this.until.get('/prodx/mxusercoll/collnum?subPk='+this.pk+'&sysUserPk='+this.userPk)
+        .then(res=>{
+          this.state = res
+        })
+
+    },
+    //取消或加入收藏
+    collect(){
+      if(this.state){  //已经收藏了，要取消
+        this.until.get('/prodx/mxusercoll/canselcoll?subPk='+this.pk+'&sysUserPk='+this.userPk)
+          .then(res=>{
+
+            this.state = res.status=='200' ? 0: 1
+          })
+      }else {
+        let params = {
+          subPk:this.pk,
+          sysUserPk:this.userPk
+        }
+        this.until.postData('/prod/mxusercoll/edit',JSON.stringify(params))
+          .then(res=>{
+            this.state = res.status=='200' ? 1: 0
+          })
+      }
+    }
+  },
   components: {
     tradeHeader,
     tradeFooter
@@ -91,6 +142,9 @@ body {
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
+      .button{
+        cursor: pointer;
+      }
       > div {
         margin-bottom: 25px;
         width: 100%;

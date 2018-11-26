@@ -20,7 +20,6 @@ import 'assets/js/wconfig.js';
 import './iconfont'  //字体库
 import './wconfig.js'
 import {Query} from 'assets/js/query'
-
 // import 'assets/js/Ios';
 // import 'assets/js/WebViewJavascriptBridge';
 

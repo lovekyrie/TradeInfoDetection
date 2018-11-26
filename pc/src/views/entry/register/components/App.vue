@@ -18,17 +18,17 @@
         <input type="button" @click="change()" value="企业注册" :class="{formButton_a:seen.seen1,formButton_b:seen.seen2}">
         <input type="button" @click="change()" value="个人注册" :class="{formButton_a:seen.seen2,formButton_b:seen.seen1}">
         <!--企业注册表单-->
-        <div class="inForm" v-if="seen.seen1">
+        <div class="inForm">
           <el-form label-position="left" label-width="120px" :model="ruleForm" :rules="rule"
                    ref="ruleForm">
-            <el-form-item label="企业名称：" prop="enterpriseName">
-              <el-input placeholder="请输入企业名称" v-model="ruleForm.enterpriseName"></el-input>
+            <el-form-item label="企业名称：" prop="nkNm" v-if="seen.seen1">
+              <el-input placeholder="请输入企业名称" v-model="ruleForm.nkNm"></el-input>
             </el-form-item>
-            <el-form-item label="账号名称：" prop="enterpriseAccount">
-              <el-input placeholder="请输入账号名称" v-model="ruleForm.enterpriseAccount"></el-input>
+            <el-form-item label="账号名称：" prop="usNm">
+              <el-input placeholder="请输入账号名称" v-model="ruleForm.usNm"></el-input>
             </el-form-item>
-            <el-form-item label="手机号码：" prop="enterprisePhone">
-              <el-input placeholder="请输入手机号码" v-model="ruleForm.enterprisePhone"></el-input>
+            <el-form-item label="手机号码：" prop="mob">
+              <el-input placeholder="请输入手机号码" v-model="ruleForm.mob"></el-input>
             </el-form-item>
 
             <el-form-item id="modified" label="手机验证码：" prop="enterpriseCode">
@@ -36,53 +36,53 @@
               <button class="formButton_c" :disabled="disabled">{{btntext}}</button>
             </el-form-item>
 
-            <el-form-item label="邮箱地址：" prop="enterpriseEmail">
-              <el-input placeholder="请输入常用邮箱" v-model="ruleForm.enterpriseEmail"></el-input>
+            <el-form-item label="邮箱地址：" prop="email">
+              <el-input placeholder="请输入常用邮箱" v-model="ruleForm.email"></el-input>
             </el-form-item>
-            <el-form-item label="登录密码：" prop="enterprisePwd1">
-              <el-input type="password" placeholder="请输入登录密码" v-model="ruleForm.enterprisePwd1"></el-input>
+            <el-form-item label="登录密码：" prop="pwd">
+              <el-input type="password" placeholder="请输入登录密码" v-model="ruleForm.pwd"></el-input>
             </el-form-item>
-            <el-form-item label="确认密码：" prop="enterprisePwd2">
-              <el-input type="password" placeholder="请再次输入密码" v-model="ruleForm.enterprisePwd2"></el-input>
+            <el-form-item label="确认密码：" prop="pwd2">
+              <el-input type="password" placeholder="请再次输入密码" v-model="ruleForm.pwd2"></el-input>
             </el-form-item>
           </el-form>
 
         </div>
 
         <!--个人注册表单-->
-        <div class="inForm" v-if="seen.seen2">
-          <el-form label-position="left" label-width="120px" :model="ruleForm" :rules="rule">
-            <el-form-item label="账号名称：" prop="personalAccount">
-              <el-input placeholder="请输入账号名称" v-model="ruleForm.personalAccount"></el-input>
-            </el-form-item>
-            <el-form-item label="手机号码：" prop="personalPhone">
-              <el-input placeholder="请输入手机号码" v-model="ruleForm.personalPhone"></el-input>
-            </el-form-item>
+        <!--<div class="inForm" v-if="seen.seen2">-->
+          <!--<el-form label-position="left" label-width="120px" :model="ruleForm" :rules="rule">-->
+            <!--<el-form-item label="账号名称：" prop="usNm">-->
+              <!--<el-input placeholder="请输入账号名称" v-model="ruleForm.usNm"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="手机号码：" prop="mob">-->
+              <!--<el-input placeholder="请输入手机号码" v-model="ruleForm.mob"></el-input>-->
+            <!--</el-form-item>-->
 
-            <el-form-item id="modified" label="手机验证码：" prop="personalCode">
-              <el-input placeholder="请输入验证码" v-model="ruleForm.personalCode"></el-input>
-              <button class="formButton_c">获取验证码</button>
-            </el-form-item>
+            <!--<el-form-item id="modified" label="手机验证码：" prop="personalCode">-->
+              <!--<el-input placeholder="请输入验证码" v-model="ruleForm.personalCode"></el-input>-->
+              <!--<button class="formButton_c">获取验证码</button>-->
+            <!--</el-form-item>-->
 
-            <el-form-item label="邮箱地址：" prop="personalEmail">
-              <el-input placeholder="请输入常用邮箱" v-model="ruleForm.personalEmail"></el-input>
-            </el-form-item>
-            <el-form-item label="登录密码：" prop="personalPwd1">
-              <el-input type="password" placeholder="请输入登录密码" v-model="ruleForm.personalPwd1"></el-input>
-            </el-form-item>
-            <el-form-item label="确认密码：" prop="personalPwd2">
-              <el-input type="password" placeholder="请再次输入密码" v-model="ruleForm.personalPwd2"></el-input>
-            </el-form-item>
-          </el-form>
+            <!--<el-form-item label="邮箱地址：" prop="email">-->
+              <!--<el-input placeholder="请输入常用邮箱" v-model="ruleForm.email"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="登录密码：" prop="pwd">-->
+              <!--<el-input type="password" placeholder="请输入登录密码" v-model="ruleForm.pwd"></el-input>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item label="确认密码：" prop="pwd2">-->
+              <!--<el-input type="password" placeholder="请再次输入密码" v-model="ruleForm.pwd2"></el-input>-->
+            <!--</el-form-item>-->
+          <!--</el-form>-->
 
-        </div>
+        <!--</div>-->
       </form>
 
       <!--底部确认-->
-      <el-checkbox>我已阅读并同意接收<a href="#">《服务协议》</a></el-checkbox>
+      <el-checkbox checked>我已阅读并同意接收<a href="#">《服务协议》</a></el-checkbox>
       <br/>
       <input @click="checkAll('ruleForm')" value="确定" type="button" class="confirm" style="background-color: rgb(13,85,210);color: white">
-      <input value="取消" type="button" class="confirm">
+      <input value="取消" type="button" class="confirm" @click="resetForm('ruleForm')">
     </div>
     <!--页脚-->
     <div id="footer">
@@ -120,7 +120,7 @@
       var checkPwd1=(rule,value,callback)=>{
         if(value==''){
           callback(new Error('请再次输入密码'));
-        }else if(value!=this.ruleForm.enterprisePwd1){
+        }else if(value!=this.ruleForm.pwd){
           callback(new Error('两次密码不一致'));
         }else{
           callback();
@@ -150,73 +150,68 @@
         },
         //企业表单数据
         ruleForm: {
-          enterpriseName: '',
-          enterpriseAccount: '',
-          enterprisePhone: '',
-          enterpriseCode: '',
-          enterpriseEmail: '',
-          enterprisePwd1: '',
-          enterprisePwd2: '',
-          personalAccount:'',
-          personalPhone:'',
-          personalCode:'',
-          personalEmail:'',
-          personalPwd1:'',
-          personalPwd2:''
+          usNm:'',//账号名称
+          nkNm:'',//企业名称
+          pwd:'',//密码
+          mob:'',//手机
+          email:'',//邮件
+          arg1:'1',//1/2；个人/企业
+          catCd:'20000.170',//20000.160/20000.170
+          arg9:'',//推荐码
         },
         //表单验证
         rule: {
-          enterpriseName: [
+          nkNm: [
             {required: true, message: '请输入企业名称', trigger: 'blur'}
           ],
 
-          enterpriseAccount: [
+          usNm: [
             {required: true, message: '请输入账号', trigger: 'blur'},
             {min: 6, message: '请输入6位以上中英文数字结合的账号', trigger: 'blur'}
           ],
-          personalAccount:[
-            {required: true, message: '请输入账号', trigger: 'blur'},
-            {min: 6, message: '请输入6位以上中英文数字结合的账号', trigger: 'blur'}
-          ],
+          // personalAccount:[
+          //   {required: true, message: '请输入账号', trigger: 'blur'},
+          //   {min: 6, message: '请输入6位以上中英文数字结合的账号', trigger: 'blur'}
+          // ],
 
-          enterprisePhone: [
+          mob: [
             {required: true, message: '请输入手机号码', trigger: 'blur'},
             {validator:checkPhone,trigger:'blur'}
           ],
-          personalPhone:[
-            {required: true, message: '请输入手机号码', trigger: 'blur'},
-            {validator:checkPhone,trigger:'blur'}
-          ],
+          // personalPhone:[
+          //   {required: true, message: '请输入手机号码', trigger: 'blur'},
+          //   {validator:checkPhone,trigger:'blur'}
+          // ],
 
-          enterpriseCode: [
-            {required: true, message: '请输入验证码', trigger: 'blur'},
-          ],
-          personalCode: [
-            {required: true, message: '请输入验证码', trigger: 'blur'},
-          ],
+          // enterpriseCode: [
+          //   {required: true, message: '请输入验证码', trigger: 'blur'},
+          // ],
+          // personalCode: [
+          //   {required: true, message: '请输入验证码', trigger: 'blur'},
+          // ],
 
-          enterpriseEmail:[
+          email:[
             {required: true, message: '请输入常用邮箱', trigger: 'blur'},
             {validator:checkEmail,trigger:'blur'}
           ],
-          personalEmail:[
-            {required: true, message: '请输入常用邮箱', trigger: 'blur'},
-            {validator:checkEmail,trigger:'blur'}
-          ],
+          // personalEmail:[
+          //   {required: true, message: '请输入常用邮箱', trigger: 'blur'},
+          //   {validator:checkEmail,trigger:'blur'}
+          // ],
 
-          enterprisePwd1:[
+          pwd:[
             {required:true,message:'请输入密码',trigger:'blur'},
           ],
-          personalPwd1:[
-            {required:true,message:'请输入密码',trigger:'blur'},
-          ],
+          // personalPwd1:[
+          //   {required:true,message:'请输入密码',trigger:'blur'},
+          // ],
 
-          enterprisePwd2:[
+          pwd2:[
             {required:true,validator:checkPwd1,trigger:'blur'}
           ],
-          personalPwd2:[
-            {required:true,validator:checkPwd2,trigger:'blur'}
-          ]
+          // personalPwd2:[
+          //   {required:true,validator:checkPwd2,trigger:'blur'}
+          // ]
 
         },
 
@@ -226,22 +221,38 @@
 
     },
     methods: {
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
       change() {
         if (this.seen.seen1) {
           this.seen.seen1 = false;
           this.seen.seen2 = true;
-
+          this.ruleForm.catCd = 20000.160
         }
         else {
           this.seen.seen1 = true;
           this.seen.seen2 = false;
+          this.ruleForm.catCd = 20000.170
         }
       },
       checkAll(formName){
         this.$refs[formName].validate((valid)=>{
           //全部表单验证完毕
           if(valid){
-            alert('submit')
+            this.until.postData('/prod/adduser/edit',JSON.stringify(this.ruleForm))
+              .then(res=>{
+                if(res.status=='200'){
+                  this.$message({
+                    message: '注册成功！',
+                    type: 'success'
+                  });
+                  setTimeout(()=>{
+                    window.location.href = 'login.html'
+                  },1500)
+
+                }
+              })
           }else{
             return false;
           }

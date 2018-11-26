@@ -11,7 +11,7 @@
               <span>质控管理</span>
             </div>
           </div>
-          <div @click="toPurchase"> 
+          <div @click="toPurchase">
             <div>
               <img :src="purchase" alt="">
             </div>
@@ -79,7 +79,7 @@ export default {
     toPurchase(){
       window.location.href='../buyers/purchasequery.html'
     },
-    toRequireRelease(){ 
+    toRequireRelease(){
       window.location.href='../buyers/requirelist.html'
     },
     toHumanResource(){
@@ -110,6 +110,7 @@ export default {
       justify-content: space-between;
       align-items: center;
       > div {
+        cursor: pointer;
         width: 30%;
         display: -webkit-flex;
         display: flex;
@@ -151,6 +152,7 @@ export default {
         align-items: center;
         background-color: #fff;
         .item-wrap {
+          cursor: pointer;
           display: -webkit-flex;
           display: flex;
           flex-wrap: nowrap;

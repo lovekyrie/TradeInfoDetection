@@ -20,7 +20,7 @@
         <li class="line"><span></span></li>
       </ul>
       <!--表单-->
-      <form>
+      <div class="form">
         <div><img src="../img/账号.png"><input type="text" placeholder="请输入账号"> </div>
         <div><img src="../img/手机.png"><input v-model="phone" @blur.prevent="phoneCheck()" type="number" placeholder="请输入注册手机号码">
           <span v-model="Tips.tip1" style="position:absolute;top:11px;color: red">{{Tips.tip1}}</span>
@@ -32,7 +32,7 @@
         <div style="margin-left: 30px"><button class="loginBtn" type="submit">确定</button>
           <button class="cancelBtn">取消</button>
         </div>
-      </form>
+      </div>
 
 
     </div>

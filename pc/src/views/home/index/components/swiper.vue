@@ -1,9 +1,9 @@
 <template>
   <div class="swipper">
       <el-carousel :interval="5000" arrow="always">
-        <el-carousel-item v-for="item in swipperList" :key="item.ID">
+        <el-carousel-item v-for="item in swipperList" :key="item.sysAdPk">
           <div>
-            <img :src="item.swipper" alt="">
+            <img :src="item.srcUrl" alt="">
           </div>
         </el-carousel-item>
       </el-carousel>
@@ -11,18 +11,18 @@
 </template>
 
 <script>
-import swipper from "../images/swiper.png";
 
 export default {
   data(){
     return {
-       swipperList: [
-        { ID: 1, swipper },
-        { ID: 2, swipper },
-        { ID: 3, swipper },
-        { ID: 4, swipper }
-      ],
+       swipperList: [],
     }
+  },
+  mounted(){
+    this.until.get('/sys/ad/list?catCd=30040.150')
+      .then(res=>{
+        this.swipperList = res.data.items
+      })
   }
 }
 </script>
@@ -44,6 +44,10 @@ export default {
           align-items: center;
           > div {
             width: 100%;
+            display: flex;
+            display: -webkit-flex;
+            justify-content: center;
+            align-items: center;
             img {
               width: auto;
               height: auto;

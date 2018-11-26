@@ -1,7 +1,7 @@
 <template>
-    <div id="app">
+    <div id="member">
     <!--页头-->
-    <trade-header :showNav="showNav"></trade-header>
+    <!--<trade-header :showNav="showNav"></trade-header>-->
     <!--中间内容-->
     <div id="main">
       <div class="inMain">
@@ -15,13 +15,13 @@
             </li>
           </ul>
         </div>
-        
+
         <router-view></router-view>
       </div>
     </div>
 
     <!--页脚-->
-    <trade-footer></trade-footer>
+    <!--<trade-footer></trade-footer>-->
   </div>
 
 </template>
@@ -146,7 +146,7 @@ export default {
         }
       }
 
-     
+
     }
   }
 }

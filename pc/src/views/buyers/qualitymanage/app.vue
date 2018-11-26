@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-loading="loading">
     <div class="header">
       <trade-header></trade-header>
     </div>
@@ -7,20 +7,20 @@
       <div class="search">
         <el-form>
             <el-form-item label="质检产品名称：">
-              <el-input v-model="search.productName" placeholder="产品名称"></el-input>
+              <el-input placeholder="产品名称" v-model="searchGdno"></el-input>
             </el-form-item>
             <el-form-item label="供应商名称：">
-              <el-input v-model="search.vendor" placeholder="供应商名称"></el-input>
+              <el-input placeholder="供应商名称" v-model="searchCustName"></el-input>
             </el-form-item>
             <el-form-item label="质检产品地域：">
-              <el-input v-model="search.address" placeholder="省、市"></el-input>
+              <addr @setAddr="getAddr"></addr>
             </el-form-item>
             <el-form-item label="序列号：">
-              <el-input v-model="search.serialNo" placeholder="序列号"></el-input>
+              <el-input placeholder="序列号" v-model="searchSn"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSearch">查询</el-button>
-              <el-button>报告上传</el-button>
+              <el-button type="primary" @click="search">查询</el-button>
+              <el-button @click="toUpload">报告上传</el-button>
             </el-form-item>
             <!-- 布局用 -->
             <div></div>
@@ -33,21 +33,19 @@
           <span>供应商名称</span>
           <span>质检产品地域</span>
         </div>
-        <div v-for="(item, index) in detectionList" :key="index">
-          <span>{{item.serialNo}}</span>
-          <span>{{item.productName}}</span>
-          <span>{{item.vendor}}</span>
-          <span>{{item.address}}</span>
+        <div v-for="(item, index) in searchBot" :key="index" @click="toDetail(item.mxRepoPk)" class="myList">
+          <span>{{item.no}}</span>
+          <span>{{item.prodNm}}</span>
+          <span>{{item.supply}}</span>
+          <span>{{item.prodProvNm}} {{item.prodCityNm}}</span>
         </div>
         <div class="block">
           <el-pagination
-            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="currentPage4"
-            :page-sizes="[100, 200, 300, 400]"
-            :page-size="100"
+            :current-page=pageNo
+            :page-size=pageSize
             layout="total, sizes, prev, pager, next, jumper"
-            :total="400">
+            :total=total>
           </el-pagination>
         </div>
       </div>
@@ -61,17 +59,20 @@
 <script>
 import tradeHeader from "components/tradeHeader";
 import tradeFooter from "components/tradeFooter";
-
+import addr from "components/addr";
 export default {
   data() {
     return {
-      search: {
-        productName: "",
-        vendor: "",
-        address: "",
-        serialNo: ""
-      },
-      detectionList:[
+      loading:false,
+      pageNo:1,
+      pageSize:30,
+      total:0,
+      cityCode1:'',
+      cityCode2:'',
+      searchGdno: "",
+      searchSn: "",
+      searchCustName: "",
+      searchBot:[
         {
           serialNo:'110000919282392312',
           productName:'防晒衣',
@@ -123,12 +124,65 @@ export default {
       ]
     };
   },
+  mounted(){
+    this.getList()
+  },
   methods: {
-    onSearch() {}
+    toUpload(){
+      window.location.href = '../buyers/uploadreport.html'
+    },
+    //详情
+    toDetail(val){
+      window.location.href = '../buyers/reportdetail.html?pk='+val
+    },
+    getAddr:function(val){
+      let cd = JSON.parse(val)
+      this.cityCode1 = cd.cd1
+      this.cityCode2 = cd.cd2
+    },
+    getList(){
+      this.loading = true;
+      let query = new this.Query();
+      query.buildPageClause(this.pageNo,this.pageSize);
+      let param = {
+        city:this.cityCode2,
+        type:1,
+        nm:this.searchGdno,
+        no:this.searchSn,
+        prov:this.cityCode1,
+        deteOrg:this.searchCustName,
+        query:query.getParam()
+      }
+      this.until.get('/prodx/mxrepo/page',param)
+        .then(res=>{
+          this.loading = false;
+          if(res.status == 200){
+            this.total = res.page.total
+            this.searchBot=res.data.items
+
+          }else {
+            this.$hero.msg.show({
+              text:res.message,
+              times:1500
+            });
+          }
+        },err=>{});
+    },
+    //查询
+    search(){
+      this.searchBot = []
+      this.pageNo = 1
+      this.getList()
+    },
+    handleCurrentChange(val){
+      this.pageNo = val
+      this.getList()
+    }
   },
   components: {
     tradeHeader,
-    tradeFooter
+    tradeFooter,
+    addr
   }
 };
 </script>
@@ -194,6 +248,9 @@ body {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
+        .myList{
+          cursor: pointer;
+        }
         >div{
           width: 100%;
           display: -webkit-flex;

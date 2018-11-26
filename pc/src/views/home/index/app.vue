@@ -9,7 +9,6 @@
 <script>
 import tradeHeader from "components/tradeHeader";
 import tradeFooter from "components/tradeFooter";
-
 export default {
   data() {
     return {
@@ -20,7 +19,7 @@ export default {
   methods: {},
   components: {
     tradeHeader,
-    tradeFooter
+    tradeFooter,
   }
 };
 </script>
@@ -38,7 +37,7 @@ body {
       margin: 0 auto;
       background-color: #fff;
     }
-    
+
   }
 }
 </style>
