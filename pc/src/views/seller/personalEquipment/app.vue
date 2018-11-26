@@ -19,9 +19,13 @@
 </template>
 
 <script>
+import tradeHeader from 'components/tradeHeader'
+import tradeFooter from 'components/tradeFooter'
+
 export default {
   data(){
     return{
+      showSearch:false,
       equipmentList:[
         {
           content:'【转租】高价租最新服装衬衫全效检测设备一台',
@@ -30,73 +34,77 @@ export default {
           time:'2018年6月17日'
         },
         {
-          content:'',
+          content:'【转租】高价租最新服装衬衫全效检测设备一台',
           linkedMan:'张先生',
           phoneNum:'15900110011',
           time:'2018年6月17日'
         },
         {
-          content:'',
+          content:'【转租】高价租最新服装衬衫全效检测设备一台',
           linkedMan:'张先生',
           phoneNum:'15900110011',
           time:'2018年6月17日'
         },
         {
-          content:'',
+          content:'【转租】高价租最新服装衬衫全效检测设备一台',
           linkedMan:'张先生',
           phoneNum:'15900110011',
           time:'2018年6月17日'
         },
         {
-          content:'',
+          content:'【转租】高价租最新服装衬衫全效检测设备一台',
           linkedMan:'张先生',
           phoneNum:'15900110011',
           time:'2018年6月17日'
         },
         {
-          content:'',
+          content:'【转租】高价租最新服装衬衫全效检测设备一台',
           linkedMan:'张先生',
           phoneNum:'15900110011',
           time:'2018年6月17日'
         },
         {
-          content:'',
+          content:'【转租】高价租最新服装衬衫全效检测设备一台',
           linkedMan:'张先生',
           phoneNum:'15900110011',
           time:'2018年6月17日'
         },
         {
-          content:'',
+          content:'【转租】高价租最新服装衬衫全效检测设备一台',
           linkedMan:'张先生',
           phoneNum:'15900110011',
           time:'2018年6月17日'
         },
         {
-          content:'',
+          content:'【转租】高价租最新服装衬衫全效检测设备一台',
           linkedMan:'张先生',
           phoneNum:'15900110011',
           time:'2018年6月17日'
         },
         {
-          content:'',
+          content:'【转租】高价租最新服装衬衫全效检测设备一台',
           linkedMan:'张先生',
           phoneNum:'15900110011',
           time:'2018年6月17日'
         },
         {
-          content:'',
+          content:'【转租】高价租最新服装衬衫全效检测设备一台',
           linkedMan:'张先生',
           phoneNum:'15900110011',
           time:'2018年6月17日'
         },
         {
-          content:'',
+          content:'【转租】高价租最新服装衬衫全效检测设备一台',
           linkedMan:'张先生',
           phoneNum:'15900110011',
           time:'2018年6月17日'
         }
       ]
     }
+  },
+  components:{
+    tradeHeader,
+    tradeFooter
   }
 }
 </script>
@@ -123,14 +131,20 @@ html,body{
           flex-flow: row nowrap;
           justify-content: space-between;
           align-items: center;
+          border-bottom: 1px solid #e1e1e1;
           >span{
             &:nth-of-type(1){
               width: 45%;
               color: #0d55d2;
+              display: flex;
+              align-items: center;
               &::before{
+                display: inline-block;
+                content: '.';
                 height: 5px;
                 width: 5px;
                 background-color: #0d55d2;
+                color: #fff;
               }
             }
             &:nth-of-type(2){

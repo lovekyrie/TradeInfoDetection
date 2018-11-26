@@ -50,7 +50,7 @@ export default {
       }
     },
     toPersonal(){
-      window.location.href='/seller/personalEquipment.html'
+      window.location.href='./personalEquipment.html'
     }
   }
 };
