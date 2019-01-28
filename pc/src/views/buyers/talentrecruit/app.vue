@@ -4,36 +4,36 @@
       <trade-header></trade-header>
     </div>
     <div class="content">
-      <el-form>
+      <el-form :model="form" :rules="rules" ref="form" >
         <trade-title :title="title"></trade-title>
-          <el-form-item label="职位名称：">
-            <el-input v-model="form.jobName" placeholder="无机分析工程师"></el-input>
-          </el-form-item>
-          <el-form-item label="薪资：">
-            <el-input v-model="form.salaryG" placeholder="4000"></el-input><span>~</span>
-            <el-input v-model="form.salaryL" placeholder="5000"></el-input><span>元/月</span>
-          </el-form-item>
-          <el-form-item label="联系电话：">
-            <el-input v-model="form.phone" placeholder="13599990000"></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱地址：">
-            <el-input v-model="form.address" placeholder="2378273829@qq.com"></el-input>
-          </el-form-item>
-            <el-form-item label="职位描述：">
-            <el-input type="textarea" v-model="form.desc" :placeholder="jobdesc"></el-input>
-          </el-form-item>
-           <el-form-item>
-            <div class="btn-wrap">
-              <el-button type="primary" @click="onSubmit">确认</el-button>
-              <el-button>取消</el-button>
-            </div>
-            </el-form-item>
+        <el-form-item label="职位名称：" prop="nm">
+          <el-input v-model="form.nm" ></el-input>
+        </el-form-item>
+        <el-form-item label="薪资：">
+          <el-input v-model="form.frSala" ></el-input><span>~</span>
+          <el-input v-model="form.toSala" ></el-input><span>元/月</span>
+        </el-form-item>
+        <el-form-item label="联系电话：" prop="mob">
+          <el-input v-model="form.mob" ></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱地址：">
+          <el-input v-model="form.email" ></el-input>
+        </el-form-item>
+        <el-form-item label="职位描述：" prop="intro">
+          <el-input type="textarea" v-model="form.intro" ></el-input>
+        </el-form-item>
+        <el-form-item>
+          <div class="btn-wrap">
+            <el-button type="primary" @click="onSubmit('form')">确认</el-button>
+            <el-button @click="cancel('form')">取消</el-button>
+          </div>
+        </el-form-item>
       </el-form>
     </div>
     <div class="footer">
       <trade-footer></trade-footer>
     </div>
-  </div> 
+  </div>
 </template>
 
 <script>
@@ -48,18 +48,68 @@ export default {
       jobdesc:
         "1、操作过ICP，GC-MS等分析仪器；2、英语CET4及以上；3、能熟练的操作办公软件。",
       form: {
-        jobName: "",
-        salaryG: "",
-        salaryL: "",
-        phone: "",
-        address: "",
-        desc: ""
+        mxPubRecrPk:'',//主键
+        sysUserPk:'',//用户主键
+        entpPk:'',//企业主键
+        entpNm:'',//企业名称
+        nm:'',//名称
+        frSala:'',//最少薪资
+        toSala:'',//最多薪资
+        mob:'',//电话
+        email:'',//邮箱
+        intro:'',//简介
+      },
+      rules:{
+        nm: [
+          { required: true, message: '请输入职位名称', trigger: 'blur' },
+        ],
+        mob: [
+          { required: true, message: '请输入联系电话', trigger: 'blur' }
+        ],
+        intro: [
+          {  required: true, message: '请输入职位描述', trigger: 'blur'}
+        ],
       }
     };
   },
+  mounted(){
+    let info=JSON.parse(this.until.loGet('userInfo'))
+    if(info){
+      this.form.sysUserPk = info.sysUserPk
+      this.form.entpPk = info.entpPk
+      this.form.entpNm = info.entpNm
+    }
+  },
   methods: {
-    onSubmit(){
-      
+    cancel(formName) {
+      this.$refs[formName].resetFields();
+    },
+    onSubmit(formName){
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          this.loading=true
+          this.until.postData('/prod/mxpubrecr/edit',JSON.stringify(this.form))
+            .then(res=>{
+              this.loading = false
+              if(res.status=='200'){
+                this.$message({
+                  message:res.message,
+                  type:'success'
+                });
+                setTimeout(()=>{
+                  window.history.go(-1)
+                  // window.location.href = 'humanresource.html'
+                },1500)
+              }else {
+                this.$message({
+                  message:res.message,
+                  type:'warning'
+                });
+              }
+            })
+        }
+      })
+
     }
   },
   components: {
@@ -81,12 +131,10 @@ body {
       width: 765px;
       margin: 65px auto 0px;
       .el-form {
-        display: -webkit-flex;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
+        padding-bottom: 30px;
         .el-form-item {
-          width: 100%;
+          width: 80%;
+          margin: 15px auto;
           display: -webkit-flex;
           display: flex;
           flex-direction: row;
@@ -106,11 +154,12 @@ body {
             }
           }
           > label {
-            width: 15%;
-            text-align: left;
+            width: 20%;
+            text-align: right;
           }
           > div {
-            width: 80%;
+            /*width: 70%;*/
+            flex: 1;
           }
           textarea {
             height: 80px;

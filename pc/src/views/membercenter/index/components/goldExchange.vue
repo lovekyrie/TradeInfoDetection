@@ -1,6 +1,6 @@
 <template>
    <div class="goldexchange">
-          <p @click="toMyGold" style="text-align: left;padding-left: 20px;margin-bottom: 30px;">
+          <p @click="toMyGold" style="text-align: left;padding-left: 20px;margin-bottom: 30px;" class="cursor">
             <i class="el-icon-arrow-left"></i> 返回
           </p>
           <!--标题-->
@@ -54,7 +54,7 @@ export default {
 };
 </script>
 
-<style lang='less' scoped>
+<style lang='less'>
 .goldexchange {
   flex: 5.5;
   background-color: white;
@@ -87,7 +87,7 @@ export default {
 
   //  兑换列表
   .exchange {
-    text-align: center;
+
     ul {
       margin-top: 20px;
 
@@ -95,7 +95,8 @@ export default {
       li {
         display: inline-block;
         text-align: left;
-        margin-right: 5%;
+        width: 30%;
+        margin-right: 3%;
         margin-bottom: 10px;
 
         //兑换按钮

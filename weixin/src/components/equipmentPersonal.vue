@@ -8,7 +8,7 @@
       <div>
         <span>{{item.contNm}}</span>
         <span>{{item.contMob}}</span>
-        <span>{{item.rcdTm}}</span>
+        <span>{{item.crtTm}}</span>
       </div>
     </div>
   </div>
@@ -46,13 +46,14 @@ export default {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
-        justify-content: space-between;
+        /*justify-content: space-between;*/
         align-items: center;
         &:nth-of-type(1){
           >span{
             &:nth-of-type(1){
-              height: 15%;
-              width: 1%;
+              height: 3px;
+              width: 3px;
+              margin-right: 8px;
               background-color: #000;
             }
             &:nth-of-type(2){
@@ -63,7 +64,7 @@ export default {
         &:nth-of-type(2){
           >span{
             &:nth-of-type(1){
-              margin-left: .4rem;
+              margin-left: 11px;
               width: 25%;
             }
             &:nth-of-type(2){

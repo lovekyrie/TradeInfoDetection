@@ -29,7 +29,8 @@ export default {
 
 <style lang='less'>
 .swipper {
-      width: 1400px;
+      width: 100%;
+      background: #ffffff;
       height: 500px;
       margin: 0 auto;
       .el-carousel__container {
@@ -48,12 +49,13 @@ export default {
             display: -webkit-flex;
             justify-content: center;
             align-items: center;
+            height: 100%;
             img {
               width: auto;
               height: auto;
               max-width: 100%;
               max-height: 100%;
-              vertical-align: middle;
+              /*vertical-align: middle;*/
             }
           }
         }

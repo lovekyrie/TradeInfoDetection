@@ -11,21 +11,21 @@
           <!--兑换列表-->
           <div class="exchange">
             <ul>
-              <li>
-                <span class="excImg"><a href="#"> <img :src="myexchange" alt="物品图"></a></span>
-                <span class="excDes">河北纺织品有限公司四件套检测报告</span>
-                <span class="price">200金币</span>
-              </li>
-              <li>
-                <span class="excImg"><a href="#"> <img :src="myexchange" alt="物品图"></a></span>
-                <span class="excDes">河北纺织品有限公司四件套检测报告</span>
-                <span class="price">200金币</span>
-              </li>
-              <li>
-                <span class="excImg"><a href="#"> <img :src="myexchange" alt="物品图"></a></span>
-                <span class="excDes">河北纺织品有限公司四件套检测报告</span>
-                <span class="price">200金币</span>
-              </li>
+              <!--<li>-->
+                <!--<span class="excImg"><a href="#"> <img :src="myexchange" alt="物品图"></a></span>-->
+                <!--<span class="excDes">河北纺织品有限公司四件套检测报告</span>-->
+                <!--<span class="price">200金币</span>-->
+              <!--</li>-->
+              <!--<li>-->
+                <!--<span class="excImg"><a href="#"> <img :src="myexchange" alt="物品图"></a></span>-->
+                <!--<span class="excDes">河北纺织品有限公司四件套检测报告</span>-->
+                <!--<span class="price">200金币</span>-->
+              <!--</li>-->
+              <!--<li>-->
+                <!--<span class="excImg"><a href="#"> <img :src="myexchange" alt="物品图"></a></span>-->
+                <!--<span class="excDes">河北纺织品有限公司四件套检测报告</span>-->
+                <!--<span class="price">200金币</span>-->
+              <!--</li>-->
 
 
             </ul>
@@ -87,9 +87,10 @@ export default {
 
       //列样式
       li {
+        width: 290px;
         display: inline-block;
         text-align: left;
-        margin-right: 5%;
+        margin-right: 15px;
         margin-bottom: 10px;
 
         //兑换品描述
@@ -103,7 +104,7 @@ export default {
         //兑换品图片
         .excImg {
           img {
-            width: 270px;
+            width: 100%;
           }
         }
 

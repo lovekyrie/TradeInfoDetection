@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <header-title :title="title"></header-title>
     <address-manage :addressList="list" @delete="deleteAddr"></address-manage>
     <div class="footer">
       <div @click="toAddAddress">
@@ -15,10 +16,12 @@
 <script>
 import addressManage from "components/addressManage";
 import addAddress from "./images/添加地址.png";
-
+import headerTitle from "components/headerTitle";
 export default {
   data() {
     return {
+        url:'../home/index.html',
+        title:'地址管理',
       addAddress,
         info:{
 
@@ -39,10 +42,25 @@ export default {
     };
   },
     mounted(){
+       this.until.pushHistory();
       this.info = JSON.parse(this.until.loGet('userInfo'))
       this.getAddr()
     },
   methods:{
+      // pushHistory(){
+      //     window.addEventListener("popstate", function(e) {
+      //
+      //         // alert("后退");
+      //         self.location.reload();
+      //     }, false);
+      //
+      //     var state = {
+      //         title : "",
+      //         url : "#"
+      //     };
+      //     window.history.replaceState(state, "", "#");
+      //
+      // },
       deleteAddr(index){
           this.list.splice(index,1)
       },
@@ -59,7 +77,8 @@ export default {
     }
   },
   components: {
-    addressManage
+    addressManage,
+      headerTitle
   }
 };
 </script>
@@ -97,6 +116,9 @@ export default {
           align-items:center;
           padding: .2rem 0;
           color: #fff;
+          img{
+            width: 0.4rem;
+          }
           >span{
             font-size: 16px;
             margin-left: .2rem;

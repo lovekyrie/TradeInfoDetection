@@ -18,9 +18,9 @@
               min-width="70%"
             >
               <template slot-scope="scope">
-                <span class="tableMsg">收&nbsp;货&nbsp;人：{{scope.row.name}}</span>
-                <span>手机号码：{{scope.row.phone}}</span>
-                <p>详细地址：{{scope.row.address}}</p>
+                <span class="tableMsg">收&nbsp;货&nbsp;人：{{scope.row.receNm}}</span>
+                <span>手机号码：{{scope.row.receMob}}</span>
+                <p>详细地址：{{scope.row.provNm}}{{scope.row.cityNm}}{{scope.row.distNm}}{{scope.row.streetNm}}{{scope.row.addrDtl}}</p>
               </template>
             </el-table-column>
 
@@ -51,42 +51,56 @@
 export default {
    data() {
       return {
-        tableData: [{
-          name:'张三',
-          phone:'15123123132',
-          address:'浙江省宁波市高新区福民路618号 516室'
-        },
-          {
-          name:'张四',
-          phone:'15123123132',
-          address:'浙江省宁波市高新区福民路618号 516室'
-        },
-          {
-          name:'张五',
-          phone:'15123123132',
-          address:'浙江省宁波市高新区福民路618号 516室'
-        },
-        ]
+        tableData: []
       }
     },
+  mounted(){
+    this.getAddr()
+  },
      methods: {
+       getAddr(){
+         this.until.get('/sys/addr/listSelf')
+           .then(res=>{
+             this.tableData = res.data.items
+           })
+       },
       //编辑当前行
       handleEdit(index,row){
-        console.log(index, row);
+        // console.log(index, row);
+        this.$router.push({
+          path:'/addAddress',
+          query:{
+            info:JSON.stringify(row)
+          }
+        })
       },
 
       //删除当前行
       handleDelete(index, row) {
         let r = confirm("确定删除吗?")
         if(r == true){
-          alert('已删除')
+          this.until.get('/sys/addr/del?pks='+row.sysAddrPk)
+            .then(res=>{
+              if(res.status=='200'){
+                this.tableData.splice(index,1)
+                this.$message({
+                  message:'删除成功！',
+                  type:'success'
+                });
+              }else {
+                this.$message({
+                  message:res.message,
+                  type:'warning'
+                });
+              }
+            })
         }else {
           return
         }
       },
       toAddAddr(){
         this.$router.push({
-          path:'/addaddress'
+          path:'/addaddress',
         })
       }
     }
@@ -104,7 +118,7 @@ export default {
           text-align: left;
           padding: 0 15px;
           padding-bottom: 20px;
-          border-bottom: 2px solid rgb(241, 241, 241);  
+          border-bottom: 2px solid rgb(241, 241, 241);
           button{
             margin-left: 30px;
             background-color: #0d55d2;

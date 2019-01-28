@@ -3,9 +3,8 @@
     <div class="content">
       <div>
         <span>资源类型：</span>
-        <select>
-          <option value="业务资源">业务资源</option>
-          <option value="设备资源">设备资源</option>
+        <select v-model="info.catCd">
+          <option :value="item.cd" v-for="(item,index) in catCdList" :key="index">{{item.nm}}</option>
         </select>
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-31xiala"></use>
@@ -13,43 +12,51 @@
       </div>
       <div>
         <span>资源名称：</span>
-        <input type="text" placeholder="单行输入">
+        <input type="text" v-model="info.nm" placeholder="单行输入">
       </div>
-      <div>
-        <span>发布时间：</span>
-        <input type="text" readonly :value="currentTime">
-      </div>
+      <!--<div>-->
+        <!--<span>发布时间：</span>-->
+        <!--<input type="text" readonly :value="currentTime">-->
+      <!--</div>-->
       <div>
         <span>有效日期：</span>
-        <select>
-          <option :value="validTime">{{validTime}}</option>
-        </select>
-         <svg class="icon" aria-hidden="true">
+        <input @click="chooseDate=true" v-model="info.rcdTm" type="text"/>
+        <van-popup v-model="chooseDate" position="bottom" :overlay="false">
+          <van-datetime-picker
+                  v-model="rcdTm2"
+                  type="date"
+                  :min-date="minDate"
+                  @cancel="cancel"
+                  @confirm="confirmDate"
+          />
+        </van-popup>
+
+        <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-31xiala"></use>
-          </svg>
+        </svg>
       </div>
       <div>
         <span>资源描述：</span>
-        <textarea name="" id="" placeholder="多行输入"></textarea>
+        <textarea name="" id="" placeholder="多行输入" v-model="info.rmks"></textarea>
       </div>
       <div>
         <span>联系人：</span>
-        <input type="text" placeholder="请输入联系人姓名">
+        <input type="text" placeholder="请输入联系人姓名" v-model="info.contNm">
       </div>
       <div>
         <span>联系电话：</span>
-        <input type="text" placeholder="请输入联系电话">
+        <input type="text" placeholder="请输入联系电话" v-model="info.contMob">
       </div>
       <div>
         <span>邮箱地址：</span>
-        <input type="text" placeholder="请输入邮箱地址">
+        <input type="text" placeholder="请输入邮箱地址" v-model="info.email">
       </div>
+      <!--<div>-->
+        <!--<span>联系方式：</span>-->
+        <!--<input type="text" placeholder="请输入其他联系方式">-->
+      <!--</div>-->
       <div>
-        <span>联系方式：</span>
-        <input type="text" placeholder="请输入其他联系方式">
-      </div>
-      <div>
-        <button>
+        <button @click="submit">
           确认
         </button>
       </div>
@@ -61,8 +68,25 @@
 export default {
   data(){
     return {
+        chooseDate:false,
       currentTime:'',
       validTime:'',
+        rcdTm2:'',
+        rcdTm:'',
+        minDate:new Date(),
+        info:{
+            mxPubResPk:'',
+            sysUserPk:'',
+            nm:'',
+            contNm:'',
+            contMob:'',
+            contOther:'',
+            email:'',
+            rcdTm:'',
+            rmks:'',
+            catCd:''
+        },
+        catCdList:[]
     }
   },
   mounted(){
@@ -82,10 +106,84 @@ export default {
     month=month+1<10?"0"+month:month;
     this.currentTime=time.year+'-'+time.month+'-'+time.day
     this.validTime=year+'-'+month+'-'+time.day
+      this.info.sysUserPk = JSON.parse(this.until.loGet('userInfo')).sysUserPk
+    this.getCatCd()
+
   },
   methods:{
 
-  }
+      cancel(){
+          this.rcdTm2 = this.rcdTm
+          this.chooseDate = false
+      },
+      confirmDate(){
+          this.rcdTm = this.rcdTm2
+          this.chooseDate = false
+      },
+      //获取资源类型
+      getCatCd(){
+          this.until.get('/general/cat/listByPrntCd?prntCd=60030')
+              .then(res=>{
+                  if(res.status=='200'){
+                      this.catCdList = res.data.items
+                  }
+              })
+      },
+      Verification(){
+          if(this.info.nm==''){
+              return false
+          }
+          if(this.info.catCd==''){
+              return false
+          }
+          if(this.info.rcdTm==''){
+              return false
+          }
+          if(this.info.rmks==''){
+              return false
+          }
+          if(this.info.contNm==''){
+              return false
+          }
+          if(this.info.contMob==''){
+              return false
+          }
+          if(this.info.email==''){
+              return false
+          }
+          return true
+      },
+      submit(){
+          if(this.Verification()){
+              this.$dialog.loading.open()
+              this.until.postData('/prod/mxpubreq/edit',JSON.stringify(this.info))
+                  .then(res=>{
+                      this.$dialog.loading.close()
+                      if(res.status=='200'){
+                          this.$hero.msg.show({
+                              text:'提交成功！',
+                              times:1500
+                          });
+                          setTimeout(()=>{
+                              window.location.href = '../servicecenter/partnerList.html'
+                          },1500)
+                      }
+                  })
+          }else {
+              this.$hero.msg.show({
+                  text:'请补全信息！',
+                  times:1500
+              });
+          }
+
+      }
+  },
+    watch:{
+        rcdTm:function (val) {
+            let myDate = this.until.formatDate(val)
+            this.info.rcdTm = myDate.year+'-'+myDate.month+'-'+myDate.day+' 00:00:00'
+        }
+    }
 };
 </script>
 
@@ -133,7 +231,7 @@ body {
         }
         &:nth-of-type(5){
           >span{
-            margin-top: -1.2rem;
+            /*margin-top: -1.2rem;*/
           }
         }
         &:not(:nth-last-of-type(1)) {

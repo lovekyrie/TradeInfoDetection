@@ -287,12 +287,12 @@
     methods: {
       //编辑当前行
       handleEdit(index, row) {
-        console.log(index, row);
+        // console.log(index, row);
       },
 
       //删除当前行
       handleDelete(index, row) {
-        console.log(index, row);
+        // console.log(index, row);
       },
     }
   }

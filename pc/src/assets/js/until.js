@@ -1,6 +1,46 @@
 const postImgUrl = 'http://106.14.184.214:8999/mortgageImage/_upFile';
 const clubId = 90;
+import { MessageBox } from 'element-ui';
 class until{
+  //判断是否登录
+  ifLogin(){
+    // console.log(localStorage.getItem('user'))
+    if(!this.loGet('user')){
+      MessageBox.confirm('登录后才能操作，请您先登录', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        window.location.href = '../entry/login.html'
+      })
+      return false
+    }else {
+      return true
+    }
+  }
+  down(obj){
+    let objArr=obj.split('/')
+    let name = objArr[objArr.length-1]
+    let url = 'http://mx.jiaxiangtech.com/upload/201812/5b24f0422eb24717a37f08d43c529713.jpg'
+    // for(let i=0; i<objArr.length-1;i++){
+    //   name+=objArr[i]
+    // }
+    // console.log(url)
+    // 创建隐藏的可下载链接
+    var eleLink = document.createElement('a');
+    // http___khtest.10jqka.com.cn_dev_taojinchao_vuepdf_dist_test
+    eleLink.download = name;
+    eleLink.style.display = 'none';
+    // 字符内容转变成blob地址
+    var blob = new Blob([url]);
+    eleLink.href = URL.createObjectURL(blob);
+    // 触发点击
+    document.body.appendChild(eleLink);
+    eleLink.click();
+    // 然后移除
+    document.body.removeChild(eleLink);
+
+  }
   getPk(){
     let obj = this.loGet('JS_token');
     return JSON.parse(obj).accInfo.teachAccPk;;
@@ -45,23 +85,29 @@ class until{
   upImg(e){
     let $q = new Promise((resolve,reject)=>{
       let blob = e.target.files[0];
-      if (!/^image/.test(blob.type)){
-        return reject('请选择图片文件');
+      let maxSize = 1024*1024*10
+      if(blob.size>maxSize){
+
+        return reject('最大不能超过10M！');
       }
-      let param = new FormData();
-      param.append('file',blob);
-      this.postImg('/general/file/upload',param)
-        .then(res=>{
-          e.target.value = '';
-          if(res.status == 500){
-            reject(res.message)
-          }else {
-            resolve(res.data);
-          }
-        },err=>{
-          e.target.value = '';
-          reject('上传失败');
-        })
+      if (/^image/.test(blob.type) || /^application\/pdf/.test(blob.type)){
+        let param = new FormData();
+        param.append('file',blob);
+        this.postImg('/general/file/upload',param)
+          .then(res=>{
+            e.target.value = '';
+            if(res.status == 500){
+              reject(res.message)
+            }else {
+              resolve(res.data);
+            }
+          },err=>{
+            e.target.value = '';
+            reject('上传失败');
+          })
+      }else {
+        return reject('请选择图片文件或者PDF！');
+      }
     });
     return $q;
   }
@@ -114,7 +160,7 @@ class until{
       })
     });
     return promise;
-  }postCard
+  }
   postCard(url,data){
         let promise = new Promise((resolve,reject)=> {
             $.ajax({
@@ -155,6 +201,7 @@ class until{
     });
     return promise;
   }
+
   get(url,data,processData = true){
     let promise = new Promise((resolve,reject)=>{
       $.ajax({
@@ -298,7 +345,8 @@ class until{
   }
   //格式化日期,返回 年 月 日 星期
   formatDate(str=""){
-    str = str==""?new Date():new Date(str.replace(/-/g, "/"));
+    // str = str==""?new Date():new Date(str.replace(/-/g, "/"));
+    str = str==""?new Date():new Date(str);
     let week = ["星期天","星期一","星期二","星期三","星期四","星期五","星期六"];
     let year =str.getFullYear();
     let month = str.getMonth()+1<10?"0"+(str.getMonth()+1):str.getMonth()+1;

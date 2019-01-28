@@ -29,23 +29,25 @@
 
   //图标行
   #icon {
-    border-top: 1px solid rgb(204, 204, 204);
-    border-bottom: 2px solid rgb(241, 241, 241);
     height: 70px;
-    min-width: 800px;
     background-color: white;
-    line-height: 70px;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
     text-align: center;
-
+    width: 1200px;
+    margin: 0 auto;
     img {
       width: 90px;
-      position: relative;
-      left: -165px;
+      margin-left: 20px;
     }
 
   //  搜索框
     .el-input{
       width: 350px;
+      //margin-left: 520px;
+      margin-left: auto;
+      margin-right:30px;
       .el-input__inner{
         border-radius: 0;
       }
@@ -61,21 +63,21 @@
   //  发布资源按钮
     .releaseButton{
       display: inline-block;
-      width: 90px;
+      width: 120px;
       height: 34px;
       border-radius: 4px;
       color: rgb(13,85,210);
       border-color: rgb(13,85,210);
-      position: relative;
-      left: 120px;
+      right: 120px;
+      border-width: 1px;
+      background: #ffffff;
     }
 
   }
 
   //中间主体部分
   #main {
-    width: 860px;
-    min-width: 800px;
+    width: 1200px;
     //height: 460px;
     min-height: 460px;
     background-color: white;

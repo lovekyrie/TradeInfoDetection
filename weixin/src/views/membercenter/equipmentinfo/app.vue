@@ -10,12 +10,15 @@
         <equipment-info :equipmentList="list"></equipment-info>
       </van-list>
     </div>
+    <footer @click="submit">
+      发布设备需求
+    </footer>
   </div>
 </template>
 
 <script>
 import equipmentInfo from 'components/equipmentInfo'
-
+import equipmentPer from 'components/equipmentPer'
 export default {
   data(){
     return {
@@ -44,15 +47,22 @@ export default {
     }
   },
     mounted(){
+        this.until.pushHistory();
         this.getList()
     },
     methods:{
         getList(){
             this.loading = true;
-            let query = new this.Query();
-            query.buildPageClause(this.pageNo,this.pageSize);
+            // let query = new this.Query();
+            // query.buildPageClause(this.pageNo,this.pageSize);
+            let page = {
+                p:{
+                    n:this.pageNo,
+                    s:this.pageSize
+                }
+            }
             let param = {
-                query:query.getParam()
+                query:JSON.stringify(page),
             }
             this.until.get('/prod/mxpubdev/pageSelf',param)
                 .then(res=>{
@@ -93,9 +103,13 @@ export default {
                 }
             }, 500);
         },
+        submit(){
+            window.location.href = 'equipmentSubmit.html'
+        }
     },
   components:{
     equipmentInfo,
+      equipmentPer
   }
 }
 
@@ -107,6 +121,22 @@ html,body{
   background-color: #f7f7f7;
   #app{
     height: 100%;
+    overflow: hidden;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction:column;
+    .content{
+      flex: 1;
+      overflow: auto;
+    }
+  }
+  footer{
+    padding: .2rem 0;
+    width: 100%;
+    font-size: 16px;
+    background-color: #2A8AF2;
+    color: #fff;
+    text-align: center;
   }
 }
 </style>

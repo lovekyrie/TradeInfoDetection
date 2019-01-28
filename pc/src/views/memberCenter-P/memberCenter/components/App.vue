@@ -102,6 +102,16 @@
               </div>
               <div class="rightBottom_c_right"></div>
             </div>
+            <div class="rightBottom_c">
+              <div class="rightBottom_c_left"><a href="../../views/servicecenter/settleInsuccess.html">
+                <img src="../img/我的发布.png" alt="我的发布" align="left" style="margin-right: 30px"></a>
+                <div style="padding-top: 10px">
+                  <p style="margin-bottom: 5px;font-size: 16px">我的发布</p>
+                  <p><a href="../../views/servicecenter/settleInsuccess.html" style="font-size: 14px">查看发布情况 ></a></p>
+                </div>
+              </div>
+              <div class="rightBottom_c_right"></div>
+            </div>
           </div>
         </div>
       </div>

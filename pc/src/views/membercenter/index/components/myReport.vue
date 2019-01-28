@@ -1,5 +1,5 @@
 <template>
-   <div class="myreport">
+   <div class="myreport" v-loading="loading">
 
           <!--搜索框-->
           <div class="mainSearch">
@@ -22,52 +22,60 @@
                 <el-select v-model="value">
                   <el-option
                     v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                    :key="item.cd"
+                    :label="item.nm"
+                    :value="item.cd">
                   </el-option>
                 </el-select>
               </el-form-item>
 
               <el-form-item>
-                <el-button type="primary">搜索</el-button>
+                <el-button type="primary" @click="toSearch">搜索</el-button>
               </el-form-item>
-              <a class="upReport" href="#">报告上传</a>
+              <a class="upReport" href="../buyers/uploadreport.html">报告上传</a>
             </el-form>
 
           </div>
           <!--收藏信息-->
           <el-table
-            :data="tableData"
+            :data="list"
             style="width: 100%"
             align="left"
             padding="5px"
-            @row-click="toReportDetail()">
-            <el-table-column prop="reportTitle" label="报告标题" >
-              <template slot-scope="scope">
-               <a :href="tableData[scope.$index].reportAddress" target="_self">{{tableData[scope.$index].reportTitle}}
-               </a>
-              </template>
+            @row-click="toReportDetail"  class="cursor">
+            <el-table-column prop="nm" label="报告标题" >
+              <!--<template slot-scope="scope">-->
+               <!--<a :href="tableData[scope.$index].mxRepoPk" target="_self">{{tableData[scope.$index].nm}}-->
+               <!--</a>-->
+              <!--</template>-->
             </el-table-column>
 
-            <el-table-column prop="id" label="序列号"> </el-table-column>
-            <el-table-column prop="testingAgency" label="检测机构" width="160px"> </el-table-column>
-            <el-table-column prop="testingName" label="质检产品名称" align="center"> </el-table-column>
-            <el-table-column prop="property" label="性质" width="70" align="center" ></el-table-column>
-            <el-table-column prop="upTime" label="上传时间" align="center"></el-table-column>
+            <el-table-column prop="no" label="序列号"> </el-table-column>
+            <el-table-column prop="deteOrg" label="检测机构" width="160px"> </el-table-column>
+            <el-table-column prop="prodNm" label="质检产品名称" align="center"> </el-table-column>
+            <el-table-column prop="statNm" label="性质" width="70" align="center" ></el-table-column>
+            <el-table-column prop="crtTm" label="上传时间" align="center"></el-table-column>
             <el-table-column align="center" prop="Toperation" label="操作" >
 
               <template slot-scope="scope">
                 <el-button
                   size="mini"
-                  @click="handleEdit(scope.$index, scope.row)"><i class="el-icon-edit"></i></el-button>
+                  @click.stop="handleEdit(scope.$index, scope.row)"><i class="el-icon-edit"></i></el-button>
                 <el-button
                   size="mini"
-                  @click="handleDelete(scope.$index, scope.row)"><i class="el-icon-delete"></i></el-button>
+                  @click.stop="handleDelete(scope.$index, scope.row)"><i class="el-icon-delete"></i></el-button>
               </template>
             </el-table-column>
           </el-table>
-
+         <div class="block">
+           <el-pagination
+             @current-change="handleCurrentChange"
+             :current-page="pageNo"
+             :page-size="pageSize"
+             layout="total, prev, pager, next, jumper"
+             :total="total">
+           </el-pagination>
+         </div>
 
         </div>
 
@@ -77,65 +85,106 @@
 export default {
    data() {
       return {
+        loading:false,
+        pageNo:1,
+        pageSize:20,
+        total:0,
         search: {
           reportTitle:'',
           id:'',
           testingAgency:'',
           testingName:'',
         },
-        tableData: [
-          {
-            reportTitle:'福州福州服饰有限公司防晒衣检测报告',
-            reportAddress:'./reportDetail.html',
-            id:'1023240321223102',
-            testingAgency:'宁波贸信检测',
-            testingName:'防晒衣',
-            property:'公开',
-            upTime:'2018-06-06 12:00:00',
-          },{
-            reportTitle:'福州福州服饰有限公司防晒衣检测报告',
-            reportAddress:'./reportDetail.html',
-            id:'1023240321223102',
-            testingAgency:'宁波贸信检测',
-            testingName:'防晒衣',
-            property:'公开',
-            upTime:'2018-06-06 12:00:00',
-          },{
-            reportTitle:'福州福州服饰有限公司防晒衣检测报告',
-            reportAddress:'./reportDetail.html',
-            id:'1023240321223102',
-            testingAgency:'宁波贸信检测',
-            testingName:'防晒衣',
-            property:'公开',
-            upTime:'2018-06-06 12:00:00',
-          },
-        ],
+        list:[],
+        tableData: [],
         options:[
-          {value:0,
-          label:'全部'},
-          {value:1,
-          label:'公开'},
-          {value:2,
-          label:'私密'},
+          {cd:'',
+          nm:'全部'},
         ],
-        value:0
+        value:''
       }
     },
+  mounted(){
+    this.getList()
+    this.getOrdType()
+  },
      methods: {
+       toSearch(){
+         this.pageNo=1
+         this.getList()
+       },
+       handleCurrentChange(val){
+         this.pageNo = val
+         this.getList()
+       },
+       getList(){
+         this.loading = true;
+         let query = new this.Query();
+         // console.log(this.search.orderNum)
+         query.buildWhereClause('nm',this.search.reportTitle,'LK');
+         query.buildWhereClause('no',this.search.id,'LK');
+         query.buildWhereClause('deteOrg',this.search.testingAgency,'LK');
+         query.buildWhereClause('prodNm',this.search.testingName,'LK');
+         query.buildWhereClause('statCd',this.value,'LK');
+         // query.buildWhereClause('prodCityCd',this.cityCode2,'LK');
+
+         query.buildPageClause(this.pageNo,this.pageSize);
+         let param = query.getParam();
+         this.until.get('/prod/mxrepo/pageSelf',param)
+           .then(res=>{
+             this.loading = false;
+             if(res.status == 200){
+               this.total = res.page.total
+               res.data.items.forEach(item=>{
+                 item.crtTm = item.crtTm.split(' ')[0]
+               })
+               this.list = res.data.items
+
+             }else {
+
+             }
+           },err=>{});
+       },
+       getOrdType(){
+         this.until.get('/general/cat/listByPrntCd?prntCd=60000')
+           .then(res=>{
+             if(res.status=='200'){
+               this.options.push(...res.data.items)
+             }
+           })
+       },
       //编辑当前行
       handleEdit(index, row) {
-        console.log(index, row);
+        // console.log(index, row);
+        window.location.href = '../buyers/uploadreport.html?info='+JSON.stringify(row)
       },
 
       //删除当前行
       handleDelete(index, row) {
-        console.log(index, row);
+        // console.log(index, row);
+        this.until.get('/prod/mxrepo/del?pks='+row.mxRepoPk)
+          .then(res=>{
+            if(res.status=='200'){
+              this.list.splice(index,1)
+              this.$message({
+                message:'删除成功！',
+                type:'success'
+              });
+            }else {
+              this.$message({
+                message:res.message,
+                type:'warning'
+              });
+            }
+          })
       },
       //跳转详情页面
-      toReportDetail(row, event, column){
-        // console.log(row, event, column)
+      toReportDetail(row){
         this.$router.push({
-          path:'/reportdetail'
+          path:'/reportdetail',
+          query:{
+            id:row.mxRepoPk
+          }
         })
       }
     }
@@ -148,7 +197,9 @@ export default {
   background-color: white;
   padding-top: 30px;
   padding-bottom: 50px;
-
+  .block{
+    margin-top: 20px;
+  }
   //搜索框
   .mainSearch {
     text-align: left;

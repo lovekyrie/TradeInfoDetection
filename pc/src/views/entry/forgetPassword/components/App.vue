@@ -1,5 +1,5 @@
 <template>
-  <div id="container">
+  <div id="container" v-loading="loading">
     <!--顶部-->
     <div id="header">
       <ul>
@@ -21,16 +21,16 @@
       </ul>
       <!--表单-->
       <div class="form">
-        <div><img src="../img/账号.png"><input type="text" placeholder="请输入账号"> </div>
-        <div><img src="../img/手机.png"><input v-model="phone" @blur.prevent="phoneCheck()" type="number" placeholder="请输入注册手机号码">
+        <div><img src="../img/手机.png"><input v-model="phone" type="number" placeholder="请输入注册手机号码" class="phone">
           <span v-model="Tips.tip1" style="position:absolute;top:11px;color: red">{{Tips.tip1}}</span>
         </div>
 
-        <div><img src="../img/邮箱.png"><input v-model="email" @blur.prevent="emailCheck()" type="text" placeholder="请输入注册邮箱地址">
-          <span v-model="Tips.tip2" style="position:absolute;top:11px;color: red">{{Tips.tip2}}</span>
+        <div style="margin-bottom: 10px"><img src="../img/验证码.png"><input style="width: 200px" type="text" v-model="code">
+          <button class="formButton_c" @click="getCode()" v-if="getCodeShow">获取验证码</button>
+          <button class="modified" v-else>重新发送({{num}}S)</button>
+
         </div>
-        <div style="margin-left: 30px"><button class="loginBtn" type="submit">确定</button>
-          <button class="cancelBtn">取消</button>
+        <div style="margin-left: 30px"><button class="loginBtn" type="submit" @click="submit">重置</button>
         </div>
       </div>
 
@@ -50,8 +50,12 @@
   export default {
     data(){
       return{
+        loading: false,
+        getCodeShow:true, //是否禁止发送验证码
+        num:'',//倒计时
+        time:60,//倒计时时间
         phone:'',
-        email:'',
+        code:'',
         Tips:{
           tip1:'',
           tip2:''
@@ -59,36 +63,88 @@
       }
     },
     methods:{
-      phoneCheck:function () {
-        let reg=11 && /^((13|14|15|17|18)[0-9]{1}\d{8})$/;
-        if(this.phone==''){
-          this.Tips.tip1="*请输入注册手机号码";
+      submit(){
+        this.loading = true
+        let param={
+          phone:this.phone,
+          code:this.code
         }
-        else if(!reg.test(this.phone)){
-          this.Tips.tip1="*请输入正确的手机号码格式";
-        }
-        else {
-          this.Tips.tip1="";
-        }
+        this.until.post('/prodx/adduser/chagpwd',param)
+          .then(res=>{
+            this.loading = false
+            if(res.status=='200'){
+              this.$alert(res.msg, '重置密码', {
+                confirmButtonText: '确定',
+                callback: action => {
+                  // this.$message({
+                  //   type: 'info',
+                  //   message: `action: ${ action }`
+                  // });
+                }
+              });
+            }else {
+              this.$message({
+                message:res.msg,
+                type: 'warning'
+              });
+            }
+          })
       },
-      emailCheck:function () {
-        let reg=/^[\w,\d]+[_|\.]?[\w,\d]*@[\w,\d]+[\.]{1}[\w]{1,3}$/;
-        if(this.email==''){
-          this.Tips.tip2="*请输入注册邮箱地址";
-        }
-        else if(!reg.test(this.email)){
-          this.Tips.tip2="*请输入正确的邮箱格式";
-        }
-        else {
-          this.Tips.tip2="";
-        }
+      getCode(){
 
-      }
+        let param={
+          phone:this.phone
+        }
+        this.until.post('/general/sms/sendCode',param)
+          .then(res=>{
+            if(res.status=='200'){
+              this.getCodeShow=false
+              this.num = this.time
+              this.countDown()
+              this.$message({
+                message:res.message,
+                type: 'success'
+              });
+            }else {
+              this.$message({
+                message:res.message,
+                type: 'warning'
+              });
+            }
 
+          })
+      },
+      //倒计时
+      countDown(){
+        let timePick=setInterval(()=>{
+          this.num--
+          if(this.num==0){
+            this.getCodeShow = true
+            clearInterval(timePick)
+          }
+        },1000)
+      },
     }
   }
 </script>
 
-<style scoped>
-
+<style scoped lang="less">
+  .form{
+    input.phone{
+      width: 340px!important;
+    }
+  }
+.formButton_c {
+  width: 135px!important;
+  height: 36px;
+  font-size: 12px;
+  background-color: rgb(13, 85, 210);
+  color: white;
+  /*position: relative;*/
+  left: -5px;
+  top: 2px;
+}
+.modified{
+  width: 135px!important;
+}
 </style>

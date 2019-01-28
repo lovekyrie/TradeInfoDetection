@@ -16,7 +16,9 @@ body{
   url('../font/iconfont.svg?t=1471339595#iconfont') format('svg'); /* iOS 4.1- */
 }
 
-
+.cursor{
+  cursor: pointer;
+}
 
 .iconfont{
 	font-family:"iconfont";

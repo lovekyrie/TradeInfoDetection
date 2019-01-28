@@ -74,11 +74,11 @@
     }
     //表单样式
     #outForm {
-      position: relative;
-      left: 8px;
+      //position: relative;
+      //left: 8px;
       //消除按钮之间的间隙
       font-size: 0px;
-      word-spacing: -1px;
+      //word-spacing: -1px;
 
       .formButton_a {
         display: inline;
@@ -107,15 +107,15 @@
 
       .inForm {
         text-align: center;
-        margin-top: 20px;
-
+        width: 500px;
+        margin: 20px auto;
         .el-form-item {
 
           label {
             font-weight: 300;
             color: rgb(121, 121, 121);
-            position: relative;
-            left: 165px;
+            //position: relative;
+            //left: 165px;
 
           }
 
@@ -123,10 +123,10 @@
 
         //表单位置细调
         .el-input {
-          width: 260px;
-          height: 38px;
-          position: relative;
-          left: -58px;
+          //width: 290px;
+          //height: 38px;
+          //position: relative;
+          //left: -58px;
 
           .el-input__inner {
             border-radius: 0;
@@ -135,27 +135,38 @@
         }
 
         #modified {
-
-          .el-input {
             position: relative;
-            left: -55px;
-            width: 190px;
+          .el-input {
+            //position: relative;
+            //left: -55px;
+            //width: 190px;
             //border-top-right-radius: 0px;
             //border-bottom-right-radius: 0px;
 
           }
 
           .formButton_c {
-            width: 71px;
+            position: absolute;
+            right: 0;
+            width: 101px;
             height: 36px;
             font-size: 12px;
             background-color: rgb(13, 85, 210);
             color: white;
-            position: relative;
-            left: -61px;
-            top: -1px;
+            //position: relative;
+            //left: -61px;
+            top: 0px;
           }
-
+          .formButton_num {
+            width: 101px;
+            height: 36px;
+            font-size: 12px;
+            background: #e4e4e4;
+            //color: white;
+            position: absolute;
+            right: 0;
+            top: 0px;
+          }
         }
 
       }

@@ -12,7 +12,7 @@
       <div class="detail" v-for="(item, index) in list" :key="index">
         <div><span>{{item.recoUserNm}}</span></div>
         <div><span>{{item.recoQty}}</span></div>
-        <div><span>{{item.recoTm}}</span></div>
+        <div><span>{{item.crtTm}}</span></div>
       </div>
     </div>
   </div>

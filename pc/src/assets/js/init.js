@@ -22,13 +22,16 @@ import './wconfig.js'
 import {Query} from 'assets/js/query'
 // import 'assets/js/Ios';
 // import 'assets/js/WebViewJavascriptBridge';
-
-const hostUrl='http://server.haitiandrive.com';
-
+// import Router from 'vue-router'
+const hostUrl='http://mx.jiaxiangtech.com/wechat';
+import saveAs from 'file-saver';
+var FileSaver = require('file-saver');
 export default{
   install(Vue){
     Vue.use(ElementUI)
+    // Vue.use(FileSaver)
     // Vue.prototype.axios = axios;
+    Vue.prototype.FileSaver = FileSaver;
     Vue.prototype.hostUrl=hostUrl;
     Vue.prototype.until = new until();
     Vue.prototype.app=new app();

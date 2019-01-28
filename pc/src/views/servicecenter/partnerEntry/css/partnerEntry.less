@@ -39,7 +39,55 @@
       margin-left: 250px;
     }
   }
-
+  .i-item{
+    float: left;
+    width: 100px;
+    height: 100px;
+    border: 1px solid #d8d8d8;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    svg{
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      width: 15px;
+      height: 15px;
+    }
+    img{
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+  .upload{
+    float: left;
+    width: 100px;
+    height: 100px;
+    border: 1px solid #d8d8d8;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-right: 5px;
+    margin-bottom: 5px;
+    position: relative;
+    input{
+      cursor: pointer;
+      opacity: 0;
+      position: absolute;
+      top:0;
+      left:0;
+      width: 100px;
+      height: 100px;
+    }
+  }
   //中间主体部分
   #main {
     width: 960px;
@@ -78,17 +126,17 @@
 
     //表单
     .inForm {
+      width: 500px;
+      margin: 20px auto;
       text-align: center;
-      margin-top: 20px;
-      margin-bottom: 20px;
       .el-form-item {
         margin-bottom: 11px;
         //表单标签位置
         label {
           font-weight: 300;
           color: rgb(121, 121, 121);
-          position: relative;
-          left: 240px;
+          //position: relative;
+          //left: 240px;
 
         }
 
@@ -96,10 +144,10 @@
 
       //表单位置细调
       .el-input {
-        width: 320px;
-        height: 38px;
-        position: relative;
-        left: -34px;
+        //width: 320px;
+        //height: 38px;
+        //position: relative;
+        //left: -34px;
 
         .el-input__inner {
           border-radius: 0;
@@ -108,10 +156,10 @@
       }
       //  企业简介框样式
       .el-textarea{
-        width: 320px;
-        min-width: 320px;
-        position: relative;
-        left: -33px;
+        //width: 320px;
+        //min-width: 320px;
+        //position: relative;
+        //left: -33px;
 
         .el-textarea__inner{
           height: 76px;

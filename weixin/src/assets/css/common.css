@@ -16,7 +16,9 @@ body{
   url('../font/iconfont.svg?t=1471339595#iconfont') format('svg'); /* iOS 4.1- */
 }
 
-
+input,select,textarea{
+    -webkit-appearance: none!important;
+}
 
 .iconfont{
 font-family:"iconfont";
@@ -69,7 +71,9 @@ canvas {
 img {
 	border: 0;
 	padding: 0;
-	
+    width: 100%;
+    height:100%;
+    max-width: 100%;
 	margin: 0;
 }
 a {

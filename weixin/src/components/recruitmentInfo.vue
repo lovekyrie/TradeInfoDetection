@@ -4,11 +4,11 @@
       <div class="job-info">
         <div><span>职位名称：{{item.nm}}</span></div>
         <div><span>薪资：{{item.frSala}} - {{item.toSala}}</span></div>
-        <div><span>审核状态：{{item.state}}</span></div>
+        <!--<div><span>审核状态：{{item.state}}</span></div>-->
       </div>
       <div class="release-time">
         <div>
-          <span>发布时间：{{item.releaseTime}}</span>
+          <span>发布时间：{{item.crtTm}}</span>
         </div>
         <div>
           <button @click="detail(item.mxPubRecrPk)">查看详情</button>

@@ -1,5 +1,6 @@
 .DS_Store
 /.svn
+/static/
 .svn/
 node_modules/
 .gitignore

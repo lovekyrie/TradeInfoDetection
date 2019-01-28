@@ -5,15 +5,15 @@
     </div>
     <div class="content">
       <div class="introduce">
-        <div><img :src="log" alt=""></div>
+        <div><img :src="detail.logoUrl" alt=""></div>
         <div>
           <div>
-            <p>{{companyName}}</p>
-            <span>{{name}}</span>
+            <p>{{nm}}</p>
+            <span>{{detail.legal}}</span>
           </div>
           <div>
             <p>公司简介：</p>
-            <span>{{introduce}}</span>
+            <span>{{detail.intro}}</span>
           </div>
         </div>
       </div>
@@ -22,13 +22,13 @@
           <span></span><span>联系方式</span>
         </div>
         <div>
-          <span>上传者：{{name}}</span>
-          <span>联系方式：{{phone}}</span>
-          <span>联系传真：{{tax}}</span>
+          <span>联系人：{{detail.contNm}}</span>
+          <span>联系方式：{{detail.contMob}}</span>
+          <!--<span>联系传真：{{tax}}</span>-->
         </div>
         <div>
-          <span>联系邮箱：{{email}}</span>
-          <span>详细地址：{{address}}</span>
+          <span>联系邮箱：{{detail.email}}</span>
+          <span>详细地址：{{detail.contAddr}}</span>
         </div>
       </div>
       <div class="propaganda">
@@ -36,12 +36,12 @@
           <span></span><span>生产工艺宣传</span>
         </div>
         <div>
-          <div v-for="(item, index) in processArr" :key="index">
+          <div v-for="(item, index) in imgList" :key="index">
             <img :src="item" alt="">
         </div>
         </div>
         <div>
-          <span>{{desc}}</span>
+          <span>{{detail.descr}}</span>
         </div>
       </div>
     </div>
@@ -62,23 +62,26 @@ import process3 from "./images/process3_10.png";
 export default {
   data() {
     return {
-      log,
-      process1,
-      process2,
-      process3,
-      companyName: "宁波太平鸟服饰",
-      name: "张三",
-      introduce: `质检服饰佩饰_CTTC中纺标_认证需求。如果你无法简洁的表达你的想法，那只说明你还不够了解它`,
-      phone: "13599990000",
-      tax: "0574-8889999",
-      email: "239934203@163.com",
-      address: "浙江省宁波市鄞州区彩虹南路12号",
-      processArr: [process1, process2, process3],
-      desc: `最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告，最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告
-      ，最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告，最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告`
+      nm:'',
+      imgList:[],
+      detail:{}
     };
   },
-  methods: {},
+  mounted(){
+    this.nm = this.until.getQueryString('nm')
+    this.getInfo();
+  },
+  methods: {
+    getInfo(){
+      this.until.get('/prod/mxmagent/page?nm='+this.nm)
+        .then(res=>{
+          if(res.status=='200'){
+            this.detail = res.data.items[0]
+            this.imgList = this.detail.imgUrl!='' ? this.detail.imgUrl.split(',') : ''
+          }
+        })
+    }
+  },
   components: {
     tradeHeader,
     tradeFooter
@@ -86,7 +89,7 @@ export default {
 };
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 html,
 body {
   width: 100%;

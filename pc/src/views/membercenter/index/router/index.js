@@ -11,6 +11,7 @@ import goldExchange from '../components/goldExchange.vue'
 import goldRecharge from '../components/goldRecharge.vue'
 import myCollect from '../components/myCollect.vue'
 import myEquipment from '../components/myEquipment.vue'
+import myEquipmentQY from '../components/myEquipmentQY.vue'
 import myExchange from '../components/myExchange.vue'
 import myGold from '../components/myGold.vue'
 import myOrder from '../components/myOrder.vue'
@@ -22,11 +23,13 @@ import recruitDetail from '../components/recruitDetail.vue'
 import reportDetail from '../components/reportDetail.vue'
 import center from '../components/center.vue'
 import equipmentDetail from '../components/equipmentDetail.vue'
-
+import myJob from '../components/myJob.vue'
+import accountManager from '../components/accountManager.vue'
 export default new VueRouter({
   routes:[
-    {path:'',component:center},
+    {path:'',redirect:'/center'},
     {path:'/center',component:center},
+    {path:'/accountManager',component:accountManager},
     {path:'/mygold',component:myGold},
     {path:'/myorder',component:myOrder},
     {path:'/myreport',component:myReport},
@@ -35,6 +38,7 @@ export default new VueRouter({
     {path:'/mycollect',component:myCollect},
     {path:'/talentinfo',component:myRecruit},
     {path:'/equipment',component:myEquipment},
+    {path:'/equipmentQY',component:myEquipmentQY},
     {path:'/addresslist',component:addressList},
     {path:'/changepwd',component:changePwd},
     {path:'/addaddress',component:addAddress},
@@ -45,7 +49,8 @@ export default new VueRouter({
     {path:'/orderdetail',component:orderDetail},
     {path:'/recruitdetail',component:recruitDetail},
     {path:'/reportdetail',component:reportDetail},
-    {path:'/equipmentdetail',component:equipmentDetail}
+    {path:'/equipmentdetail',component:equipmentDetail},
+    {path:'/myJob',component:myJob}
   ]
 })
 

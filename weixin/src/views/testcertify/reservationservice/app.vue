@@ -36,7 +36,7 @@
           <span>服务名称</span>
         </div>
         <div>
-          <div><img :src="img" alt=""></div>
+          <div class="img"><img :src="img" alt=""></div>
           <div>
             <span>{{info.mxPubCheckNm}}</span>
           </div>
@@ -75,7 +75,7 @@
       </div>
       <div class="content">
         <div><span></span><span>我的地址</span></div>
-        <div class="addr">
+        <div class="addr" @click="addrShows()" v-if="addrList.length>0">
           <p>
             <span>收货人：</span>
             {{addr.receNm}}
@@ -88,17 +88,18 @@
             <span>详细地址：</span>
             {{addr.addrDtl}}
           </p>
-          <svg class="icon" aria-hidden="true" @click="addrShows()">
+          <svg class="icon" aria-hidden="true">
             <use xlink:href="#icon-gengduo"></use>
           </svg>
         </div>
+        <p v-else @click="toAddr">添加地址 +</p>
       </div>
     </div>
 
     <div class="footer" @click="submitOrder">
       <foot-button :btnObj="btnObj"></foot-button>
     </div>
-    <upload-success v-show="showUpload"></upload-success>
+    <upload-success v-show="showUpload" :code="codeUrl"></upload-success>
 
   </div>
 </template>
@@ -108,7 +109,6 @@ import footButton from "components/footButton";
 import uploadSuccess from "components/uploadSuccess";
 import prosmall from "./images/prosmall.png";
 import { setTimeout } from 'timers';
-
 export default {
   data() {
     return {
@@ -118,6 +118,7 @@ export default {
         addr:{}, //选中的地址
         addrList:[],  //地址列表
         addrShow:false,
+        codeUrl:'', //二维码文本
         info:{
             mxOrdDetePk:'',
             sysUserPk:'',//用户主键
@@ -147,6 +148,7 @@ export default {
   mounted(){
       this.info.mxPubCheckPk = this.until.getQueryString('pk')
       this.info.mxPubCheckNm = this.until.getQueryString('nm')
+      this.info.sysUserPk = JSON.parse(this.until.loGet('userInfo')).sysUserPk
       this.img = this.until.getQueryString('img')
       this.getAddr()
   },
@@ -154,13 +156,32 @@ export default {
       getAddr(){
         this.until.get('/sys/addr/listSelf')
             .then(res=>{
-                this.addrList = res.data.items
-                this.addr = this.addrList[0]
-                this.addrPk = this.addr.sysAddrPk
+                if(res.status=='200'){
+                    this.addrList = res.data.items
+                    if(this.addrList.length>0){
+                        this.addr = this.addrList[0]
+                        this.addrPk = this.addr.sysAddrPk
+                    }else {
+                        this.$hero.msg.show({
+                            text:'请添加收货地址',
+                            times:1500
+                        });
+                    }
+
+                }else {
+                    this.$hero.msg.show({
+                        text:res.message,
+                        times:1500
+                    });
+                }
+
             })
       },
       addrShows(){
           this.addrShow = true
+      },
+      toAddr(){
+        window.location.href = '../address/addresslist.html'
       },
       cancel(){
         this.addrPk = this.addr.sysAddrPk
@@ -175,23 +196,57 @@ export default {
           })
           this.addrShow = false
       },
+      verification(){
+          if(this.info.supply==''){
+              console.log(1)
+              return false
+          }
+          if(this.info.prodNm==''){
+              console.log(2)
+              return false
+          }
+          if(this.info.qty==''){
+              console.log(3)
+              return false
+          }
+          if(this.info.contNm==''){
+              console.log(4)
+              return false
+          }
+          if(this.info.contMob==''){
+              console.log(5)
+              return false
+          }
+          return true
+      },
     submitOrder(){
-          this.info.sysAddrPk = this.addrPk
-        this.until.postData('/prod/mxordete/edit',JSON.stringify(this.info))
-            .then(res=>{
-                if(res.status=='200'){
-                    this.showUpload=true
-                    setTimeout(()=>{
-                        this.showUpload=false
-                        window.location.href = '../membercenter/myorder.html'
-                    },2000)
-                }else {
-                    this.$hero.msg.show({
-                        text:res.message,
-                        times:1500
-                    });
-                }
-            })
+          if(this.verification()){
+              this.$dialog.loading.open()
+              this.info.sysAddrPk = this.addrPk
+              this.until.postData('/prod/mxordete/edit',JSON.stringify(this.info))
+                  .then(res=>{
+                      this.$dialog.loading.close()
+                      if(res.status=='200'){
+                          this.showUpload=true
+                          this.codeUrl = this.hostUrl+'/views/code/order.html?code='+res.data
+                          setTimeout(()=>{
+                              this.showUpload=false
+                              window.location.href = '../membercenter/myorder.html'
+                          },3000)
+                      }else {
+                          this.$hero.msg.show({
+                              text:res.message,
+                              times:1500
+                          });
+                      }
+                  })
+          }else {
+              this.$hero.msg.show({
+                  text:'请补全信息！',
+                  times:1500
+              });
+          }
+
 
     }
   },
@@ -262,6 +317,7 @@ body {
         }
 
       }
+
     }
     .header {
       background-color: #fff;
@@ -274,6 +330,7 @@ body {
         flex-wrap: wrap;
         justify-content: space-between;
         align-items: center;
+
         &:nth-of-type(1) {
           border-bottom: 1px solid #dedede;
           > span:nth-of-type(1) {
@@ -287,7 +344,9 @@ body {
           }
         }
         &:nth-of-type(2) {
-          color: #9e9e9e;
+          background: #2A8AF2;
+          color: #fff;
+          /*color: #9e9e9e;*/
           border-bottom: 1px solid #e9e9e9;
           > span:nth-of-type(1) {
             width: 30%;
@@ -299,6 +358,17 @@ body {
         &:nth-last-of-type(1) {
           > div:nth-of-type(1) {
             width: 30%;
+            height: 2rem;
+            display: flex;
+            display: -webkit-flex;
+            align-items: center;
+            justify-content: center;
+            img{
+              width: auto;
+              height: auto;
+              max-width: 100%;
+              max-height: 100%;
+            }
           }
           > div:nth-of-type(2) {
             width: 70%;
@@ -313,11 +383,20 @@ body {
     .content {
       background-color: #fff;
       margin-bottom: .3rem;
+      >p{
+        line-height: 30px;
+        border: 1px solid #d2d2d2;
+        border-radius: 3px;
+        width: 2rem;
+        text-align: center;
+        margin: 0.2rem;
+      }
       .addr{
         position: relative;
         p{
           width: 100%;
         }
+
         svg{
           position: absolute;
           right: .5rem;

@@ -1,19 +1,17 @@
 <template>
-  <div id="app">
+  <div id="app" v-loading="loading">
     <div class="header">
-      <trade-header :showSearch="showSearch"></trade-header>
+      <trade-header :showSearch="showSearch" @search="search" :butNm="butNm" searchText="找人才"></trade-header>
     </div>
     <div class="content">
       <talent-recruit :talentList="talentList"></talent-recruit>
        <div class="block">
           <el-pagination
-            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="currentPage4"
-            :page-sizes="[100, 200, 300, 400]"
-            :page-size="100"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="400">
+            :current-page="pageNo"
+            :page-size="pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="total">
           </el-pagination>
         </div>
     </div>
@@ -31,61 +29,60 @@ import talentRecruit from "components/talentRecruit";
 export default {
   data() {
     return {
+      butNm:'发布人才需求',
       showSearch: true,
-      talentList: [
-        {
-          title: "实验室经理助理1名",
-          company: "浙江宁波华信质检",
-          salary: "4000-5000元/月",
-          linkedPhone: "0574-88889999"
-        },
-        {
-          title: "实验室经理助理1名",
-          company: "浙江宁波华信质检",
-          salary: "4000-5000元/月",
-          linkedPhone: "0574-88889999"
-        },
-        {
-          title: "实验室经理助理1名",
-          company: "浙江宁波华信质检",
-          salary: "4000-5000元/月",
-          linkedPhone: "0574-88889999"
-        },
-        {
-          title: "实验室经理助理1名",
-          company: "浙江宁波华信质检",
-          salary: "4000-5000元/月",
-          linkedPhone: "0574-88889999"
-        },
-        {
-          title: "实验室经理助理1名",
-          company: "浙江宁波华信质检",
-          salary: "4000-5000元/月",
-          linkedPhone: "0574-88889999"
-        },
-        {
-          title: "实验室经理助理1名",
-          company: "浙江宁波华信质检",
-          salary: "4000-5000元/月",
-          linkedPhone: "0574-88889999"
-        },
-        {
-          title: "实验室经理助理1名",
-          company: "浙江宁波华信质检",
-          salary: "4000-5000元/月",
-          linkedPhone: "0574-88889999"
-        },
-        {
-          title: "实验室经理助理1名",
-          company: "浙江宁波华信质检",
-          salary: "4000-5000元/月",
-          linkedPhone: "0574-88889999"
-        }
-      ]
+      talentList: [],
+      loading:false,
+      pageNo:1,
+      pageSize:20,
+      total:1
     };
   },
-  mounted() {},
-  methods: {},
+  mounted() {
+    let info=JSON.parse(this.until.loGet('user'))
+    this.userPk = info.sysUserPk
+    // this.getInfo()
+    if(this.until.getQueryString('val')){
+      this.key = this.until.getQueryString('val')
+    }
+    this.getList()
+  },
+  methods: {
+    //查询
+    search(val){
+      this.key = val
+      this.pageNo = 1
+      this.getList()
+    },
+    getList(){
+      this.loading = true;
+      // let query = new this.Query();
+      // query.buildPageClause(this.pageNo,this.pageSize);
+      let page = {
+        p:{
+          n:this.pageNo,
+          s:this.pageSize
+        }
+      }
+      let param = {
+        query:JSON.stringify(page),
+        value:this.key,
+        // query:query.getParam()
+      }
+      this.until.get('/prod/mxpubrecr/page',param)
+        .then(res=>{
+          this.loading = false;
+          if(res.status == 200){
+            this.total = res.page.total
+            this.talentList = res.data.items
+          }
+        },err=>{});
+    },
+    handleCurrentChange(val){
+      this.pageNo = val
+      this.getList()
+    }
+  },
   components: {
     tradeHeader,
     tradeFooter,
@@ -94,7 +91,7 @@ export default {
 };
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 html,
 body {
   width: 100%;

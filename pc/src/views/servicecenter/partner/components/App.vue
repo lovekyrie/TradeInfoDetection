@@ -1,127 +1,58 @@
 <template>
-  <div id="container">
+  <div id="container" v-loading="loading">
     <!--顶部-->
     <div id="header">
-      <ul>
+      <ul v-if="!login">
         <li><a class="login" href="../entry/login.html">登录</a></li>
         <li><a href="../entry/register.html">注册</a></li>
+      </ul>
+      <ul v-else>
+        <li><a class="login" href="../home/index.html#/center">{{myInfo.usNm}}</a></li>
+        <li><a href="#" @click="loginOut()">退出</a></li>
       </ul>
     </div>
     <!--图标-->
     <div id="icon">
-      <img src="../../../entry/login/img/logo.png">
-
+      <a href="../home/index.html">
+        <img src="../../../entry/login/img/logo.png">
+      </a>
       <!--搜索框-->
       <el-input placeholder="找设备">
         <el-button slot="append">搜索</el-button>
       </el-input>
-      <input class="releaseButton" type="button" value="发布资源">
+      <input class="releaseButton" type="button" value="发布资源" @click="submit">
     </div>
     <!--中间主体-->
     <div id="main">
 
       <!--分页内容-->
-      <div class="inContent">
+      <div class="inContent" v-for="(item,index) in list" :key="index">
         <table>
           <tr>
-            <td class="tableTitle"><ul><li>检测机器设备提供</li></ul></td>
+            <td class="tableTitle"><ul><li>{{item.nm}}</li></ul></td>
             <td></td>
-            <td class="tableRight_a">设备资源</td>
+            <td class="tableRight_a">{{item.catNm}}</td>
           </tr>
           <tr>
-            <td class="tableDec">公司拥有检测设备，及某某设备资源</td>
+            <td class="tableDec">{{item.rmks}}</td>
 
           </tr>
           <tr>
-            <td>张先生</td>
-            <td>15055555200</td>
-            <td class="tableRight_b">2018年6月20日</td>
+            <td>{{item.contNm}}</td>
+            <td>{{item.contMob}}</td>
+            <td class="tableRight_b">{{item.rcdTm}}</td>
           </tr>
         </table>
       </div>
-      <div class="inContent">
-        <table>
-          <tr>
-            <td class="tableTitle"><ul><li>检测机器设备提供</li></ul></td>
-            <td></td>
-            <td class="tableRight_a">设备资源</td>
-          </tr>
-          <tr>
-            <td class="tableDec">公司拥有检测设备，及某某设备资源</td>
-
-          </tr>
-          <tr>
-            <td>张先生</td>
-            <td>15055555200</td>
-            <td class="tableRight_b">2018年6月20日</td>
-          </tr>
-        </table>
-      </div>
-      <div class="inContent">
-        <table>
-          <tr>
-            <td class="tableTitle"><ul><li>检测机器设备提供</li></ul></td>
-            <td></td>
-            <td class="tableRight_a">设备资源</td>
-          </tr>
-          <tr>
-            <td class="tableDec">公司拥有检测设备，及某某设备资源</td>
-
-          </tr>
-          <tr>
-            <td>张先生</td>
-            <td>15055555200</td>
-            <td class="tableRight_b">2018年6月20日</td>
-          </tr>
-        </table>
-      </div>
-      <div class="inContent">
-        <table>
-          <tr>
-            <td class="tableTitle"><ul><li>检测机器设备提供</li></ul></td>
-            <td></td>
-            <td class="tableRight_a">设备资源</td>
-          </tr>
-          <tr>
-            <td class="tableDec">公司拥有检测设备，及某某设备资源</td>
-
-          </tr>
-          <tr>
-            <td>张先生</td>
-            <td>15055555200</td>
-            <td class="tableRight_b">2018年6月20日</td>
-          </tr>
-        </table>
-      </div>
-      <div class="inContent">
-        <table>
-          <tr>
-            <td class="tableTitle"><ul><li>检测机器设备提供</li></ul></td>
-            <td></td>
-            <td class="tableRight_a">设备资源</td>
-          </tr>
-          <tr>
-            <td class="tableDec">公司拥有检测设备，及某某设备资源</td>
-
-          </tr>
-          <tr>
-            <td>张先生</td>
-            <td>15055555200</td>
-            <td class="tableRight_b">2018年6月20日</td>
-          </tr>
-        </table>
-      </div>
-
 
       <!--分页选框-->
       <div class="block">
         <el-pagination
-          @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :current-page="currentPage"
+          :current-page="pageNo"
           :page-size="pageSize"
           layout=" prev, pager, next, total,jumper"
-          :total="totalCount">
+          :total="total">
         </el-pagination>
 
       </div>
@@ -130,37 +61,125 @@
     <div id="footer">
       <tradeFooter></tradeFooter>
     </div>
-    <!--<div id="footer">-->
-    <!--<p>版权所有：宁波贸信检测技术有限公司 信息产业部备案/许可证编号：浙ICP备16007937号</p>-->
-    <!--<p>宁波贸信检测技术服务有限公司&nbsp;&nbsp;&nbsp;&nbsp;地址：宁波市鄞州区富强路555号三、四楼&nbsp;&nbsp;电话：+86-574-89201299</p>-->
-    <!--<p>传真：+86-574-89017298&nbsp;&nbsp;&nbsp;&nbsp;E-mail：info@gig-lab.com&nbsp;&nbsp;&nbsp;&nbsp;http://www.gig-lab.com</p>-->
-    <!--</div>-->
 
   </div>
 </template>
 
 <script>
   import tradeFooter from 'components/tradeFooterl'
-
+  import tradeHeader from "components/tradeHeader";
   export default {
     data(){
       return{
-        currentPage:1,
-        totalCount:100,
-        pageSize:5,
+        login:false,
+        loading:false,
+        userPk:'',
+        key:'',
+        pageNo:1,
+        total:0,
+        pageSize:20,
+        myInfo:{},
+        list:[]
       }
     },
     components:{
-      tradeFooter,
+      tradeFooter,tradeHeader
+    },
+    mounted(){
+      let info=JSON.parse(this.until.loGet('user'))
+      this.userPk = info.sysUserPk
+      this.getInfo()
+      this.getList()
     },
     methods:{
+      //获取个人信息
+      getInfo(){
+        this.until.get('/sys/user/info/'+this.userPk)
+          .then(res=>{
+            if(res.status == '200'){
+              this.login = true
+              this.myInfo = res.data
+              this.type = this.myInfo.arg1
+              this.until.loSave('userInfo',JSON.stringify(this.myInfo));
+            }else {
+              this.login = false
+              this.$message({
+                message: res.message,
+                type: 'warning'
+              });
+            }
+          })
+      },
+      //注销
+      loginOut(){
+        this.until.get('/general/access/logout')
+          .then(res=>{
+            if(res.status=='200'){
+              this.until.loRemove('userInfo')
+              this.until.loRemove('user')
+              this.$message({
+                message: '注销成功！',
+                type: 'success'
+              });
+              window.location.href='../entry/login.html'
+            }else {
+              this.$message({
+                message: res.message,
+                type: 'warning'
+              });
+            }
+
+          })
+      },
+      search(val){
+        this.key = val
+        this.list = []
+        this.pageNo = 1
+        this.getList()
+      },
+      getList(){
+        this.loading = true;
+        // let query = new this.Query();
+        // query.buildPageClause(this.pageNo,this.pageSize);
+        let page = {
+          p:{
+            n:this.pageNo,
+            s:this.pageSize
+          }
+        }
+        let param = {
+          query:JSON.stringify(page),
+          value:this.key
+        }
+        let url = '/prod/mxpubres/pageSelf'
+        this.until.get(url,param)
+          .then(res=>{
+            this.loading = false;
+            if(res.status == 200){
+              this.total = res.page.total
+
+                res.data.items.forEach(item=>{
+                  item.rcdTm = item.rcdTm ? item.rcdTm.split(' ')[0]:''
+                })
+                this.list=res.data.items
+
+            }else {
+
+            }
+          },err=>{});
+      },
       //分页条数
-      handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
+      submit() {
+        if(!this.until.ifLogin()){
+          return false
+        }
+       window.location.href = 'partnerSubmit.html'
       },
       //当前页
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+        this.pageNo = val
+        this.getList()
+        // console.log(`当前页: ${val}`);
       }
     }
   }

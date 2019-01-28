@@ -1,9 +1,10 @@
 <template>
   <div class="header-title">
     <div @click="back()">
-      <svg class="icon" aria-hidden="true">
-        <use xlink:href="#icon-gengduo"></use>
-      </svg>
+      <van-icon name="arrow-left" />
+      <!--<svg class="icon" aria-hidden="true">-->
+        <!--<use xlink:href="#icon-gengduo"></use>-->
+      <!--</svg>-->
     </div>
     <div class="title-name">{{title}}</div>
     <div class="little-title" @click="linkToSimilar">{{littleTitle}}</div>
@@ -11,14 +12,21 @@
 </template>
 
 <script>
+    import Vue from 'vue'
+    import { Icon } from 'vant';
+    Vue.use(Icon);
 export default {
-  props: ["title", "littleTitle"],
+  props: ["title", "littleTitle",'backUrl'],
   data() {
     return {};
   },
   methods: {
     back(){
-      window.history.back();
+        if(this.backUrl){
+            window.location.href = this.backUrl
+        }else {
+            window.history.back();
+        }
     },
     linkToSimilar() {
       if (this.littleTitle === "平台发布") {
@@ -42,6 +50,9 @@ export default {
   justify-content: space-between;
   align-items: center;
   color: #fff;
+  .van-icon{
+    font-size: 16px;
+  }
   > div:nth-of-type(1) {
     width: 20%;
     > svg {

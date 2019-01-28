@@ -1,7 +1,7 @@
 <template>
   <div class="title">
     <span></span>
-      <h3>{{title}}</h3>          
+      <h3>{{title}}</h3>
     <span></span>
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
 };
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 .title {
   margin: 60px auto;
   width: 590px;

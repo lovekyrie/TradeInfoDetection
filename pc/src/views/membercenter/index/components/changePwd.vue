@@ -1,6 +1,6 @@
 <template>
    <!--中间右侧内容栏-->
-        <div class="changepwd">
+        <div class="changepwd" v-loading="loading">
           <!--标题-->
           <ul class="mainTitle">
             <li class="line"><span></span></li>
@@ -71,6 +71,7 @@ export default {
       };
 
       return {
+        loading:false,
         ruleForm: {
           oldPwd: '',
           newPwd: '',
@@ -93,7 +94,29 @@ export default {
       submitForm(formName){
         this.$refs[formName].validate((valid)=>{
           if(valid){
-            alert('submit');
+            this.loading = true
+            let param={
+              oldPwd:this.ruleForm.oldPwd,
+              newPwd:this.ruleForm.newPwd
+            }
+            this.until.post('/general/auth/updPwd',param)
+              .then(res=>{
+                this.loading = false
+                if(res.status=='200'){
+                  this.$message({
+                    message:'密码修改成功，请重新登录！',
+                    type:'success'
+                  });
+                  setTimeout(()=>{
+                    window.location.href = '../entry/login.html'
+                  },1500)
+                }else {
+                  this.$message({
+                    message:res.message,
+                    type:'warning'
+                  });
+                }
+              })
           }else {
             console.log('error submit');
             return false;
@@ -107,7 +130,7 @@ export default {
 }
 </script>
 
-<style lang='less' scoped>
+<style lang='less'>
    //右边信息
       .changepwd {
         flex: 5.5;

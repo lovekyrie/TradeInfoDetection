@@ -14,8 +14,8 @@
         <div><input type="password" v-model="newPWD2"></div>
       </div>
       <div>
-        <div>
-          <button @click="submit">确定</button>
+        <div @click="submit">
+          <button>确定</button>
         </div>
       </div>
     </div>
@@ -33,6 +33,7 @@ export default {
     },
     methods:{
         submit(){
+            this.$dialog.loading.open()
             if(this.oldPWD&&this.newPWD&&this.newPWD2){
                 let param={
                     oldPwd:this.oldPWD,
@@ -40,13 +41,14 @@ export default {
                 }
                 this.until.post('/general/auth/updPwd',param)
                     .then(res=>{
+                        this.$dialog.loading.close()
                         if(res.status=='200'){
                             this.$hero.msg.show({
                                 text:'密码修改成功，请重新登录！',
                                 times:1500
                             });
                             setTimeout(()=>{
-                                // window.location.href = '../system/login.html'
+                                window.location.href = '../system/login.html'
                             },1500)
                         }else {
                             this.$hero.msg.show({

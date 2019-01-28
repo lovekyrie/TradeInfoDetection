@@ -50,7 +50,7 @@
         <span>资历证书：</span>
         <div>
           <div class="img" v-for="item in qualCertUrlList">
-            <img :src="item">
+            <img :src="item"/>
           </div>
         </div>
       </div>
@@ -58,7 +58,7 @@
         <span>培训经历：</span>
         <div>
           <div class="img" v-for="item in trainExpeList">
-            <img :src="item">
+            <img :src="item"/>
           </div>
         </div>
       </div>
@@ -96,10 +96,11 @@ export default {
     },
   methods:{
       getInfo(){
-          this.until.get('/prodx/mxpers/info/'+this.userPk)
+          this.until.get('/prodx/mxpers/infosize/'+this.userPk)
               .then(res=>{
                   if(res.status=='200'){
-                      this.info = res.data
+                      let myData = res.data.items[0]
+                      this.info = myData
                       if(this.info.qualCertUrl){
                           this.qualCertUrlList = this.info.qualCertUrl.split(',')
                       }

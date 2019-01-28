@@ -23,22 +23,17 @@ export default {
   props: ["equipmentList"],
   data() {
     return {
-        type:'', // 1个人  2企业
+        // type:'', // 1个人  2企业
     };
   },
     mounted(){
-       let info=JSON.parse(this.until.loGet('userInfo'))
-        this.type = info.arg1
+       // let info=JSON.parse(this.until.loGet('userInfo'))
+        // this.type = info.arg1
     },
     methods:{
       toDetail(pk){
-          if(this.type==1){
-              window.location.href = '../seller/personalreleasedetail.html?pk='+pk
 
-          }else {
               window.location.href = '../seller/enterprisereleasedetail.html?pk='+pk
-
-          }
       },
         toDelete(pk,index){
             this.until.get('/prod/mxpubdev/del?pks='+pk)

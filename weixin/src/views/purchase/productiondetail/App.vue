@@ -94,27 +94,27 @@
     <div id="container">
         <div class="header">
             <div class="log">
-                <img src="" alt="logo">
+                <img :src="detail.logoUrl" alt="logo">
             </div>
             <div class="productioninfo">
-                <h2>宁波太平鸟服饰</h2>
-                <p>法人姓名:</p>
+                <h2>{{nm}}</h2>
+                <p>法人姓名:{{detail.legal}}</p>
             </div>
         </div>
         <div class="content">
             <div class="introduction">
                 <h3>公司简介：</h3>
-                <p>{{detail.introduction}}</p>
+                <p>{{detail.intro}}</p>
             </div>
             <div class="link">
                 <h3>联系方式</h3>
                 <p>
                     <span>联系人：</span>
-                    {{detail.linkedman}}
+                    {{detail.contNm}}
                 </p>
                 <p>
                     <span>联系方式：</span>
-                    {{detail.linkedphone}}
+                    {{detail.contMob}}
                 </p>
                 <p>
                     <span>联系传真：</span>
@@ -122,11 +122,11 @@
                 </p>
                 <p>
                     <span>联系邮箱：</span>
-                    {{detail.linkedemail}}
+                    {{detail.email}}
                 </p>
                 <p>
                     <span>详细地址：</span>
-                    {{detail.linkedaddress}}
+                    {{detail.contAddr}}
                 </p>
             </div>
         </div>
@@ -135,14 +135,12 @@
                 <h3>生产工艺质量宣传</h3>
             </div>
             <div class="imglist">
-                <img src="" alt="img1">
-                <img src="" alt="img2">
-                <img src="" alt="img3">
+                <img src="item" alt="" v-for="item in imgList">
             </div>
             <div class="description">
                 <p>
                     <span>生产工艺描述：</span>
-                    {{detail.description}}
+                    {{detail.descr}}
                 </p>
             </div>
         </div>
@@ -156,29 +154,39 @@
 
         data() {
             return {
+
                 obj: {
                     src: "./orderQueryDetail.html?",
                 },
+                imgList:[],
+                nm:'',
                 detail:{
-                    introduction:'质检服饰配饰_CTTC中纺标 _ 认证需求。如果你无法简洁的表达你的想法，那只说明你还不够了解它。',
-                    linkedman:'张三',
-                    linkedphone:'13911112222',
-                    linkedtax:'宁波贸信检测',
-                    linkedemail:'宁波太平鸟服饰',
-                    linkedaddress:'防晒衣',
-                    description:`最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告，
-                    最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告，最新最权威的防晒衣质检报告，
-                    最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告。`
+                    // introduction:'质检服饰配饰_CTTC中纺标 _ 认证需求。如果你无法简洁的表达你的想法，那只说明你还不够了解它。',
+                    // linkedman:'张三',
+                    // linkedphone:'13911112222',
+                    // linkedtax:'宁波贸信检测',
+                    // linkedemail:'宁波太平鸟服饰',
+                    // linkedaddress:'防晒衣',
+                    // description:`最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告，
+                    // 最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告，最新最权威的防晒衣质检报告，
+                    // 最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告。`
                 }
             }
         },
         mounted() {
-            var self = this;
-          
-            this.searchBtn();
+            this.nm = this.until.getQueryString('nm')
+            this.getInfo();
         },
         methods: {
-
+            getInfo(){
+                this.until.get('/prod/mxmagent/page?nm='+this.nm)
+                    .then(res=>{
+                        if(res.status=='200'){
+                            this.detail = res.data.items[0]
+                            this.imgList = this.detail.imgUrl!='' ? this.detail.imgUrl.split(',') : ''
+                        }
+                    })
+            }
         },
         components: {
             tempApp,

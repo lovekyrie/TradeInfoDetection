@@ -1,6 +1,6 @@
 <template>
   <div class="publish">
-    <div class="publish-item" v-for="(item, index) in releaseList" :key="index" @click="toDetail(item.mxPubReqPk)">
+    <div class="publish-item" v-for="(item, index) in releaseList" :key="index" @click="toDetail(item.mxPubResPk)">
       <div class="row-first">
         <div></div>
         <div>{{item.nm}}</div>

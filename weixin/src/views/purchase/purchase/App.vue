@@ -197,7 +197,7 @@
                             <div>
                                 <p>
                                     <span>序列号：{{item.no}}</span>
-                                    <span>上传时间：{{item.rcdTm}}</span>
+                                    <span>上传时间：{{item.crtTm}}</span>
                                 </p>
                             </div>
                             <p>{{item.nm}}</p>
@@ -211,9 +211,6 @@
             </div>
             <div class="noResult" v-if="dataFinish">全部加载完</div>
         </div>
-        <footer @click="upLoad">
-            报告上传
-        </footer>
     </div>
 </template>
 
@@ -267,20 +264,43 @@
                 window.location = '../quality/reportupload.html'
             },
             getList(){
+                this.$dialog.loading.open()
                 this.loading = true;
+                // let query = new this.Query();
+                // query.buildPageClause(this.pageNo,this.pageSize);
+                // let page = {
+                //     p:{
+                //         n:this.pageNo,
+                //         s:this.pageSize
+                //     }
+                // }
+                // let param = {
+                //     query:JSON.stringify(page),
+                //     city:this.cityCode2,
+                //     type:2,
+                //     nm:this.searchGdno,
+                //     no:this.searchSn,
+                //     prov:this.cityCode1,
+                //     deteOrg:this.searchCustName,
+                //     // query:query.getParam()
+                // }
                 let query = new this.Query();
+                query.buildWhereClause('no',this.searchSn,'LK');
+                query.buildWhereClause('prodNm',this.searchGdno,'LK');
+                query.buildWhereClause('supply',this.searchCustName,'LK');
+                query.buildWhereClause('prodProvCd',this.cityCode1,'LK');
+                query.buildWhereClause('prodCityCd',this.cityCode2,'LK');
+
                 query.buildPageClause(this.pageNo,this.pageSize);
+                let myParam = query.getParam();
+                // console.log(myParam)
                 let param = {
-                    city:this.cityCode2,
                     type:2,
-                    nm:this.searchGdno,
-                    no:this.searchSn,
-                    prov:this.cityCode1,
-                    deteOrg:this.searchCustName,
-                    query:query.getParam()
+                    query:myParam.query
                 }
                 this.until.get('/prodx/mxrepo/page',param)
                     .then(res=>{
+                        this.$dialog.loading.close()
                         this.loading = false;
                         if(res.status == 200){
                             this.total = res.page.total

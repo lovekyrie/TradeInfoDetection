@@ -7,37 +7,44 @@
       <div class="product">
         <div class="proinfo">
           <div>
-            <img :src="detailpro" alt="">
+            <div class="img">
+              <img :src="bigImg" alt="">
+            </div>
+            <p>
+              <img :src="item" v-for="item in images" :class="{active:bigImg==item}" @click="bigImg = item"/>
+            </p>
           </div>
           <div>
             <div>
-              <h3>{{title}}</h3>
-              <span>联系方式：{{phone}}</span>
+              <h3>{{info.nm}}</h3>
+              <span>联系方式：{{info.mob}}</span>
             </div>
             <div>
-              <template>
                 <span>数量：</span>
-                <el-input-number v-model="num8" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
-              </template>
+                <el-input-number v-model="qty" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
+                件
               <el-row>
-                <el-button>立即购买</el-button>
+                <el-button @click="submit">立即购买</el-button>
               </el-row>
             </div>
           </div>
         </div>
-        <div class="thumbnail">
-          <div v-for="(item, index) in samllArr" :key="index">
-            <img :src="item" alt="">
-          </div>
-        </div>
+        <!--<div class="thumbnail">-->
+          <!--<div v-for="(item, index) in images" :key="index">-->
+            <!--<img :src="item" alt="" @click="changeImg(item)">-->
+          <!--</div>-->
+        <!--</div>-->
       </div>
       <div class="detailinfo">
         <h4>商品详情</h4>
-        <p>产品参数：{{proParam}}</p> 
+        <p>产品参数：{{info.rmks}}</p>
         <p>
-          <span>联系人：{{linkedMan}}</span>
-          <span>联系电话：{{linkedPhone}}</span>
+          <span>联系人：{{info.cont}}</span>
+          <span>联系电话：{{info.mob}}</span>
         </p>
+        <div v-html="info.intro">
+
+        </div>
       </div>
     </div>
     <div class="footer">
@@ -57,22 +64,37 @@ import small3 from "./images/imgS3_03.png";
 export default {
   data() {
     return {
-      small1,
-      small2,
-      small3,
-      detailpro,
-      title: "儿童家具质量评审儿童家具质检",
-      phone: "0574-88889999",
-      proParam: "CFDA食堂餐厅饭店自制饮食产品检测",
-      linkedMan: "张三",
-      linkedPhone: "13599990000",
-      samllArr: [small1, small2, small3],
-      num8: 1
+      pk:'',
+      qty: 1,
+      images:[],
+      bigImg:'',
+      info:{}
     };
   },
+  mounted(){
+    this.pk = this.until.getQueryString('pk')
+    this.getInfo()
+  },
   methods: {
+    submit(){
+      if(!this.until.ifLogin()){
+        return false
+      }
+      window.location.href = '../buyers/reservationservice.html?qty='+this.qty+'&nm='+this.info.nm+'&img='+this.bigImg+'&pk='+this.pk
+    },
     handleChange(value) {
-      console.log(value);
+      // console.log(value);
+    },
+    getInfo(){
+      this.until.get('/prodx/mxpubcheck/info/'+this.pk)
+        .then(res=>{
+          this.info = res.data
+          this.images = this.info.imgUrl.split(',')
+          this.bigImg = this.images[0]
+        })
+    },
+    changeImg(val){
+      this.bigImg = val
     }
   },
   components: {
@@ -82,7 +104,7 @@ export default {
 };
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 html,
 body {
   width: 100%;
@@ -108,17 +130,36 @@ body {
           > div {
             &:nth-of-type(1) {
               width: 420px;
-              img {
-                max-height: 100%;
-                max-width: 100%;
-                height: auto;
-                width: auto;
-                vertical-align: middle;
+              .img{
+                width: 420px;
+                height: 420px;
+                display: flex;
+                display: -webkit-flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 15px;
+                img{
+                  max-height: 100%;
+                  max-width: 100%;
+                  height: auto;
+                  width: auto;
+                }
+              }
+              p{
+                img{
+                  width: 90px;
+                  height: 90px;
+                  border: 1px solid #d2d2d2;
+                }
+                .active{
+                  border: 1px solid #0d55d2;
+                }
               }
             }
             &:nth-of-type(2) {
               margin: 30px 0;
               width: 755px;
+              height: 400px;
               display: -webkit-flex;
               flex-direction: row;
               flex-wrap: wrap;
@@ -127,11 +168,11 @@ body {
                 width: 100%;
                 &:nth-of-type(1) {
                   h3 {
-                    font-size: 20px;
+                    font-size: 24px;
                     margin-bottom: 10px;
                   }
                   span {
-                    font-size: 16px;
+                    /*font-size: 16px;*/
                     color: #737373;
                   }
                 }
@@ -170,9 +211,13 @@ body {
         }
       }
       .detailinfo{
-        font-size: 16px;
+        margin-top: 40px;
+        color: #999999;
+        margin-bottom: 20px;
         h4{
-          padding-bottom: 10px;
+          color: #333333;
+          font-size: 18px;
+          padding-bottom: 15px;
           border-bottom: 1px solid #ddd;
         }
         p{
@@ -183,7 +228,9 @@ body {
             }
           }
         }
-      
+        >div{
+          margin-top: 20px;
+        }
       }
     }
   }

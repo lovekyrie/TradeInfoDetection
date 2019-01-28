@@ -5,7 +5,7 @@
         <span>{{info.nm}}</span>
       </div>
       <div>
-        <span>发布日期：{{info.rcdTm}}</span>
+        <span>发布日期：{{info.crtTm}}</span>
       </div>
     </div>
     <div class="content">
@@ -46,6 +46,7 @@ export default {
               .then(res=>{
                   if(res.status=='200'){
                       this.info = res.data
+                      this.info.crtTm = this.info.crtTm.split(' ')[0]
                   }else {
                       this.$hero.msg.show({
                           text:res.message,

@@ -8,19 +8,19 @@
             align="left"
             padding="5px">
             <el-table-column
-              prop="name"
+              prop="recoUserNm"
               label="一级人员"
               align="center"
               >
             </el-table-column>
             <el-table-column
-              prop="number"
+              prop="recoQty"
               label="二级人数"
               align="center"
             >
             </el-table-column>
             <el-table-column
-              prop="date"
+              prop="crtTm"
               label="时间">
             </el-table-column>
           </el-table>
@@ -57,10 +57,19 @@ export default {
       ]
     };
   },
+  mounted(){
+    this.getList()
+  },
   methods: {
+    getList(){
+      this.until.get('/prodx/mxuserreco/listSelfReco')
+        .then(res=>{
+          this.tableData = res.data.items
+        })
+    },
     //删除当前行
     handleDelete(index, row) {
-      console.log(index, row);
+      // console.log(index, row);
     }
   }
 };

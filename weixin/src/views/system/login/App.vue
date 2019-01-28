@@ -1,5 +1,7 @@
 <template>
   <div id="app">
+    <!--<a :href="'../down/downList.html?urlList='+JSON.stringify(urlList)">下载列表</a>-->
+    <!--<a href="http://192.168.2.140:9091/static/test.pdf" download="测试文档" mce_href="#">下载测试</a>-->
     <div class="content">
       <div>
         <span>账号名称：</span>
@@ -13,20 +15,20 @@
         <span>验证码</span>
         <div>
           <input type="text" v-model="code">
-          <span>{{myCode}}</span>
+          <span @click="changeCode">{{myCode}}</span>
         </div>
       </div>
       <p>
         <span @click="forgetPassword">忘记密码？</span>
       </p>
       <div class="operate">
-        <div>
-          <button @click="login">登录</button>
+        <div @click="login">
+          <button>登录</button>
         </div>
       </div>
       <div class="operate">
-        <div>
-          <button @click="register">注册</button>
+        <div @click="register">
+          <button>注册</button>
         </div>
       </div>
     </div>
@@ -38,17 +40,43 @@
 export default {
   data(){
     return {
-      user:'admin',
-      password:'1124',
+      user:'',
+      password:'',
       code:'',
       myCode:'',
       codeRight:false,
+        wxCode:'',
+        urlList:[
+            {
+                nm:'111',
+                url:'url111'
+            },
+            {
+                nm:'222',
+                url:'ur222'
+            },
+            {
+                nm:'333',
+                url:'ur333'
+            }
+        ]
     }
   },
   mounted(){
+      // this.down()
+      console.log(sessionStorage.getItem('wxCode'))
+      // if(this.until.getQueryString('code')){
+      //     this.wxCode = this.until.getQueryString('code')
+      //     this.until.seSave('wxCode',this.wxCode)
+      // }
+      if(sessionStorage.getItem('wxCode')){
+          this.wxCode = sessionStorage.getItem('wxCode')
+      }
+
       this.getCode()
   },
   methods:{
+
       login(){
           console.log(this.code.toUpperCase)
           if(this.code.toUpperCase()!=this.myCode.toUpperCase()){
@@ -60,9 +88,10 @@ export default {
               let param = {
                 username:this.user,
                 password:this.password,
-                remberMe:this.codeRight
+                code:this.wxCode
+                // remberMe:this.codeRight
               }
-              this.until.post('/general/access/appLogin',param)
+              this.until.post('/wxMp/access/login',param)
                   .then(res=>{
                       if(res.status == 200){
                           let myInfo = res.data.userInfo
@@ -77,7 +106,7 @@ export default {
 
                       }else {
                           this.$hero.msg.show({
-                              text:res.data,
+                              text:res.message,
                           });
                       }
                   },err=>{});
@@ -90,10 +119,13 @@ export default {
       forgetPassword(){
           window.location.href='../system/forgetpassword.html'
       },
+      changeCode(){
+        this.getCode()
+      },
       getCode(){
           //首先默认code为空字符串
           let code = '';
-          //设置长度，这里看需求，我这里设置了4
+          //设置长度，这里看需求，我这里设置了6
           var codeLength = 6;
           //设置随机字符
           var random = new Array(0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R', 'S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z');

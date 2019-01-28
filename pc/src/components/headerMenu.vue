@@ -29,7 +29,7 @@
   }
 </script>
 
-<style lang="less" type="text/less">
+<style lang="less" type="text/less" scoped>
   #header {
 
     height: 30px;

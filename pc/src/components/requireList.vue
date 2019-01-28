@@ -1,21 +1,25 @@
 <template>
   <div class="require-list">
-    <div class="require-wrap" v-for="(item, index) in requireList" :key="index">
+    <div class="require-wrap" v-for="(item, index) in requireList" :key="index" @click="toDetail(item.mxPubResPk)">
       <div>
         <span></span>
-        <span>{{item.reportName}}</span>
-        <span>{{item.requireStyle}}</span>
+        <span>{{item.nm}}</span>
+        <span>{{item.catNm}}</span>
       </div>
       <div>
-        <span>{{item.requireName}}</span>
-        <span>{{item.linkedPhone}}</span>
-        <span>{{item.releaseTime}}</span>
+        <span>{{item.contNm}}</span>
+        <span>{{item.contMob}}</span>
+        <span>{{item.rcdTm}}</span>
+      </div>
+      <div v-show="!item.state">
+        <img :src="overdue" alt="">
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import overdue from './images/已失效.png'
 export default {
   props: {
     requireList: {
@@ -24,7 +28,14 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      overdue,
+    };
+  },
+  methods:{
+    toDetail(val){
+      window.location.href = 'requiredetail.html?pk='+val
+    }
   }
 };
 </script>
@@ -34,6 +45,7 @@ export default {
   width: 1200px;
   margin: 0 auto;
   .require-wrap {
+    cursor: pointer;
     padding: 40px 30px;
     display: -webkit-flex;
     display: flex;
@@ -41,30 +53,35 @@ export default {
     flex-wrap: wrap;
     align-content: center;
     border-bottom: 1px solid #ddd;
+    position: relative;
     > div {
       width: 100%;
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
-      justify-content: space-around;
+      /*justify-content: space-around;*/
       align-items: center;
       font-size: 18px;
       &:nth-of-type(1){
         margin-bottom: 20px;
+        display: flex;
+        display: -webkit-flex;
         >span{
           &:nth-of-type(1){
             width: 5px;
             height: 5px;
+            margin-right: 21px;
             background-color: #666;
           }
           &:nth-of-type(2){
-            width: 50%;
+            flex: 1;
           }
           &:nth-of-type(3){
-            width: 46%;
-            text-align: right;
+            /*width: 46%;*/
+            /*text-align: right;*/
             color: #5a7fdb;
           }
+
         }
       }
       &:nth-of-type(2){
@@ -79,6 +96,10 @@ export default {
             color: #d0d0d0;
           }
         }
+      }
+      &:nth-of-type(3){
+        position: absolute;
+        left: 50%;
       }
     }
   }

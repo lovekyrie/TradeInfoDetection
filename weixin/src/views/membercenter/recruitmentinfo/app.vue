@@ -53,10 +53,16 @@ export default {
     methods:{
         getList(){
             this.loading = true;
-            let query = new this.Query();
-            query.buildPageClause(this.pageNo,this.pageSize);
+            // let query = new this.Query();
+            // query.buildPageClause(this.pageNo,this.pageSize);
+            let page = {
+                p:{
+                    n:this.pageNo,
+                    s:this.pageSize
+                }
+            }
             let param = {
-                query:query.getParam()
+                query:JSON.stringify(page),
             }
             this.until.get('/prod/mxpubrecr/pageSelf',param)
                 .then(res=>{

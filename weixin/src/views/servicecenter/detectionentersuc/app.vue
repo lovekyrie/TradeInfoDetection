@@ -3,7 +3,7 @@
         <div class="header">
             <header-title :title="title"></header-title>
         </div>
-        <div class="notify">
+        <div class="notify" v-if="info.statCd =='50000.200'">
             <div>
                 <div>
                     <img :src="successlog" >
@@ -27,7 +27,7 @@
             <div>
                 <span>邮箱地址：</span>
                 <div>
-                    <span>{{info.eamil}}</span>
+                    <span>{{info.email}}</span>
                 </div>
             </div>
             <div>
@@ -46,6 +46,14 @@
                 <span>联系地址：</span>
                 <div>
                     <span>{{info.contAddr}}</span>
+                </div>
+            </div>
+            <div class="file-type">
+                <span>公司logo：</span>
+                <div>
+                    <div class="img" v-if="info.logoUrl">
+                        <img :src="info.logoUrl">
+                    </div>
                 </div>
             </div>
             <div class="file-type">
@@ -127,11 +135,11 @@
                             if(this.info.cmaQualUrl){
                                 this.cmaQualUrl = this.info.cmaQualUrl.split(',')
                             }
-                            if(this.info.cnasQualRul){
-                                this.cnasQualRul = this.info.cnasQualRul.split(',')
+                            if(this.info.cnasQualUrl){
+                                this.cnasQualRul = this.info.cnasQualUrl.split(',')
                             }
-                            if(this.info.otherQualRul){
-                                this.otherQualRul = this.info.otherQualRul.split(',')
+                            if(this.info.otherQualUrl){
+                                this.otherQualRul = this.info.otherQualUrl.split(',')
                             }
                         }else {
                             this.$hero.msg.show({

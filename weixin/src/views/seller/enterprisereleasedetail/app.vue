@@ -2,7 +2,7 @@
   <div id="app">
     <div class="header">
       <div class="img">
-      <img :src="info.imgUrl" alt=""/>
+        <img :src="info.imgUrl" alt=""/>
       </div>
        <div class="detection-name">
        <div>
@@ -12,7 +12,7 @@
          <span>价格：
            <i>{{info.price}}</i>
          </span>
-         <span>发布日期：{{info.rcdTm}}</span>
+         <span>发布日期：{{info.crtTm}}</span>
        </div>
       </div>
     </div>
@@ -83,6 +83,7 @@ body {
       margin-bottom: 0.2rem;
       img {
         vertical-align: middle;
+        max-width: 100%;
       }
       .detection-name {
         padding: 0.2rem 0.4rem;

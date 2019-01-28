@@ -2,36 +2,37 @@
   <div id="app">
       <trade-header></trade-header>
       <div class="content">
+
         <div class="job-info">
           <div>
             <span>
-            {{jobInfo.jobname}}
+            {{info.talePost}}
             </span>
           </div>
           <div>
-            <span>{{jobInfo.name}}</span>
-            <span>{{jobInfo.linkedPhone}}</span>
+            <span>{{info.persNm}}</span>
+            <span>联系电话：{{info.taleMob}}</span>
           </div>
-          <div><span>{{jobInfo.email}}</span></div>
+          <div><span>邮箱地址：{{info.taleEmail}}</span></div>
         </div>
         <div class="personal">
           <div>
             <span></span><span>个人简介</span>
           </div>
-          <div v-for="(item, index) in introduceArr" :key="index">
-            <span>{{item}}</span>
+          <div v-html="info.taleIntro">
           </div>
         </div>
         <div class="skills">
           <div>
             <span></span><span>技能特长</span>
           </div>
-          <div id="certificate"><span>资历证书：</span></div>
-          <div v-for="(item, index) in certificateArr" :key="index"><span>{{item}}</span></div>
-          <div id="train"><span>培训经历：</span></div>
-          <div v-for="(item, index) in trainArr" :key="index">
-            <span>{{item}}</span>
+          <div v-html="info.taleSpecSkill">
           </div>
+          <div id="certificate"><span>资历证书：</span></div>
+          <div v-html="info.taleQualCert">
+          </div>
+          <div id="train"><span>培训经历：</span></div>
+          <div v-html="info.taleTrainExpes"></div>
         </div>
       </div>
       <trade-footer></trade-footer>
@@ -45,26 +46,23 @@ import tradeFooter from "components/tradeFooter";
 export default {
   data() {
     return {
-      jobInfo: {
-        jobname: "无机分析工程师工作",
-        name: "张三",
-        linkedPhone: "13599990000",
-        email: "239243349@qq.com",
-      },
-       introduceArr:[
-          '1、操作ICP，GC-MS等分析仪器；','2、英语CET4及以上；',
-          '3、能熟练的操作办公软件',
-        ],
-        certificateArr:[
-          '2018年获得特级无机分析工程师证书',
-          '2016年获得无机分析工程师证书'
-        ],
-        trainArr:[
-          '2015年于宁波检测机构培训并获得结业证书'
-        ]
+      userPk:'',
+      info:{},
     };
   },
-  methods: {},
+  mounted(){
+    this.userPk = this.until.getQueryString('pk')
+    this.getInfo()
+  },
+  methods:{
+
+    getInfo(){
+      this.until.get('/prodx/mxpubtale/info/'+this.userPk)
+        .then(res=>{
+          this.info = res.data
+        })
+    }
+  },
   components: {
     tradeHeader,
     tradeFooter
@@ -72,7 +70,7 @@ export default {
 };
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 html,
 body {
   width: 100%;
@@ -81,7 +79,8 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 150px auto 130px;
+      margin: 20px auto 130px;
+
       > div {
         margin: 40px 0;
         display: -webkit-flex;
@@ -117,6 +116,8 @@ body {
       }
       .personal,
       .skills{
+        border-top: 1px solid #F1F1F1;
+        padding-top: 40px;
         >div{
           width: 100%;
           &:nth-of-type(1){

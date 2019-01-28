@@ -1,5 +1,5 @@
 <template>
-     <div class="equipment">
+     <div class="equipment" v-loading="loading">
 
           <!--搜索框-->
           <div class="mainSearch">
@@ -8,8 +8,8 @@
                 <el-input class="searchInput_a" v-model="search.stitle" placeholder="设备标题"></el-input>
               </el-form-item>
 
-              <el-form-item>
-                <el-button type="primary">搜索</el-button>
+              <el-form-item >
+                <el-button type="primary" @click="toSearch">搜索</el-button>
               </el-form-item>
               <el-form-item>
                 <el-button @click="toAddEquipment" class="release">发布设备需求</el-button>
@@ -17,26 +17,34 @@
             </el-form>
           </div>
           <!--收藏信息-->
-          <el-table :data="tableData" style="width: 100%" align="left" padding="5px" @row-click="toEquipmentDetail()">
+          <el-table :data="list" style="width: 100%" align="left" padding="5px" @row-click="toEquipmentDetail"  class="cursor">
             <el-table-column prop="title" label="设备标题"  align="center">
               <!--插入第一列标题链接,scope相当于table，可以访问表内数据-->
               <template slot-scope="scope">
-                <a :href="tableData[scope.$index].address"
+                <a
                    target="_self"
-                   class="buttonText">{{tableData[scope.$index].Ttitle}}</a>
+                   class="buttonText">{{list[scope.$index].nm}}</a>
               </template>
             </el-table-column>
-            <el-table-column  prop="contacts" label="联系人"  align="center"> </el-table-column>
-            <el-table-column prop="contactWay" label="联系方式" align="center"> </el-table-column>
+            <el-table-column  prop="contNm" label="联系人"  align="center"> </el-table-column>
+            <el-table-column prop="contMob" label="联系方式" align="center"> </el-table-column>
             <el-table-column  align="center"  label="操作"  width="130" >
               <template slot-scope="scope">
                 <el-button
                   size="small"
-                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                  @click.stop="handleDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
-
+         <div class="block">
+           <el-pagination
+             @current-change="handleCurrentChange"
+             :current-page=pageNo
+             :page-size=pageSize
+             layout="total, prev, pager, next, jumper"
+             :total=total>
+           </el-pagination>
+         </div>
 
         </div>
 </template>
@@ -45,6 +53,11 @@
 export default {
   data() {
       return {
+        list:[],
+        loading:false,
+        pageNo:1,
+        pageSize:20,
+        total:0,
         search: {
           stitle: '',
         },
@@ -67,19 +80,76 @@ export default {
         ]
       }
     },
+  mounted(){
+    this.getList()
+  },
      methods: {
+       toSearch(){
+         // console.log('111111')
+         this.pageNo = 1
+         this.list = []
+         this.getList()
+       },
+       getList(){
+         this.loading = true;
+         let query = new this.Query();
+         // query.buildWhereClause('nm',this.search.stitle,'LK');
+         query.buildPageClause(this.pageNo,this.pageSize);
+         let param = {
+           nm:this.search.stitle,
+           query:query.getParam().query
+         }
+         this.until.get('/prod/mxpubdev/pageSelf',param)
+           .then(res=>{
+             this.loading = false;
+             if(res.status == 200){
+               this.total = res.page.total
+               res.data.items.forEach(item=>{
+                 item.crtTm = item.crtTm.split(' ')[0]
+               })
+               this.list = res.data.items
+
+
+             }else {
+               this.$message({
+                 message:res.message,
+                 type:'warning'
+               });
+             }
+           },err=>{
+             this.loading = false;
+           });
+       },
+       handleCurrentChange(val){
+         this.pageNo=val
+         this.getList()
+       },
       //删除当前行
       handleDelete(index, row) {
-        console.log(index, row);
+        this.until.get('/prod/mxpubdev/del?pks='+row.mxPubDevPk)
+          .then(res=>{
+            if(res.status=='200'){
+              this.$message({
+                message:'删除成功！',
+                type:'success'
+              })
+              this.list.splice(index,1)
+            }
+          })
+        // console.log(index, row);
       },
       toAddEquipment(){
         this.$router.push({
           path:'/addequipment'
         })
       },
-      toEquipmentDetail(){
+      toEquipmentDetail(row){
+         // window.location.href = '../seller/enterpriseEquipmentd.html?pk='+row.mxPubDevPk
         this.$router.push({
-          path:'/equipmentdetail'
+          path:'/equipmentdetail',
+          query:{
+            id:row.mxPubDevPk
+          }
         })
       }
     }

@@ -3,7 +3,7 @@
 
           <!--金币信息-->
           <div class="coinMsg">
-            <div>我的金币：<span style="color: red;font-size: 28px">16</span>
+            <div>我的金币：<span style="color: red;font-size: 28px">{{gold}}</span>
               <span class="coinMsg_b">
                 <button class="button1" @click="recharge()">充值</button>
                 <button class="button2" @click="exchange()">兑换</button>
@@ -15,32 +15,42 @@
           <!--收藏信息-->
           <el-table
             :data="tableData"
+            @filter-change="tFilterMethod"
             style="width: 100%"
             align="left"
             padding="5px">
             <el-table-column
-              prop="tradingWays"
+              prop="catNm"
               label="交易方式"
               align="center"
+              column-key="status"
+              :filter-multiple="false"
               :filters="tFilter"
-              :filter-method="tFilterMethod"
             >
             </el-table-column>
             <el-table-column
-              prop="coinNum"
+              prop="qty"
               label="金币数"
               align="center"
             >
             </el-table-column>
             <el-table-column
-              prop="tradingTime"
+              prop="crtTm"
               label="交易时间"
               align="center"
             >
             </el-table-column>
           </el-table>
 
-
+     <div class="block">
+       <el-pagination
+         @current-change="handleCurrentChange"
+         :current-page="pageNo"
+         :page-size="pageSize"
+         layout="total, prev, pager, next, jumper"
+         :total="total">
+       </el-pagination>
+     </div>
         </div>
 </template>
 
@@ -48,6 +58,11 @@
 export default {
    data() {
       return {
+        type:'',
+        gold:0,
+        total:0,
+        pageNo:1,
+        pageSize:20,
         search: {
           stitle: '',
         },
@@ -72,7 +87,76 @@ export default {
         ]
       }
     },
+  mounted(){
+     this.getGold()
+     this.getType()
+    this.getList()
+  },
      methods: {
+       handleCurrentChange(val){
+         this.pageNo = val
+         this.getList()
+       },
+       getType(){
+         this.until.get('/general/cat/listByPrntCd?prntCd=81020')
+           .then(res=>{
+             if(res.status == 200){
+               this.tFilter = []
+                res.data.items.forEach(item=>{
+                 this.tFilter.push({
+                   text:item.nm,
+                   value:item.cd
+                 })
+               })
+               // console.log(this.tFilter)
+             }else {
+               this.$message({
+                 message:res.message,
+                 type:'warning'
+               });
+             }
+           })
+       },
+       getGold(){
+
+         this.until.get('/prod/mxpers/listSelf')
+           .then(res=>{
+             if(res.status == 200){
+               this.gold = res.data.items[0].goldQty
+
+             }else {
+               this.$message({
+                 message:res.message,
+                 type:'warning'
+               });
+             }
+           })
+       },
+       getList(){
+
+         let query = new this.Query();
+         query.buildWhereClause('catCd',this.type,'LK');
+         query.buildPageClause(this.pageNo,this.pageSize);
+         let param = query.getParam();
+         this.until.get('/prod/log/pageSelf',param)
+           .then(res=>{
+             if(res.status == 200){
+               this.total = res.page.total
+
+                // res.data.items.forEach(item=>{
+                //    item.crtTm = item.crtTm ? item.crtTm.split(' ')[0] : ' '
+                //  })
+                 this.tableData=res.data.items
+
+
+             }else {
+               this.$message({
+                 message:res.message,
+                 type:'warning'
+               });
+             }
+           })
+       },
       recharge(){
         this.$router.push({
           path:'/goldrecharge'
@@ -84,14 +168,17 @@ export default {
           path:'/goldexchange'
         })
       },
-      tFilterMethod(value,row){
-        return row.tradingWays == value;
+      tFilterMethod(filters){
+         this.type = filters.status[0]
+        this.getList()
+         // console.log(filters)
       }
     }
 };
 </script>
 
-<style lang='less' scoped>
+<style lang='less'>
+
 .mygold {
   flex: 5.5;
   background-color: white;
@@ -131,7 +218,7 @@ export default {
   //表格
   .el-table {
     margin: 0 auto;
-    margin-bottom: 100px;
+    margin-bottom: 20px;
     border: none;
     font-size: 14px;
     color: rgb(144, 144, 144);

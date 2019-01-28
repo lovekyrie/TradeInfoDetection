@@ -18,7 +18,7 @@
       <div class="organization">
         <div><span></span><span>检测机构介绍</span></div>
         <div>
-          <div><img :src="info.entpLogoUrl" alt=""></div>
+          <div class="img"><img :src="info.entpLogoUrl" alt=""></div>
           <div>
             <div>检测机构名称：</div>
             <div>{{info.entpNm}}</div>
@@ -71,6 +71,7 @@ body {
     .header {
       img {
         vertical-align: middle;
+        max-width: 100%;
       }
     }
     .content {
@@ -122,6 +123,19 @@ body {
         display: flex;
         flex-direction: row;
         flex-wrap: wrap;
+        .img{
+          display: flex;
+          display: -webkit-flex;
+          align-items: center;
+          justify-content: center;
+          height: 1.5rem;
+          img{
+            width: auto;
+            height: auto;
+            max-height: 100%;
+            max-width: 100%;
+          }
+        }
         > div {
           margin-top: .2rem;
           width: 100%;

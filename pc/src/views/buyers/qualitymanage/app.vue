@@ -13,7 +13,7 @@
               <el-input placeholder="供应商名称" v-model="searchCustName"></el-input>
             </el-form-item>
             <el-form-item label="质检产品地域：">
-              <addr @setAddr="getAddr"></addr>
+              <addr @setAddr="getAddr" distCd="0"></addr>
             </el-form-item>
             <el-form-item label="序列号：">
               <el-input placeholder="序列号" v-model="searchSn"></el-input>
@@ -30,12 +30,14 @@
         <div>
           <span>序列号</span>
           <span>质检产品名称</span>
+          <span>报告类别</span>
           <span>供应商名称</span>
           <span>质检产品地域</span>
         </div>
         <div v-for="(item, index) in searchBot" :key="index" @click="toDetail(item.mxRepoPk)" class="myList">
           <span>{{item.no}}</span>
           <span>{{item.prodNm}}</span>
+          <span>{{item.catNm}}</span>
           <span>{{item.supply}}</span>
           <span>{{item.prodProvNm}} {{item.prodCityNm}}</span>
         </div>
@@ -44,7 +46,7 @@
             @current-change="handleCurrentChange"
             :current-page=pageNo
             :page-size=pageSize
-            layout="total, sizes, prev, pager, next, jumper"
+            layout="total, prev, pager, next, jumper"
             :total=total>
           </el-pagination>
         </div>
@@ -125,11 +127,16 @@ export default {
     };
   },
   mounted(){
+    if(this.until.getQueryString('val')){
+      this.searchGdno = this.until.getQueryString('val')
+    }
     this.getList()
   },
   methods: {
     toUpload(){
-      window.location.href = '../buyers/uploadreport.html'
+      if(this.until.ifLogin()){
+        window.location.href = '../buyers/uploadreport.html'
+      }
     },
     //详情
     toDetail(val){
@@ -137,21 +144,27 @@ export default {
     },
     getAddr:function(val){
       let cd = JSON.parse(val)
-      this.cityCode1 = cd.cd1
-      this.cityCode2 = cd.cd2
+      // console.log(cd)
+      this.cityCode1 = cd.cd1 ? cd.cd1 : ''
+      this.cityCode2 = cd.cd2 ? cd.cd2 : ''
     },
     getList(){
       this.loading = true;
+
       let query = new this.Query();
+      query.buildWhereClause('no',this.searchSn,'LK');
+      query.buildWhereClause('prodNm',this.searchGdno,'LK');
+      query.buildWhereClause('supply',this.searchCustName,'LK');
+      query.buildWhereClause('prodProvCd',this.cityCode1,'LK');
+      query.buildWhereClause('prodCityCd',this.cityCode2,'LK');
+      query.buildWhereClause('prodCityCd',this.cityCode2,'LK');
+
       query.buildPageClause(this.pageNo,this.pageSize);
+      let myParam = query.getParam();
+      // console.log(myParam)
       let param = {
-        city:this.cityCode2,
         type:1,
-        nm:this.searchGdno,
-        no:this.searchSn,
-        prov:this.cityCode1,
-        deteOrg:this.searchCustName,
-        query:query.getParam()
+        query:myParam.query
       }
       this.until.get('/prodx/mxrepo/page',param)
         .then(res=>{
@@ -159,11 +172,12 @@ export default {
           if(res.status == 200){
             this.total = res.page.total
             this.searchBot=res.data.items
+            // console.log(this.searchBot)
 
           }else {
-            this.$hero.msg.show({
-              text:res.message,
-              times:1500
+            this.$message({
+              message:res.message,
+              type: 'warning'
             });
           }
         },err=>{});
@@ -197,7 +211,7 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 70px auto 0px;
+      margin: 20px auto 0px;
       .search {
         margin-bottom: 20px ;
         padding: 0 25px;
@@ -232,10 +246,11 @@ body {
             }
             > label {
               text-align: left;
-              width: 35%;
+              padding: 0;
+              width: 100px;
             }
             > div {
-              width: 60%;
+              flex: 1;
               input{
                 padding: 23px 0 23px 10px;
               }
@@ -268,6 +283,7 @@ body {
           }
           >span{
             width:20%;
+            text-indent: 25px;
           }
         }
       }

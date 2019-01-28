@@ -71,15 +71,18 @@ export default {
           this.info.distCd = cd.cd3
       },
       submit(){
+          this.$dialog.loading.open()
           this.until.postData('/sys/addr/edit',JSON.stringify(this.info))
               .then(res=>{
+                  this.$dialog.loading.close()
                   if(res.status='200'){
                       this.$hero.msg.show({
                           text:res.message,
                           times:1500
                       });
                       setTimeout(()=>{
-                          window.location.href = '../address/addresslist.html'
+                          // window.location.href = '../address/addresslist.html'
+                          window.history.go(-1)
                       },1500)
                   }else {
                       this.$hero.msg.show({

@@ -6,13 +6,13 @@
     <div class="content">
       <div class="service">
         <div>
-          <img :src="detailpro" alt="">
+          <img :src="info.imgUrl" alt="">
         </div>
         <div>
-          <h3>{{detectionName}}</h3>
+          <h3>{{info.nm}}</h3>
           <div>
             <h4>服务内容</h4>
-            <span>{{service}}</span>
+            <span>{{info.intro}}</span>
           </div>
         </div>
       </div>
@@ -21,16 +21,16 @@
         <div class="info">
           <div>
             <div>
-              <img :src="peacebird" alt="">
+              <img :src="info.entpLogoUrl" alt="">
             </div>
             <div>
-              <p>检测机构名称：{{orgnization}}</p>
-              <span>{{introduce}}</span>
+              <p>检测机构名称：{{info.entpNm}}</p>
+              <span>{{info.entpIntro}}</span>
             </div>
           </div>
-          <div><span>联系人：{{linkedMan}}</span></div>
-          <div><span>联系电话：{{linkedPhone}}</span></div>
-          <div><span>联系邮箱：{{email}}</span></div>
+          <div><span>联系人：{{info.entpContNm}}</span></div>
+          <div><span>联系电话：{{info.entpContMob}}</span></div>
+          <div><span>联系邮箱：{{info.entpEmail}}</span></div>
         </div>
       </div>
     </div>
@@ -49,23 +49,22 @@ import peacebird from "./images/peacebird_03.png";
 export default {
   data() {
     return {
-      detailpro,
-      peacebird,
-      detectionName: "儿童家具质量评审儿童家具质检",
-      service: `最全面儿童家具质量评审儿童家具质检，可检测儿童家具中的甲醛、乙烯等有害物质，严格按照国际标准。
-      最全面儿童家具质量评审儿童家具质检，可检测儿童家具中的甲醛、乙烯等有害物质，严格按照国际标准。
-      最全面儿童家具质量评审儿童家具质检，可检测儿童家具中的甲醛、乙烯等有害物质，严格按照国际标准。`,
-      orgnization: "宁波华信检测有限公司",
-      introduce: `宁波华信检测有限公司是一家专注检测并有十年以上行业检测经验的公司，曾服务过各大制造厂商。
-      宁波华信检测有限公司是一家专注检测并有十年以上行业检测经验的公司，曾服务过各大制造厂商。
-      宁波华信检测有限公司是一家专注检测并有十年以上行业检测经验的公司，曾服务过各大制造厂商。
-      宁波华信检测有限公司是一家专注检测并有十年以上行业检测经验的公司，曾服务过各大制造厂商。`,
-      linkedMan: "张收纳",
-      linkedPhone: "13599990000",
-      email: "83906@163.com"
+      pk:'',
+      info:{},
     };
   },
-  methods: {},
+  mounted(){
+    this.pk = this.until.getQueryString('pk')
+    this.getInfo()
+  },
+  methods: {
+    getInfo(){
+      this.until.get('/prod/mxpubthrser/info/' + this.pk)
+        .then(res => {
+          this.info = res.data
+        })
+    }
+  },
   components: {
     tradeHeader,
     tradeFooter
@@ -73,7 +72,7 @@ export default {
 };
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 html,
 body {
   height: 100%;
@@ -93,6 +92,10 @@ body {
         > div {
           &:nth-of-type(1) {
             width: 418px;
+            img{
+              width: auto;
+              max-width: 100%;
+            }
           }
           &:nth-of-type(2) {
             width: 755px;
@@ -125,7 +128,7 @@ body {
           width: 100%;
           font-size: 16px;
           &:nth-of-type(1) {
-           
+
             display: -webkit-flex;
             display: flex;
             flex-direction: row;

@@ -7,10 +7,13 @@
               :immediate-check="false"
               @load="onLoad"
       >
-        <detection-order :myOrderList="list"></detection-order>
+        <detection-order :myOrderList="list" :logo="logo" @getNewList="getNewList"></detection-order>
 
       </van-list>
+      <div class="noResult" v-if="dataNo">无查询结果</div>
+      <div class="noResult" v-if="dataFinish">全部加载完</div>
     </div>
+
   </div>
 </template>
 
@@ -28,6 +31,7 @@ export default {
         pageSize:10,
         total:0,
         list: [],
+        logo:'',
       myOrderList:[
         {
           orderNo:'1234909',
@@ -63,12 +67,23 @@ export default {
       this.getList()
     },
   methods:{
+      getNewList(){
+        this.pageNo = 1
+          this.list = []
+        this.getList()
+      },
       getList(){
           this.loading = true;
-          let query = new this.Query();
-          query.buildPageClause(this.pageNo,this.pageSize);
+          // let query = new this.Query();
+          // query.buildPageClause(this.pageNo,this.pageSize);
+          let page = {
+              p:{
+                  n:this.pageNo,
+                  s:this.pageSize
+              }
+          }
           let param = {
-              query:query.getParam()
+              query:JSON.stringify(page),
           }
           let url = '/prod/mxordete/pageSelf'
           this.until.get(url,param)
@@ -77,10 +92,14 @@ export default {
                   if(res.status == 200){
                       this.total = res.page.total
                       if(this.total==0){
+                          this.finished = true;
                           this.dataNo = true
                       }else {
                           this.dataNo = false
-
+                          res.data.items.forEach(item=>{
+                              item.crtTm = item.crtTm.split(' ')[0]
+                              item.code = this.hostUrl+'/views/code/order.html?code='+item.repoQrCd
+                          })
                           this.list.push(...res.data.items)
 
 
@@ -122,6 +141,10 @@ export default {
     background-color: #f7f7f7;
     #app{
       height: 100%;
+      .noResult{
+        text-align: center;
+        padding: 0.2rem 0;
+      }
     }
   }
 </style>

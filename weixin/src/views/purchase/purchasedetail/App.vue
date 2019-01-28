@@ -16,6 +16,13 @@
     .detailinfo{
         flex: 1;
         overflow: auto;
+        button{
+            background: #f9f9f9;
+            border: 1px solid #d4d4d4;
+            padding: 0.2rem 0.4rem;
+            border-radius: 3px;
+            margin: 0.2rem;
+        }
         h3{
             margin: .35rem .25rem;
             font-size: .35rem;
@@ -50,6 +57,10 @@
         color: #fff;
         text-align: center;
     }
+    .collectFooter{
+        background-color: #d4d4d4;
+        color: #666666;
+    }
     .imginfo{
         margin: .6rem 0 .6rem;
     }
@@ -64,13 +75,13 @@
             <p>
                 <span>上传者
                     <i>:</i>
-                </span>{{detail.uploader}}
-                <span @click="toDown(detail.pdfUrl)">
-                    <a>
-                        <img src="" alt="下载">
-                    </a>
-                    <span>下载报告</span>
-                </span>
+                </span>{{detail.crtBy}}
+                <!--<span @click="toDown()">-->
+                    <!--<a>-->
+                        <!--<img src="" alt="下载">-->
+                    <!--</a>-->
+                    <!--<span>下载报告</span>-->
+                <!--</span>-->
             </p>
             <p>
                 <span>序列号
@@ -82,7 +93,7 @@
                     <i>:</i>    
                 </span>{{detail.deteOrg}}
             </p>
-            <p @click="toSuplyDetail()">
+            <p @click="toSuplyDetail(detail.supply)">
                 <span>供应商名称
                     <i>:</i>    
                 </span>{{detail.supply}}
@@ -102,12 +113,21 @@
                     <i>:</i>
                 </span>{{detail.intro}}
             </p>
-            <div class="imginfo">
-                <img src="" alt="1">
+            <button @click="down">下载报告</button>
+            <div class="imginfo" v-if="imgList.length>0">
+                <img :src="item.url" v-for="item in imgList"/>
+            </div>
+
+            <div v-if="pdfList.length>0">
+
+                <iframe :src="'/wechat/static/pdf/web/viewer.html?file=' + item.url" height="560" v-for="(item,index) in pdfList" :key="index"
+                        width="100%">
+                </iframe>
+                <!--<pdf :url="item"  v-for="(item,index) in pdfList" :key="index"></pdf>-->
             </div>
         </div>
 
-        <footer @click="collect">
+        <footer @click="collect" :class="{collectFooter:state}">
             {{state | ifState}}
         </footer>
     </div>
@@ -115,12 +135,15 @@
 
 <script>
     import tempApp from 'components/tempApp'
-
+    import pdf from "components/contract.md";
     export default {
 
         data() {
             return {
                 pk:'',
+                imgList:[],
+                pdfList:[],
+                downList:[],
                 obj: {
                     src: "./orderQueryDetail.html?",
                 },
@@ -147,14 +170,26 @@
             this.ifCollect()
         },
         methods: {
+            toSuplyDetail(val){
+              window.location.href = 'productiondetail.html?nm='+val
+            },
             getInfo(){
                 this.until.get('/prodx/mxrepo/info/'+this.pk)
                     .then(res=>{
                         this.detail = res.data
+                        this.downList = this.detail.pdfUrl
+                        let down = JSON.parse(this.downList)
+                        down.forEach(item=>{
+                            if(item.type.toUpperCase()=='PDF'){
+                                this.pdfList.push(item)
+                            }else {
+                                this.imgList.push(item)
+                            }
+                        })
                     })
             },
-            toDown(href){
-                window.location.href = href
+            down(){
+                window.location.href = '../down/downList.html?urlList='+this.downList
             },
             //判断收藏状态
             ifCollect(){
@@ -166,15 +201,30 @@
             },
             //取消或加入收藏
             collect(){
-                if(this.state){
+                if(!this.until.loGet('user')){
+                    this.$dialog.confirm({
+                        mes:'登录后才能操作，请您先登录！',
+                        title: '提示',
+                        opts:()=>{
+                            window.location.href = '../system/login.html'
+                        }
+                    })
+                    return false
+                }
+                if(this.state){  //已经收藏了，要取消
                     this.until.get('/prodx/mxusercoll/canselcoll?subPk='+this.pk+'&sysUserPk='+this.userPk)
                         .then(res=>{
-                            this.state = res
+
+                            this.state = res.status=='200' ? 0: 1
                         })
                 }else {
-                    this.until.post('/prod/mxusercoll/edit?subPk='+this.pk+'&sysUserPk='+this.userPk)
+                    let params = {
+                        subPk:this.pk,
+                        sysUserPk:this.userPk
+                    }
+                    this.until.postData('/prod/mxusercoll/edit',JSON.stringify(params))
                         .then(res=>{
-                            this.state = res
+                            this.state = res.status=='200' ? 1: 0
                         })
                 }
             }
@@ -190,6 +240,7 @@
         },
         components: {
             tempApp,
+            pdf
         }
     }
 </script>

@@ -43,7 +43,7 @@ compiler.plugin('compilation', function (compilation) {
 
 var argv = require('optimist').argv;
 function proxy() {
-  var context = ['/general','/HTWeChat','/prod','/weixin','/sys'];
+  var context = ['/general','/HTWeChat','/prod','/weixin','/sys','/pay','wxMp'];
   var options = { target:argv.proxy,changeOrigin:true};
   app.use(proxyMiddleware(options.filter || context, options))
 }

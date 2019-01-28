@@ -19,6 +19,16 @@ body {
   background-color: #fff;
   .detail-wrap {
     padding: .25rem;
+    button{
+      background: #f9f9f9;
+      border: 1px solid #d4d4d4;
+      padding: 0.2rem 0.4rem;
+      border-radius: 3px;
+      margin: 0.2rem 0;
+    }
+    img{
+      max-width: 100%;
+    }
     h3 {
       padding: 0.1rem 0;
       font-size: 16px;
@@ -47,6 +57,16 @@ footer{
   color: #fff;
   text-align: center;
 }
+.collectFooter{
+  background-color: #d4d4d4;
+  color: #666666;
+}
+.img{
+  img{
+    width: auto;
+    max-width: 100%;
+  }
+}
 .imginfo {
   margin: 0.6rem 0 0.6rem;
 }
@@ -68,6 +88,11 @@ footer{
               <span>序列号
                 <i>:</i>    
               </span>{{detail.no}}
+            </p>
+            <p>
+              <span>报告类别
+                <i>:</i>
+              </span>{{detail.catNm}}
             </p>
             <p>
               <span>检测机构
@@ -92,14 +117,33 @@ footer{
             <p>
               <span>检测项目
                 <i>:</i>
-              </span>{{detail.description}}
+              </span>{{detail.rmks}}
             </p>
+            <button @click="down">下载报告</button>
+            <vue-qr
+                    :logoSrc="logo"
+                    :text="url"
+                    :margin="0"
+                    >
+
+            </vue-qr>
             </div>
+          <div class="img" v-if="imgList.length>0">
+              <img :src="item.url" v-for="item in imgList"/>
+          </div>
+
+          <div v-if="pdfList.length>0">
+
+            <iframe :src="'/wechat/static/pdf/web/viewer.html?file=' + item.url" height="560" v-for="(item,index) in pdfList" :key="index"
+                    width="100%">
+            </iframe>
+            <!--<pdf :url="item"  v-for="(item,index) in pdfList" :key="index"></pdf>-->
+          </div>
         </div>
-      <footer @click="collect">
+      <footer @click="collect" :class="{collectFooter:state}">
         {{state | ifState}}
       </footer>
-      <!--<pdf></pdf>-->
+
         <!-- <div class="imginfo">
             <img src="" alt="1">
         </div> -->
@@ -108,27 +152,32 @@ footer{
 
 <script>
 import tempApp from "components/tempApp";
-// import pdf from "components/pdf";
+import pdf from "components/contract.md";
+import VueQr from 'vue-qr'
 export default {
   data() {
     return {
+        url:'',
+        logo:'',
       obj: {
         src: "./orderQueryDetail.html?"
       },
+        downList:[],
+        imgList:[],
+        pdfList:[],
+        pdfUrl:'http://image.cache.timepack.cn/nodejs.pdf',
         pk:'',
         state:'',
         userPk:'',
       detail: {
-        title: "福州福州服饰有限公司防晒衣检测报告",
-        uploader: "张三",
-        numberid: "1234567890098765",
-        organization: "宁波贸信检测",
-        vendorname: "宁波太平鸟服饰",
-        productname: "防晒衣",
-        address: "浙江 - 宁波 - 海曙",
-        description: `最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告，
-                    最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告，最新最权威的防晒衣质检报告，
-                    最新最权威的防晒衣质检报告最新最权威的防晒衣质检报告。`
+        title: "",
+        uploader: "",
+        numberid: "",
+        organization: "",
+        vendorname: "",
+        productname: "",
+        address: "",
+        description: ``
       }
     };
   },
@@ -139,10 +188,31 @@ export default {
       this.ifCollect()
   },
   methods: {
+      down(){
+          window.location.href = '../down/downList.html?urlList='+this.downList
+      },
       getInfo(){
           this.until.get('/prodx/mxrepo/info/'+this.pk)
               .then(res=>{
                   this.detail = res.data
+                  this.downList = this.detail.pdfUrl
+                  let down = JSON.parse(this.downList)
+                  down.forEach(item=>{
+                      if(item.type.toUpperCase()=='PDF'){
+                          this.pdfList.push(item)
+                      }else {
+                          this.imgList.push(item)
+                      }
+                  })
+                  this.url = this.hostUrl+'/views/code/index.html?code='+this.detail.no
+                  this.getLogo()
+              })
+      },
+      getLogo(){
+          this.until.getText('/prodx/mxrepo/infoByNo/'+this.detail.no)
+              .then(res=>{
+                  let myData = JSON.parse(res)
+                  this.logo = myData.logo
               })
       },
       //判断收藏状态
@@ -155,16 +225,23 @@ export default {
       },
       //取消或加入收藏
       collect(){
-          if(this.state){
-              this.until.get('/prodx/mxusercoll/canselcoll?subPk='+this.pk+'&sysUserPk='+this.userPk)
-                  .then(res=>{
-                      this.state = res
-                  })
-          }else {
-              this.until.post('/prod/mxusercoll/edit?subPk='+this.pk+'&sysUserPk='+this.userPk)
-                  .then(res=>{
-                      this.state = res
-                  })
+          if(this.until.ifLogin()){
+              if(this.state){  //已经收藏了，要取消
+                  this.until.get('/prodx/mxusercoll/canselcoll?subPk='+this.pk+'&sysUserPk='+this.userPk)
+                      .then(res=>{
+
+                          this.state = res.status=='200' ? 0: 1
+                      })
+              }else {
+                  let params = {
+                      subPk:this.pk,
+                      sysUserPk:this.userPk
+                  }
+                  this.until.postData('/prod/mxusercoll/edit',JSON.stringify(params))
+                      .then(res=>{
+                          this.state = res.status=='200' ? 1: 0
+                      })
+              }
           }
       }
   },
@@ -179,7 +256,8 @@ export default {
     },
   components: {
     tempApp,
-      // pdf
+      pdf,
+      VueQr
   }
 };
 </script>

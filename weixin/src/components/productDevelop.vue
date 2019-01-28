@@ -2,12 +2,12 @@
 <div class="hr-content">
   <div class="hr-item" @click="toDetailLink(item.taleMxPubTalePk)" v-for="(item, index) in developList" :key="index">
     <div class="hr-theme">
-      <div>{{item.jobName}}</div>
+      <div>{{item.talePost}}</div>
       <div></div>
-      <div>{{item.candidate}}</div>
+      <div>{{item.persNm}}</div>
     </div>
     <div class="hr-info">
-      <div>联系电话：{{item.phone}}</div>
+      <div>联系电话：{{item.taleMob}}</div>
     </div>
   </div>
 </div>
@@ -45,22 +45,23 @@ export default {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
-        justify-content: space-between;
+        /*justify-content: space-between;*/
         >div{
-          width: 50%;
+          /*width: 50%;*/
         }
       }
       >.hr-theme{
         >div:nth-of-type(1){
-          width: 38%;
+          /*width: 38%;*/
           color: #4C9AF4;
         }
         >div:nth-of-type(2){
+          margin: 0 0.2rem;
           background-color: #D2D2D2;
           width: .3%;
         }
         >div:nth-of-type(3){
-          width: 49.9%;
+          /*width: 49.9%;*/
         }
         margin-bottom: .2rem;
       }

@@ -2,16 +2,16 @@
   <div class="partner">
     <div class="partner-wrap" v-for="(item, index) in partnerList" :key="index">
       <div>
-        <span>{{item.partnerName}}</span>
-        <span>{{item.partnerLink}}</span>
+        <span>{{item.nm}}</span>
+        <span>{{item.catNm}}</span>
       </div>
       <div>
-        <span>{{item.introduce}}</span>
+        <span>{{item.rmks}}</span>
       </div>
       <div>
-        <span>{{item.linked}}</span>
-        <span>{{item.linkedPhone}}</span>
-        <span>{{item.releaseDate}}</span>
+        <span>{{item.contNm}}</span>
+        <span>{{item.contMob}}</span>
+        <span>{{item.crtTm}}</span>
       </div>
     </div>
   </div>
@@ -59,10 +59,11 @@ export default {
           width: 25%;
         }
         >span:nth-of-type(2){
-          width: 30%;
+          width: 35%;
         }
         >span:nth-of-type(3){
-          width: 40%;
+          width: 35%;
+          text-align: right;
         }
       }
     }

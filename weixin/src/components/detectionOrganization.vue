@@ -3,20 +3,20 @@
     <div class="detection-wrap" v-for="(item, index) in detectionOrgList" :key="index">
       <div>
         <div>
-          <span>{{item.detectionName}}</span>
+          <span>{{item.nm}}</span>
         </div>
         <div>
-          <span>检测服务分类：{{item.serviceType}}</span>
+          <span>检测服务分类：{{item.catNm}}</span>
         </div>
         <div>
-          <span>二级类别：{{item.secondType}}</span>
+          <span>二级类别：{{item.twoNm}}</span>
         </div>
       </div>
       <div>
-        <span>发布时间：{{item.releaseDate}}</span>
-        <button>查看详情</button>
-        <button>编辑</button>
-        <button>删除</button>
+        <span>发布时间：{{item.crtTm}}</span>
+        <button @click="toDetail(item.mxPubThrserPk)">查看详情</button>
+        <button @click="toEdit(item)">编辑</button>
+        <button @click="toDelete(item.mxPubThrserPk,index)">删除</button>
       </div>
     </div>
   </div>
@@ -29,7 +29,27 @@ export default {
     return {
 
     }
-  }
+  },
+    methods:{
+      toEdit(info){
+        window.location.href = 'releasedetection.html?info='+JSON.stringify(info)
+      },
+        toDelete(pk,index){
+            this.until.get('/prod/mxpubthrser/del?pks='+pk)
+                .then(res=>{
+                    if(res.status=='200'){
+                        this.detectionOrgList.splice(index,1)
+                        this.$hero.msg.show({
+                            text:'删除成功！',
+                            time:1500
+                        })
+                    }
+                })
+        },
+      toDetail(val){
+          window.location.href = 'detectionorgdetail.html?id='+val
+      }
+    }
 }
 </script>
 

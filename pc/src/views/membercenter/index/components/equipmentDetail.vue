@@ -1,6 +1,6 @@
 <template>
   <div class="mainRight">
-          <p @click="toEquipment" style="text-align: left;"><i class="el-icon-arrow-left"></i> 返回</p>
+          <p @click="toEquipment" style="text-align: left;" class="cursor"><i class="el-icon-arrow-left"></i> 返回</p>
 
           <!--标题-->
           <ul class="mainTitle">
@@ -12,23 +12,22 @@
           <!--设备详情-->
           <!--标题-->
           <div class="dTitle">
-            <span style="text-align: left">【转租】</span> 高价租最新服装衬衫全效检测设备一台
-            <span class="titleTime">发布日期：2018-06-01</span>
+            <span style="text-align: left">{{info.nm}}</span>
+            <span class="titleTime">发布日期：{{info.crtTm}}</span>
           </div>
 
           <!--描述-->
           <div class="dDes">
             <span class="dIcon"></span><span class="dTitle_b">产品描述</span>
-            <p>最新水质检测机最新水质检测机，最新水质检测机最新水质检测机最新水质检测机最新水质检测机。最新水质检测机最新水质检测机最新水质检测机
-              最新水质检测机最新水质检测机最新水质检测机最新水质检测机。最新水质检测机最新水质检测机，最新水质检测机。</p>
+            <p>{{info.intro}}</p>
           </div>
 
           <!--联系方式-->
           <div class="contactWay">
             <span class="dIcon"></span><span class="dTitle_b">联系方式</span>
-            <p>联系人：张三</p>
-            <p>联系方式：13999943921</p>
-            <p>邮箱地址：1353@13.com</p>
+            <p>联系人：{{info.contNm}}</p>
+            <p>联系方式：{{info.contMob}}</p>
+            <p>邮箱地址：{{info.contEmail}}</p>
           </div>
         </div>
 </template>
@@ -37,10 +36,28 @@
 export default {
   data(){
     return {
-
+      pk:'',
+      info:{}
     }
   },
+  mounted(){
+    this.pk = this.$route.query.id
+    this.getInfo()
+  },
   methods:{
+    getInfo(){
+      this.until.get('/prod/mxpubdev/info/'+this.pk)
+        .then(res=>{
+          if(res.status=='200'){
+            this.info = res.data
+          }else {
+            this.$message({
+              message:res.message,
+              type:'warning'
+            });
+          }
+        })
+    },
     toEquipment(){
       this.$router.back(-1)
     }
@@ -73,6 +90,7 @@ export default {
           }
           //标题字体
           .title {
+            width: auto;
             font-size: 20px;
             font-weight: 400;
             margin-left: 40px;

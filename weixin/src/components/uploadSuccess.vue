@@ -3,7 +3,11 @@
     <div class="upload-wrap">
       <div class="upload-content">
         <div>
-          <img :src="code" alt="">
+          <vue-qr
+              :logoSrc="logo"
+              :text="code"
+              :margin="0"
+          ></vue-qr>
         </div>
         <div>
           <span>
@@ -22,14 +26,18 @@
 </template>
 
 <script>
-import code from "./img/code.png";
+    import VueQr from 'vue-qr'
 
 export default {
   data() {
     return {
-      code
+logo:''
     };
-  }
+  },
+    props:['code'],
+    components:{
+        VueQr
+    }
 };
 </script>
 
@@ -45,7 +53,7 @@ export default {
     padding: .4rem;
     position: fixed;
     width: 70%;
-    height: 5.2rem;
+    padding: 0.5rem 0;
     top: 40%;
     left: 50%;
     transform: translate3d(-50%, -50%, 0);

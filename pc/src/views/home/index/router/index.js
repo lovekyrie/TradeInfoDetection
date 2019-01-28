@@ -11,6 +11,7 @@ import industryDetail from '../components/industryDetail.vue'
 import platformDetail from '../components/platformDetail.vue'
 
 import membercenter from '../../../membercenter/index/app.vue'
+import accountManager from '../../../membercenter/index/components/accountManager.vue'
 import center from '../../../membercenter/index/components/center.vue'
 import addAddress from '../../../membercenter/index/components/addAddress.vue'
 import addEquipment from '../../../membercenter/index/components/addEquipment.vue'
@@ -21,6 +22,7 @@ import goldExchange from '../../../membercenter/index/components/goldExchange.vu
 import goldRecharge from '../../../membercenter/index/components/goldRecharge.vue'
 import myCollect from '../../../membercenter/index/components/myCollect.vue'
 import myEquipment from '../../../membercenter/index/components/myEquipment.vue'
+import myEquipmentQY from '../../../membercenter/index/components/myEquipmentQY.vue'
 import myExchange from '../../../membercenter/index/components/myExchange.vue'
 import myGold from '../../../membercenter/index/components/myGold.vue'
 import myOrder from '../../../membercenter/index/components/myOrder.vue'
@@ -31,6 +33,7 @@ import orderDetail from '../../../membercenter/index/components/orderDetail.vue'
 import recruitDetail from '../../../membercenter/index/components/recruitDetail.vue'
 import reportDetail from '../../../membercenter/index/components/reportDetail.vue'
 import equipmentDetail from '../../../membercenter/index/components/equipmentDetail.vue'
+import myJob from '../../../membercenter/index/components/myJob.vue'
 export default new VueRouter({
   routes:[
     {path:'',redirect:'/buyer'},
@@ -43,7 +46,9 @@ export default new VueRouter({
     {path:'/platformDetail',component:platformDetail},
     {path:'/membercenter',component:membercenter,
       children:[
+        {path:'',redirect:'/center'},
         {path:'/center',component:center},
+        {path:'/accountManager',component:accountManager},
         {path:'/mygold',component:myGold},
         {path:'/myorder',component:myOrder},
         {path:'/myreport',component:myReport},
@@ -52,6 +57,7 @@ export default new VueRouter({
         {path:'/mycollect',component:myCollect},
         {path:'/talentinfo',component:myRecruit},
         {path:'/equipment',component:myEquipment},
+        {path:'/equipmentQY',component:myEquipmentQY},
         {path:'/addresslist',component:addressList},
         {path:'/changepwd',component:changePwd},
         {path:'/addaddress',component:addAddress},
@@ -62,7 +68,8 @@ export default new VueRouter({
         {path:'/orderdetail',component:orderDetail},
         {path:'/recruitdetail',component:recruitDetail},
         {path:'/reportdetail',component:reportDetail},
-        {path:'/equipmentdetail',component:equipmentDetail}
+        {path:'/equipmentdetail',component:equipmentDetail},
+        {path:'/myJob',component:myJob}
       ],redirect:'/center'
     }
   ]

@@ -28,6 +28,7 @@ export default {
 </script>
 
 <style lang='less'>
+
 .upload-wrap {
   position: fixed;
   top: 0;
@@ -53,6 +54,10 @@ export default {
       width: 100%;
       justify-content: space-around;
       align-items: center;
+      img{
+        width: auto;
+        max-width: 100%;
+      }
       &:nth-of-type(2) {
         margin-top: .2rem;
         padding: 0.2rem 0;

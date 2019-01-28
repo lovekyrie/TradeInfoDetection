@@ -2,16 +2,25 @@
   <div id="app">
     <trade-header :showSearch="showSearch"></trade-header>
     <div class="content">
-      <el-row>
-        <el-button @click="toEnterprise">企业发布</el-button>
-        <el-button>个人发布</el-button>
-      </el-row>
+      <div class="el-row">
+        <button @click="toEnterprise">企业发布</button>
+        <button class="active">个人发布</button>
+      </div>
       <div class="equipment-list">
-        <div v-for="(item, index) in equipmentList" :key="index">
-          <span>{{item.content}}</span>
-          <span>{{item.linkedMan}}&nbsp;&nbsp;{{item.phoneNum}}</span>
-          <span>{{item.time}}</span>
+        <div v-for="(item, index) in equipmentList" :key="index" @click="toDetail(item.mxPubDevPk)">
+          <span>{{item.nm}}</span>
+          <span>{{item.contNm}}&nbsp;&nbsp;{{item.contMob}}</span>
+          <span>{{item.rcdTm}}</span>
         </div>
+      </div>
+      <div class="block">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :current-page="pageNo"
+          :page-size="pageSize"
+          layout="total, prev, pager, next, jumper"
+          :total="total">
+        </el-pagination>
       </div>
     </div>
     <trade-footer></trade-footer>
@@ -26,80 +35,52 @@ export default {
   data(){
     return{
       showSearch:false,
-      equipmentList:[
-        {
-          content:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linkedMan:'张先生',
-          phoneNum:'15900110011',
-          time:'2018年6月17日'
-        },
-        {
-          content:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linkedMan:'张先生',
-          phoneNum:'15900110011',
-          time:'2018年6月17日'
-        },
-        {
-          content:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linkedMan:'张先生',
-          phoneNum:'15900110011',
-          time:'2018年6月17日'
-        },
-        {
-          content:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linkedMan:'张先生',
-          phoneNum:'15900110011',
-          time:'2018年6月17日'
-        },
-        {
-          content:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linkedMan:'张先生',
-          phoneNum:'15900110011',
-          time:'2018年6月17日'
-        },
-        {
-          content:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linkedMan:'张先生',
-          phoneNum:'15900110011',
-          time:'2018年6月17日'
-        },
-        {
-          content:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linkedMan:'张先生',
-          phoneNum:'15900110011',
-          time:'2018年6月17日'
-        },
-        {
-          content:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linkedMan:'张先生',
-          phoneNum:'15900110011',
-          time:'2018年6月17日'
-        },
-        {
-          content:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linkedMan:'张先生',
-          phoneNum:'15900110011',
-          time:'2018年6月17日'
-        },
-        {
-          content:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linkedMan:'张先生',
-          phoneNum:'15900110011',
-          time:'2018年6月17日'
-        },
-        {
-          content:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linkedMan:'张先生',
-          phoneNum:'15900110011',
-          time:'2018年6月17日'
-        },
-        {
-          content:'【转租】高价租最新服装衬衫全效检测设备一台',
-          linkedMan:'张先生',
-          phoneNum:'15900110011',
-          time:'2018年6月17日'
+      total:0,
+      pageNo:1,
+      pageSize:20,
+      equipmentList:[]
+    }
+  },
+  mounted(){
+    this.getList()
+  },
+  methods:{
+    toDetail(val){
+      window.location.href = 'personalEquipmentd.html?pk='+val
+    },
+    handleCurrentChange(val){
+      this.pageNo = val
+      this.getList()
+    },
+    getList(){
+      this.loading = true;
+      // let query = new this.Query();
+      // query.buildPageClause(this.pageNo,this.pageSize);
+      let page = {
+        p:{
+          n:this.pageNo,
+          s:this.pageSize
         }
-      ]
+      }
+      let param = {
+        query:JSON.stringify(page),
+        value:this.key,
+        // query:query.getParam()
+      }
+      let url = '/prodx/mxpubdev/page'
+      this.until.get(url,param)
+        .then(res=>{
+          this.loading = false;
+          if(res.status == 200){
+            this.total = res.page.total
+                this.equipmentList=res.data.items
+          }else {
+
+          }
+        },err=>{});
+    },
+    toEnterprise(){
+      window.location.href = '../seller/enterpriseEquipment.html'
     }
   },
   components:{
@@ -109,7 +90,7 @@ export default {
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 html,body{
   height: 100%;
   width: 100%;
@@ -118,13 +99,33 @@ html,body{
     width: 100%;
     .content{
       width: 1200px;
-      margin: 50px auto 0px;
+      margin: 20px auto 0px;
+      .el-row{
+        border-bottom: 1px solid #dddddd;
+        button{
+          width: 100px;
+          text-align: center;
+          line-height: 40px;
+          height: 40px;
+          border-radius: 3px 3px 0 0;
+          background: #dddddd;
+          margin-right: 15px;
+        }
+        button.active{
+          background: #0d55d2;
+          color: #fff;
+        }
+      }
+      .block{
+        margin: 20px 0;
+      }
       .equipment-list{
         display: -webkit-flex;
         display: flex;
         flex-flow: row wrap;
         justify-content: space-between;
         >div{
+          cursor: pointer;
           padding: 30px 0;
           width: 100%;
           display: flex;
@@ -139,6 +140,7 @@ html,body{
               display: flex;
               align-items: center;
               &::before{
+                margin-right: 10px;
                 display: inline-block;
                 content: '.';
                 height: 5px;

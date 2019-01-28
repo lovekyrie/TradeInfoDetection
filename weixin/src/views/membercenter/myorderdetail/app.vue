@@ -5,14 +5,22 @@
         <div><span>订单编号：{{info.mxOrdDetePk}}</span></div>
         <div><span>服务名称：{{info.mxPubCheckNm}}</span></div>
         <div><span>数量：{{info.qty}}</span></div>
-        <div><span>联系电话：{{info.mob}}</span></div>
-        <div><span>下单时间：{{info.rcdTm}}</span></div>
+        <div><span>联系电话：{{info.checkMob}}</span></div>
+        <div><span>下单时间：{{info.crtTm}}</span></div>
         <div><span>订单状态：{{info.statNm}}</span></div>
         <div><span>价格：￥{{info.price}}</span></div>
         <div><span>报告状态：{{info.repoStatNm}}</span></div>
         <div>
           <span>订单二维码</span>
-          <div><img :src="twoCode" alt=""></div>
+          <div>
+            <vue-qr
+                    :logoSrc="logo"
+                    :text="url"
+                    :margin="0"
+            >
+
+            </vue-qr>
+          </div>
         </div>
       </div>
       <div class="linked">
@@ -30,16 +38,21 @@
       </div>
       <div class="report">
         <div><span></span><span>检测报告</span></div>
-        <!--<div><span>序列号：{{info.checkNum}}</span></div>-->
-        <!--<div><span>检测机构：{{info.organization}}</span></div>-->
-        <!--<div><span>供应商名称：{{info.customerName}}</span></div>-->
-        <!--<div><span>样品名称：{{info.sampleName}}</span></div>-->
+        <div><span>序列号：{{info.checkMxPubCheckPk}}</span></div>
+        <div><span>检测机构：宁波贸信检测</span></div>
+        <div><span>供应商名称：{{info.supply}}</span></div>
+        <div><span>质检产品名称：{{info.prodNm}}</span></div>
       </div>
     </div>
-    <div class="pdf-content">
-      pdf报告
+    <div class="img" v-if="imgList.length>0">
+      <img :src="item" v-for="item in imgList"/>
     </div>
-    <div class="footer">
+    <div v-if="pdfList.length>0">
+      <iframe :src="'/wechat/static/pdf/web/viewer.html?file=' + item" height="560" v-for="(item,index) in pdfList" :key="index"
+              width="100%">
+      </iframe>
+    </div>
+    <div class="footer" @click="down">
       <div>下载报告</div>
     </div>
   </div>
@@ -47,41 +60,19 @@
 
 <script>
 import twoCode from './images/twocode.png'
-
+import pdf from "components/contract.md";
+import VueQr from 'vue-qr'
 export default {
   data(){
     return {
       twoCode,
         pk:'',
+        imgList:[],
+        pdfList:[],
+        downList:[],
+        logo:'',
+        url:'',
         info:{},
-      orderInfo:{
-        orderNo:'12349099',
-        serviceName:'CFDA食堂餐厅饭店酒店自制餐饮食品检测',
-        count:1,
-        linkedPhone:'0574-88889999',
-        createTime:'2018-06-06',
-        orderState:'已完成',
-        price:'500.00',
-        reportState:'已上传',
-      },
-      linked:{
-        customerName:'宁波食品公司',
-        sampleName:'餐盒',
-        linkedMan:'张三',
-        linkedPhone:'13577778888',
-        note:`全部都要检测全部都要检测全部都要检测全部都要检测全部都要检测全部都要检测`,
-      },
-      address:{
-        receiver:'张三',
-        phoneNum:'15800876123',
-        detail:'浙江省宁波市高新区福明路618号 516室 ',
-      },
-      report:{
-        serialNo:'1234567890987654',
-        organization:'宁波贸信检测',
-        customerName:'宁波食品公司',
-        sampleName:'餐盒',
-      }
     }
   },
   mounted(){
@@ -89,12 +80,39 @@ export default {
       this.getInfo()
   },
     methods:{
+      down(){
+          window.location.href = '../down/downList.html?urlList='+JSON.stringify(this.downList)
+      },
       getInfo(){
           this.until.get('/prod/mxordete/info/'+this.pk)
               .then(res=>{
                 this.info = res.data
+                  this.url = this.hostUrl+'/views/code/order.html?code='+ this.info.repoQrCd
+
+                  if(this.info.repoNo){
+                      let down = this.info.repoNo.split(',')
+                      down.forEach(item=>{
+                          let file = item.split('/')[item.split('/').length-1]
+                          this.downList.push({
+                              name:file.split('.')[0],
+                              url:item,
+                              type:file.split('.')[1]
+                          })
+                          if(item.indexOf('.pdf')>-1 || item.indexOf('.PDF')>-1){
+                              this.pdfList.push(item)
+                          }else {
+                              this.imgList.push(item)
+                          }
+                      })
+                      console.log(this.downList)
+                  }
+
               })
       }
+    },
+    components: {
+        pdf,
+        VueQr
     }
 }
 </script>

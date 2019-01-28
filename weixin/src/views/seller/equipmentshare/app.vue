@@ -17,8 +17,8 @@
               @load="onLoad"
       >
         <div class="equimpentList" v-if="showEnterpriseRelease" v-for="item in productList" @click="toDetail(item.mxPubDevPk)">
-          <div class="img">
-            <img :src="item.imgUrl"/>
+          <div class="img" :style="'background-image:url('+item.imgUrl+')'">
+            <!--<img :src="item.imgUrl"/>-->
           </div>
           <p>{{item.nm}}</p>
         </div>
@@ -102,16 +102,25 @@ export default {
           this.getList()
       },
       getList(){
+          this.$dialog.loading.open()
           this.loading = true;
-          let query = new this.Query();
-          query.buildPageClause(this.pageNo,this.pageSize);
+          // let query = new this.Query();
+          // query.buildPageClause(this.pageNo,this.pageSize);
+          let page = {
+              p:{
+                  n:this.pageNo,
+                  s:this.pageSize
+              }
+          }
           let param = {
+              query:JSON.stringify(page),
               value:this.key,
-              query:query.getParam()
+              // query:query.getParam()
           }
           let url = this.type ? '/prodx/mxpubdev/page':'/prodx/mxpubdev/pageentp'
           this.until.get(url,param)
               .then(res=>{
+                  this.$dialog.loading.close()
                   this.loading = false;
                   if(res.status == 200){
                       this.total = res.page.total
@@ -119,6 +128,9 @@ export default {
                           this.dataNo = true
                       }else {
                           this.dataNo = false
+                          res.data.items.forEach(item=>{
+                              item.crtTm = item.crtTm.split(' ')[0]
+                          })
                           if(this.type){
                               this.personalReleaseList.push(...res.data.items)
                           }else {
@@ -193,6 +205,9 @@ body {
           display: -webkit-flex;
           align-items: center;
           justify-content: center;
+          background-position:center;
+          background-size:cover;
+          background-repeat:no-repeat;
           img{
             width: auto;
             height: auto;

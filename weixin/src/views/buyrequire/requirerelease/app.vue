@@ -34,6 +34,7 @@ export default {
   data() {
     return {
       title:'需求发布',
+        url:'',//接口地址
         type:'',
         key:'',
         dataFinish:false,
@@ -50,33 +51,44 @@ export default {
     };
   },
     mounted(){
+        this.until.pushHistory();
       this.type = this.until.getQueryString('type')
+        this.url = this.type==1?'/prodx/mxpubres/page':'/prodx/mxpubres/pageSela'
         this.getList()
     },
   methods: {
       getList(){
+          this.$dialog.loading.open()
           this.loading = true;
-          let query = new this.Query();
-          query.buildPageClause(this.pageNo,this.pageSize);
-          let param = {
-              type:this.type,
-              value:this.cityCode1,
-              query:query.getParam()
+          // let query = new this.Query();
+          // query.buildPageClause(this.pageNo,this.pageSize);
+          let page = {
+              p:{
+                  n:this.pageNo,
+                  s:this.pageSize
+              }
           }
-          this.until.get('/prodx/mxpubreq/page',param)
+          let param = {
+              query:JSON.stringify(page),
+              value:this.key,
+              // query:query.getParam(),
+          }
+          this.until.get(this.url,param)
               .then(res=>{
+                  this.$dialog.loading.close()
                   this.loading = false;
                   if(res.status == 200){
                       this.total = res.page.total
                       if(this.total==0){
+                          this.finished = true;
                           this.dataNo = true
                       }else {
                           this.dataNo = false
                           res.data.items.forEach(item=>{
-                              item.userCrtTm=item.userCrtTm.slice(0,9)
+                              item.rcdTm=item.rcdTm?item.rcdTm.split(' ')[0]:''
                               item.state = new Date(item.rcdTm) > new Date ? true: false
                               if(!item.state){
-                                  item.contMob = item.contMob.slice(0,2)+'********'
+                                  item.contMob = item.contMob.slice(0,3)+'********'
                               }
                           })
                           this.releaseList.push(...res.data.items)
@@ -115,8 +127,10 @@ export default {
           }, 500);
       },
       submit(){
-          console.log('11111111')
-        window.location.href = 'addrequirerelease.html'
+          // console.log('11111111')
+          if(this.until.ifLogin()) {
+              window.location.href = 'addrequirerelease.html?type=' + this.type
+          }
       }
   },
   components: {

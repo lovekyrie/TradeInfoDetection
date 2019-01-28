@@ -3,8 +3,8 @@
 import {Alert, Confirm, Loading, Notify, Toast} from "vue-ydui/dist/lib.rem/dialog/index";
 
 const postImgUrl = 'http://118.178.121.34:8080/uploads/';
-const hostUrl = 'http://192.168.2.195';
-
+// const hostUrl = 'http://192.168.2.123';
+const hostUrl = 'http://mx.jiaxiangtech.com/wechat';
 
 var $dialog={
     confirm: Confirm,
@@ -15,6 +15,37 @@ var $dialog={
 };
 
 class until{
+    //苹果微信返回不刷新
+    pushHistory(){
+        window.addEventListener("popstate", function(e) {
+
+            // alert("后退");
+            self.location.reload();
+        }, false);
+
+        var state = {
+            title : "",
+            url : "#"
+        };
+        window.history.replaceState(state, "", "#");
+
+    }
+    //判断是否登录
+    ifLogin(){
+        console.log(localStorage.getItem('user'))
+        if(!this.loGet('user')){
+            $dialog.confirm({
+                mes:'登录后才能操作，请您先登录！',
+                title: '提示',
+                opts:()=>{
+                    window.location.href = '../system/login.html'
+                }
+            })
+            return false
+        }else {
+            return true
+        }
+    }
   // 截取小数
 
   getCookie(name)
@@ -92,26 +123,66 @@ class until{
   upImg(e){
     let $q = new Promise((resolve,reject)=>{
       let blob = e.target.files[0];
-      if (!/^image/.test(blob.type)){
-        return reject('请选择图片文件');
+      console.log(blob.size)
+          let maxSize = 1024*1024*10
+        if(blob.size>maxSize){
+          $dialog.loading.close()
+            return reject('最大不能超过10M！');
+        }
+      if (/^image/.test(blob.type) || /^application\/pdf/.test(blob.type)){
+          let param = new FormData();
+          param.append('file',blob);
+          this.postImg('/general/file/upload',param)
+              .then(res=>{
+                  e.target.value = '';
+                  if(res.status == 500){
+                      reject(res.message)
+                  }else {
+                      resolve(res.data);
+                  }
+              },err=>{
+                  e.target.value = '';
+                  reject('上传失败');
+              })
+      }else {
+          $dialog.loading.close()
+        return reject('请选择图片文件或者PDF！');
       }
-      let param = new FormData();
-      param.append('file',blob);
-      this.postImg('/general/file/upload',param)
-        .then(res=>{
-          e.target.value = '';
-          if(res.status == 500){
-            reject(res.message)
-          }else {
-            resolve(res.data);
-          }
-        },err=>{
-          e.target.value = '';
-          reject('上传失败');
-        })
+
     });
     return $q;
   }
+    upBaseImg(base64String){
+        let $q = new Promise((resolve,reject)=>{
+
+            let bytes = window.atob(base64String.split(',')[1]);
+            let array = [];
+            for(let i = 0; i < bytes.length; i++){
+                array.push(bytes.charCodeAt(i));
+            }
+            let blob = new Blob([new Uint8Array(array)], {type: 'image/jpeg'});
+            // 生成FormData对象
+            let param = new FormData();
+            // 注：此处 file 应和后台接收参数匹配
+            param.append('file', blob, Date.now() + '.jpg');
+
+            this.postImg('/general/file/upload',param)
+                .then(res=>{
+                    // e.target.value = '';
+                    if(res.status == 500){
+                        reject(res.message)
+                    }else {
+                        resolve(res.data);
+                    }
+                },err=>{
+                    // e.target.value = '';
+                    reject('上传失败');
+                })
+
+
+        });
+        return $q;
+    }
   upMoreImg(e){
     let $q = new Promise((resolve,reject)=>{
       let blob = e.target.files;
@@ -145,6 +216,7 @@ class until{
     return $q;
   }
   post(url,data){
+      $dialog.loading.open()
     let promise = new Promise((resolve,reject)=> {
       $.ajax({
         type:'POST',
@@ -160,19 +232,21 @@ class until{
           //         "token":"eyJhbGciOiJIUzI1NiJ9.eyJqdGkiOiJ4bTAwMSIsImlhdCI6MTUzNzk0MzY2NCwic3ViIjoiMzNlYmJhNzBmMzQ3NDQ0YWIzNTQzNDhjOGNjMDhiZjIiLCJleHAiOjE1MzgwMzAwNjR9.hNneE5LH2tUZKUTPMgL-PsiYMJ1zB2iAwRWmwYlEdQ8"
           //     },
         success(data){
-          if(data.code=='300'){
+            $dialog.loading.close()
+          if(data.code=='401'){
               $dialog.toast({
               mes: data.msg,
               timeout: 1500,
               icon: 'error',
               callback: () => {
-
+                // window.location.href = '../system/login.html'
               }
           });
           }
           resolve(data);
         },
         error(data){
+            $dialog.loading.close()
           reject(data);
         }
       })
@@ -194,6 +268,7 @@ class until{
           resolve(data);
         },
         error(data){
+            $dialog.loading.close()
           reject(data);
         }
       })
@@ -201,6 +276,7 @@ class until{
     return promise;
   }
     get(url,data,cache = false){
+        $dialog.loading.open()
         let promise = new Promise((resolve,reject)=>{
             $.ajax({
                 type:'GET',
@@ -209,6 +285,51 @@ class until{
                 cache,
                 dataType:'json',
                 success(data){
+                    $dialog.loading.close()
+                    resolve(data);
+                    if(data.status=='401') {
+                        $dialog.toast({
+                            mes: data.message,
+                            timeout: 1500,
+                            icon: 'error',
+                            callback: () => {
+                                // window.location.href = '../system/login.html'
+                            }
+                        });
+                        return false
+
+                    }
+                },
+                error(data){
+                    $dialog.loading.close()
+                    reject(data);
+                }
+            })
+        });
+        return promise;
+    }
+  //返回text数据
+    getText(url,data,cache = false){
+        let promise = new Promise((resolve,reject)=>{
+            $.ajax({
+                type:'GET',
+                url,
+                data,
+                cache,
+                dataType:'text',
+                success(data){
+                    if(data.status=='401') {
+                        $dialog.toast({
+                            mes: data.message,
+                            timeout: 1500,
+                            icon: 'error',
+                            callback: () => {
+                                // window.location.href = '../system/login.html'
+                            }
+                        });
+                        return false
+
+                    }
                     resolve(data);
                 },
                 error(data){
@@ -259,7 +380,7 @@ class until{
     if(!state){
       self.$hero.msg.show({text: '未登录'});
       setTimeout(()=>{
-        location.href = '../system/login.html';
+        // location.href = '../system/login.html';
       },1000)
       return false;
     }

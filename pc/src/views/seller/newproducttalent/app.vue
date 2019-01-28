@@ -1,17 +1,15 @@
 <template>
-  <div id="app">
-      <trade-header :showSearch="showSearch"></trade-header>
+  <div id="app" v-loading="loading">
+      <trade-header :showSearch="showSearch" @search="search" searchText="找人才"></trade-header>
     <div class="content">
       <new-product :recruitList="newProductRecruitList"></new-product>
       <div class="block">
           <el-pagination
-            @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="currentPage4"
-            :page-sizes="[100, 200, 300, 400]"
-            :page-size="100"
-            layout="total, sizes, prev, pager, next, jumper"
-            :total="400">
+            :current-page="pageNo"
+            :page-size="pageSize"
+            layout="total, prev, pager, next, jumper"
+            :total="total">
           </el-pagination>
         </div>
     </div>
@@ -29,50 +27,57 @@ import newProduct from 'components/newProduct'
 export default {
   data(){
     return {
+      loading:false,
+      total:0,
+      pageNo:1,
+      pageSize:20,
+      key:'',
       showSearch:true,
-      newProductRecruitList:[
-        {
-          job:'无机分析工程师',
-          name:'张三',
-          phoneNum:'13599990000',
-        },
-          {
-          job:'无机分析工程师',
-          name:'张三',
-          phoneNum:'13599990000',
-        },
-          {
-          job:'无机分析工程师',
-          name:'张三',
-          phoneNum:'13599990000',
-        },
-          {
-          job:'无机分析工程师',
-          name:'张三',
-          phoneNum:'13599990000',
-        },
-          {
-          job:'无机分析工程师',
-          name:'张三',
-          phoneNum:'13599990000',
-        },
-          {
-          job:'无机分析工程师',
-          name:'张三',
-          phoneNum:'13599990000',
-        },
-          {
-          job:'无机分析工程师',
-          name:'张三',
-          phoneNum:'13599990000',
-        },
-          {
-          job:'无机分析工程师',
-          name:'张三',
-          phoneNum:'13599990000',
-        },
-      ]
+      newProductRecruitList:[]
     }
+  },
+  mounted(){
+    this.key = this.until.getQueryString('val') ? this.until.getQueryString('val') : ''
+    this.getList()
+  },
+  methods:{
+    handleCurrentChange(val){
+      this.pageNo = val
+      this.getList()
+    },
+    search(val){
+      this.key = val
+      this.pageNo = 1
+      this.getList()
+    },
+    getList(){
+      this.loading = true;
+      // let query = new this.Query();
+      // query.buildPageClause(this.pageNo,this.pageSize);
+      let page = {
+        p:{
+          n:this.pageNo,
+          s:this.pageSize
+        }
+      }
+      let param = {
+        query:JSON.stringify(page),
+        value:this.key,
+        // query:query.getParam()
+      }
+      let url = '/prodx/mxpubtale/page'
+      this.until.get(url,param)
+        .then(res=>{
+          this.loading = false;
+          if(res.status == 200){
+            this.total = res.page.total
+              this.newProductRecruitList = res.data.items
+
+          }else {
+
+          }
+        },err=>{});
+    },
   },
   components:{
     tradeHeader,
@@ -82,7 +87,7 @@ export default {
 }
 </script>
 
-<style lang='less'>
+<style lang='less'scoped>
 html,body{
   width: 100%;
   background-color: #fff;
@@ -90,7 +95,7 @@ html,body{
     width: 100%;
     .content{
       width: 1200px;
-      margin: 110px auto 130px;
+      margin: 20px auto 130px;
         .block {
         margin-top: 20px;
         width: 100%;

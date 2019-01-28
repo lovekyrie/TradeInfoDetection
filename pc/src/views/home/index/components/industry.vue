@@ -1,13 +1,22 @@
 <template>
   <div class="industry">
-    <div class="industry-wrap" v-for="(item, index) in industryList" :key="index+1" @click="toDetail(item.ipPk)">
+    <div class="industry-wrap" v-for="(item, index) in industryList" :key="index+1" @click="toDetail(item.sysNewsPk)">
       <div>
-        <img :src="item.src" alt="">
+        <img :src="item.imgUrl" alt="">
       </div>
       <div>
-        <h4>{{item.title}}</h4>
-        <p>{{item.content}}</p>
+        <h4>{{item.nm}}</h4>
+        <p>{{item.cont}}</p>
       </div>
+    </div>
+    <div class="block">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :current-page="pageNo"
+        :page-size="pageSize"
+        layout="total, prev, pager, next, jumper"
+        :total="total">
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -19,7 +28,11 @@ export default {
   data() {
     return {
       industryImg,
+      pageNo:1,
+      pageSize:20,
+      total:0,
       industryObj: {
+
         ipPk:1,
         src: industryImg,
         title: "【动态分类】检测行业最新标准今早颁布",
@@ -29,11 +42,33 @@ export default {
     };
   },
   mounted() {
-    for (let index = 0; index < 4; index++) {
-      this.industryList.push(this.industryObj);
-    }
+    this.getList()
   },
   methods:{
+    getList(){
+      // let query = new this.Query();
+      // query.buildPageClause(this.pageNo,this.pageSize);
+      let page = {
+        p:{
+          n:this.pageNo,
+          s:this.pageSize
+        }
+      }
+      let param = {
+        query:JSON.stringify(page),
+        value:'30040.170',
+        // query:query.getParam()
+      }
+      this.until.get('/sys/news/page',param)
+        .then(res=>{
+          // console.log(res)
+          this.total = res.page.total
+          this.industryList = res.data.items
+          this.industryList.forEach(item=>{
+            item.cont = item.cont.replace(/<\/?[^>]*>/g, "").substring(0,120)+'...';
+          })
+        })
+    },
      //跳转到详情页面
         toDetail(ipPk){
             this.$router.push({
@@ -42,30 +77,48 @@ export default {
                     ipPk:ipPk
                 }
             })
-        }
+        },
+    handleCurrentChange(val){
+      this.pageNo = val
+      this.getList()
+    }
   }
 };
 </script>
 
 <style lang='less'>
 .industry {
-  width: 1200px;
+  width: 100%;
   margin: 0 auto;
   background-color: #fff;
+  .block{
+    padding: 20px 0;
+  }
+  .block{
+    width: 1200px;
+    margin: 0 auto;
+  }
   .industry-wrap {
-    padding: 30px 50px;
+    cursor: pointer;
+    width: 1200px;
+    margin: 0 auto;
+    padding: 30px 0px;
     display: -webkit-flex;
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    justify-content: space-between;
     border-bottom: 1px solid #ddd;
     > div {
       &:nth-of-type(1) {
         width: 10%;
+        margin-right: 20px;
+        img{
+          width: auto;
+          max-width: 100%;
+        }
       }
       &:nth-of-type(2) {
-        width: 85%;
+        flex: 1;
         h4 {
           font-size: 20px;
           margin: 20px 0;

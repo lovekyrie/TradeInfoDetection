@@ -27,18 +27,31 @@
       <div>
         <span>序列号：{{reportDetail.no}}</span>
         <span>检测机构：{{reportDetail.deteOrg}}</span>
-        <span>供应商名称：{{reportDetail.supply}}</span>
+        <span>报告类别：{{reportDetail.catNm}}</span>
       </div>
       <div>
+        <span>供应商名称：{{reportDetail.supply}}</span>
         <span>质检产品名称：{{reportDetail.prodNm}}</span>
         <span>质检产品地域：{{reportDetail.prodProvNm}} {{reportDetail.prodCityNm}}</span>
       </div>
       <div>
-        <span>检测项目：{{reportDetail.description}}</span>
+        <span>检测项目：{{reportDetail.rmks}}</span>
       </div>
+      <vue-qr
+        :logoSrc="logo"
+        :text="url"
+        :size="220"
+        :margin="0"
+      ></vue-qr>
     </div>
-    <div class="pdf-reader">
-      <img :src="item" v-for="item in imgList"/>
+    <div class="pdf-reader" v-if="imgList.length>0">
+      <img :src="item.url" v-for="item in imgList"/>
+    </div>
+    <div v-if="pdfList.length>0">
+
+      <iframe :src="'/shop/static/pdf/web/viewer.html?file=' + item.url" height="560" v-for="(item,index) in pdfList" :key="index"
+              width="100%">
+      </iframe>
     </div>
     <div class="footer">
       <trade-footer></trade-footer>
@@ -52,16 +65,22 @@ import tradeFooter from "components/tradeFooter";
 import collectNo from "./images/收藏.png";
 import hasCollect from "./images/已收藏.png";
 import download from "./images/下载小.png";
-
+import VueQr from 'vue-qr'
+import pdf from "components/contract.md";
 export default {
   data() {
     return {
+      logo:'',//二维码上的logo
       state:0,
       userPk:'',
       collectNo,
       hasCollect,
       download,
+      // downList:[], //下载列表，包含文件Url及文件名称
+      urlList:[], //附件列表
       imgList:[],
+      pdfList:[],
+      url:'',//二维码信息
       reportDetail: {
         title: "福州福州服饰有限公司防晒衣检测报告",
         uploader: "张三",
@@ -85,11 +104,21 @@ export default {
       this.until.get('/prodx/mxrepo/info/'+this.pk)
         .then(res=>{
           this.reportDetail = res.data
-          this.imgList = this.detail.pdfUrl.split(',')
+          this.urlList = JSON.parse(this.reportDetail.pdfUrl)
+          this.urlList.forEach(item=>{
+            if(item.type.toLowerCase()=='pdf'){
+              this.pdfList.push(item)
+            }else {
+              this.imgList.push(item)
+            }
+          })
+          this.url = this.hostUrl+'/views/code/index.html?code='+this.reportDetail.no
         })
     },
     down(){
-
+      this.urlList.forEach(item=>{
+        this.FileSaver.saveAs(item.url,item.name)
+      })
     },
     //判断收藏状态
     ifCollect(){
@@ -101,6 +130,9 @@ export default {
     },
     //取消或加入收藏
     collect(){
+      if(!this.until.ifLogin()){
+        return false
+      }
       if(this.state){  //已经收藏了，要取消
         this.until.get('/prodx/mxusercoll/canselcoll?subPk='+this.pk+'&sysUserPk='+this.userPk)
           .then(res=>{
@@ -121,12 +153,14 @@ export default {
   },
   components: {
     tradeHeader,
-    tradeFooter
+    tradeFooter,
+    VueQr,
+    pdf
   }
 };
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 html,
 body {
   height: 100%;
@@ -137,7 +171,7 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 75px auto 0;
+      margin: 25px auto 0;
       display: -webkit-flex;
       display: flex;
       flex-direction: row;
@@ -199,12 +233,13 @@ body {
         }
         &:nth-of-type(4){
           >span{
-            &:nth-of-type(1){
-              flex: 1;
-            }
-            &:nth-of-type(2){
-              flex:2;
-            }
+            flex: 1;
+
+            /*&:nth-of-type(1){*/
+            /*}*/
+            /*&:nth-of-type(2){*/
+              /*flex:2;*/
+            /*}*/
           }
         }
       }
@@ -214,6 +249,13 @@ body {
       height: 900px;
       margin: 0 auto 150px;
       background-color: #f2f2f2;
+      img{
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        vertical-align: middle;
+      }
     }
   }
 }

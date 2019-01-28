@@ -4,9 +4,9 @@
       <trade-header></trade-header>
     </div>
     <div class="content">
-      <div class="content-title"> 
-        <span>{{requireDetail.reportName}}</span>
-        <span>{{requireDetail.reportTime}}</span>
+      <div class="content-title">
+        <span>{{requireDetail.nm}}</span>
+        <span>{{requireDetail.crtTm}}</span>
       </div>
       <div>
         <div>
@@ -14,7 +14,7 @@
           <span>需求描述</span>
         </div>
         <div>
-          <span>{{requireDetail.desc}}</span>
+          <span>{{requireDetail.rmks}}</span>
         </div>
       </div>
       <div>
@@ -22,10 +22,10 @@
           <span></span>
           <span>联系方式</span>
         </div>
-        <div><span>联系人：{{requireDetail.linkedMan}}</span></div>
-        <div><span>联系电话：{{requireDetail.phone}}</span></div>
+        <div><span>联系人：{{requireDetail.contNm}}</span></div>
+        <div><span>联系电话：{{requireDetail.contMob}}</span></div>
         <div><span>邮箱地址：{{requireDetail.email}}</span></div>
-        <div><span>联系方式：{{requireDetail.linked}}</span></div>
+        <div><span>联系方式：{{requireDetail.contOther}}</span></div>
       </div>
     </div>
     <div class="footer">
@@ -41,6 +41,8 @@ import tradeFooter from "components/tradeFooter";
 export default {
   data() {
     return {
+      pk:'',
+      info:{},
       requireDetail: {
         reportName: "服装服饰男装女装类目质检报告",
         reportTime: "2018年6月26日",
@@ -52,7 +54,25 @@ export default {
       }
     };
   },
-  methods: {},
+  mounted(){
+    this.pk = this.until.getQueryString('pk')
+    this.getInfo()
+  },
+  methods:{
+    getInfo(){
+      this.until.get('/prod/mxpubres/info/'+this.pk)
+        .then(res=>{
+          if(res.status == '200'){
+            this.requireDetail = res.data
+          }else {
+            this.$message({
+              message: res.message,
+              type: 'warning'
+            });
+          }
+        })
+    }
+  },
   components: {
     tradeHeader,
     tradeFooter
@@ -60,7 +80,7 @@ export default {
 };
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 html,
 body {
   width: 100%;
@@ -111,11 +131,11 @@ body {
                  width: 8px;
                  height: 20px;
                  background-color: #0d55d2;
-               } 
+               }
                &:nth-of-type(2){
                  font-size: 22px;
                  margin-left: 15px;
-               }  
+               }
               }
             }
             &:nth-of-type(2){

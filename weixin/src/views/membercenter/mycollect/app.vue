@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import report from 'components/report'
+import report from 'components/collect'
 
 export default {
   data(){
@@ -61,12 +61,18 @@ export default {
   methods:{
       getList(){
           this.loading = true;
-          let query = new this.Query();
-          query.buildPageClause(this.pageNo,this.pageSize);
-          let param = {
-              query:query.getParam()
+          // let query = new this.Query();
+          // query.buildPageClause(this.pageNo,this.pageSize);
+          let page = {
+              p:{
+                  n:this.pageNo,
+                  s:this.pageSize
+              }
           }
-          this.until.get('/prod/mxrepo/pageSelf',param)
+          let param = {
+              query:JSON.stringify(page),
+          }
+          this.until.get('/prod/mxusercoll/pageSelf',param)
               .then(res=>{
                   this.loading = false;
                   if(res.status == 200){

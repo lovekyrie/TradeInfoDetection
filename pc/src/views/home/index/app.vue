@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <trade-header :showSearch="showSearch" :showNav="showNav"></trade-header>
+    <trade-header :showSearch="showSearch" :showNav="showNav" :ifSelect="true" @searchTrue="searchTrue" @searchFalse="searchFalse"></trade-header>
     <router-view></router-view>
     <trade-footer></trade-footer>
   </div>
@@ -16,7 +16,14 @@ export default {
       showNav: true,
     };
   },
-  methods: {},
+  methods: {
+    searchTrue(){
+      this.showSearch = true
+    },
+    searchFalse(){
+      this.showSearch = false
+    }
+  },
   components: {
     tradeHeader,
     tradeFooter,
@@ -29,7 +36,7 @@ html,
 body {
   height: 100%;
   width: 100%;
-  background-color: #f4f4f4;
+  background-color: #f4f4f4!important;
   #app {
     width: 100%;
     height: 100%;

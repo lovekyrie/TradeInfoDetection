@@ -2,10 +2,7 @@
   <div class="platform">
     <div class="plat-info">
       <div><img :src="platform" alt=""></div>
-      <div @click="toPlatformDetail('制度合作要求')"><span>制度合作要求</span></div>
-      <div @click="toPlatformDetail('注意事项')"><span>注意事项</span></div>
-      <div @click="toPlatformDetail('平台声明')"><span>平台声明</span></div>
-      <div @click="toPlatformDetail('送检流程介绍')"><span>送检流程介绍</span></div>
+      <div @click="toPlatformDetail(item.sysNewsPk)" v-for="(item,index) in list" :key="index" class="cursor"><span>{{item.nm}}</span></div>
     </div>
   </div>
 </template>
@@ -17,14 +14,40 @@ export default {
   data(){
     return {
       platform,
+      pageNo:1,
+      pageSize:999,
+      list:[]
     }
   },
+  mounted(){
+    this.getList()
+  },
   methods:{
+    getList(){
+      // let query = new this.Query();
+      // query.buildPageClause(this.pageNo,this.pageSize);
+      let page = {
+        p:{
+          n:this.pageNo,
+          s:this.pageSize
+        }
+      }
+      let param = {
+        query:JSON.stringify(page),
+        value:'30040.160',
+        // query:query.getParam()
+      }
+      this.until.get('/sys/news/page',param)
+        .then(res=>{
+          // console.log(res)
+          this.list = res.data.items
+        })
+    },
     toPlatformDetail(type){
       this.$router.push({
         path:'/platformDetail',
         query:{
-          type:type
+          ipPk:type
         }
       })
     }

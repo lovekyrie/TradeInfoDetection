@@ -64,7 +64,7 @@
       <div class="file-type">
         <span>培训经历：</span>
         <div>
-          <div class="i-item" v-if="upList.length>0" v-for="(up,i) in upList2">
+          <div class="i-item" v-if="upList2.length>0" v-for="(up,i) in upList2">
             <svg class="icon" aria-hidden="true" @click="deletImg(i,2)">
               <use xlink:href="#icon-guanbi"></use>
             </svg>
@@ -82,8 +82,8 @@
         </div>
       </div>
       <div>
-        <div>
-          <button @click="submit">提交申请</button>
+        <div @click="submit">
+          <button>提交申请</button>
         </div>
       </div>
     </div>
@@ -96,6 +96,7 @@ import headerTitle from "components/headerTitle";
 export default {
   data() {
     return {
+        mxperspk:'',
       title: "人才入驻",
         upList:[],
         upList2:[],
@@ -117,54 +118,119 @@ export default {
     };
   },
     mounted(){
+
       let info=JSON.parse(this.until.loGet('userInfo'))
         if(info){
           this.userPk = info.sysUserPk
+
+        }
+        if(this.until.getQueryString('type')=='edit'){
+            this.getInfo()
         }
     },
   methods: {
-      submit(){
-          this.qualCertUrl = this.upList.join(',')
-          this.trainExpe = this.upList2.join(',')
-          let param = {
-              mxperspk:'',
-              sysUserPk:this.userPk,
-              nm:this.nm,
-              mob:this.mob,
-              prof:this.prof,
-              qq:this.qq,
-              wx:this.wx,
-              email:this.email,
-              specSkill:this.specSkill,
-              qualCertUrl:this.qualCertUrl,
-              trainExpe:this.trainExpe,
-              resume:this.resume,
-              catCd:this.catCd,
-              statCd:this.statCd
+      getInfo(){
+          this.until.get('/prodx/mxpers/infosize/'+this.userPk)
+              .then(res=>{
+                  let myData = res.data.items[0]
+                  console.log(myData)
+                  this.mxperspk=myData.mxPersPk
+                  this.nm=myData.nm
+                  this.mob=myData.mob
+                  this.prof=myData.prof
+                  this.qq=myData.qq,
+                  this.wx=myData.wx,
+                  this.email=myData.email,
+                  this.specSkill=myData.specSkill,
+                  this.qualCertUrl=myData.qualCertUrl,
+                  this.trainExpe=myData.trainExpe,
+                  this.resume=myData.resume
+                  this.upList = this.qualCertUrl?this.qualCertUrl.split(','):[]
+                  this.upList2 = this.trainExpe?this.trainExpe.split(','):[]
+                  if(myData.statCd=='50000.200'){
+                      this.$hero.msg.show({
+                          text:'入驻审核中……',
+                          times:1500
+                      });
+                  }else if(myData.statCd=='50000.300'){
+                      this.$hero.msg.show({
+                          text:'入驻审核未通过，请重新提交！',
+                          times:1500
+                      });
+                  }
+                  // this.catCd=myData.catCd,
+                  // this.statCd=myData.statCd
+              })
+      },
+      Verification(){
+          if(this.nm==''){
+              return false
           }
-        this.until.postData('/prod/mxpers/edit',JSON.stringify(param))
-            .then(res=>{
-                if(res.status=='200'){
-                    window.location.href = 'talententersuc.html'
-                }else {
-                    this.$hero.msg.show({
-                        text:res,
-                        times:1500
-                    });
-                }
-            })
+          if(this.mob==''){
+              return false
+          }
+          if(this.prof==''){
+              return false
+          }
+          return true
+      },
+      submit(){
+          if(this.Verification()){
+              this.$dialog.loading.open();
+              this.qualCertUrl = this.upList.join(',')
+              this.trainExpe = this.upList2.join(',')
+              let param = {
+                  mxPersPk:this.mxperspk,
+                  sysUserPk:this.userPk,
+                  nm:this.nm,
+                  mob:this.mob,
+                  prof:this.prof,
+                  qq:this.qq,
+                  wx:this.wx,
+                  email:this.email,
+                  specSkill:this.specSkill,
+                  qualCertUrl:this.qualCertUrl,
+                  trainExpe:this.trainExpe,
+                  resume:this.resume,
+                  catCd:this.catCd,
+                  statCd:this.statCd
+              }
+              this.until.postData('/prod/mxpers/edit',JSON.stringify(param))
+                  .then(res=>{
+                      this.$dialog.loading.close();
+                      if(res.status=='200'){
+                          window.location.href = 'talententersuc.html'
+                      }else {
+                          this.$hero.msg.show({
+                              text:res.message,
+                              times:1500
+                          });
+                      }
+                  })
+          }else {
+              this.$hero.msg.show({
+                  text:'请补全信息！',
+                  times:1500
+              });
+          }
+
       },
       upImg(e,type){
+          this.$dialog.loading.open()
           this.until.upImg(e)
               .then(res=>{
+                  this.$dialog.loading.close()
                   var str = res;
-                  var str1 = str.replace('http://127.0.0.1', this.hostUrl);
+                  // var str1 = str.replace('http://127.0.0.1', this.hostUrl);
                   if(type==1){
-                      this.upList.push(str1);
+                      this.upList.push(str);
                   }else {
-                      this.upList2.push(str1);
+                      this.upList2.push(str);
                   }
-              },err=>{ this.Toast(err) });
+              },err=>{
+                  this.$dialog.loading.close()
+                  this.Toast(err)
+              });
       },
       deletImg(index,type){
           if(type==1){

@@ -1,8 +1,8 @@
 <template>
   <div class="product-info">
     <div class="product-item" v-for="(item, index) in productList" :key="index" @click="toDetail(item.mxPubCheckPk)">
-      <div>
-        <img :src="item.imgUrl" alt="">
+      <div :style="'background-image:url('+item.imgUrl+')'">
+        <!--<img :src="item.imgUrl" alt="">-->
       </div>
       <p>{{item.nm}}</p>
       <span>销量：{{item.sela}}</span>
@@ -54,19 +54,22 @@ export default {
         flex-wrap: nowrap;
       }
       div{
-        justify-content: space-around;
+        /*justify-content: space-around;*/
         width: 100%;
         height: 3rem;
-        display: flex;
-        display: -webkit-flex;
-        align-items: center;
-        justify-content: center;
-        >img{
-          height: auto;
-          width: auto;
-          max-width: 100%;
-          max-height: 100%;
-        }
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        /*display: flex;*/
+        /*display: -webkit-flex;*/
+        /*align-items: center;*/
+        /*justify-content: center;*/
+        /*>img{*/
+          /*height: auto;*/
+          /*width: auto;*/
+          /*max-width: 100%;*/
+          /*max-height: 100%;*/
+        /*}*/
       }
       p{
         justify-content: space-around;

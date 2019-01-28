@@ -1,6 +1,6 @@
 <template>
     <div class="order-del">
-          <p  @click="toOrder" style="text-align: left;padding-left: 20px"><i class="el-icon-arrow-left"></i> 返回</p>
+          <p  @click="toOrder" style="text-align: left;padding-left: 20px" class="cursor"><i class="el-icon-arrow-left"></i> 返回</p>
 
           <!--标题-->
           <ul class="mainTitle">
@@ -23,7 +23,7 @@
               <template slot-scope="scope">
                 <a :href="tableData[scope.$index].reportAddress"
                    target="_self"
-                >{{tableData[scope.$index].orderNum}}
+                >{{tableData[scope.$index].mxOrdDetePk}}
                 </a>
               </template>
             </el-table-column>
@@ -35,27 +35,27 @@
               <template slot-scope="scope">
                 <a :href="tableData[scope.$index].reportAddress"
                    target="_self"
-                >{{tableData[scope.$index].serviceName}}
+                >{{tableData[scope.$index].mxPubCheckNm}}
                 </a>
               </template>
 
             </el-table-column>
             <el-table-column
-              prop="number"
+              prop="qty"
               label="数量"
               width="80px"
               align="center"
             >
             </el-table-column>
             <el-table-column
-              prop="orderTime"
+              prop="crtTm"
               label="下单时间"
               align="center"
 
             >
             </el-table-column>
             <el-table-column
-              prop="status"
+              prop="statNm"
               label="订单状态"
               align="center"
             >
@@ -69,7 +69,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              prop="repStatus"
+              prop="repoStatNm"
               label="报告状态"
               align="center"
             >
@@ -79,7 +79,14 @@
               align="center"
             >
               <template slot-scope="scope">
-                <img :src="tableData[scope.$index].orderCodes">
+                <vue-qr
+                  :logoSrc="logo"
+                  :text="url"
+                  :size = "80"
+                  :margin="0"
+                >
+
+                </vue-qr>
               </template>
             </el-table-column>
 
@@ -88,25 +95,41 @@
           <!--联系方式-->
           <div class="contactWay">
             <span class="dIcon"></span><span class="dTitle_b">联系方式</span>
-            <p><span style="display: inline-block;width: 35%">供应商名称：宁波食品公司</span><span>质检产品名称：餐盒</span></p>
-            <p><span style="display: inline-block;width: 35%">联系人：张三</span><span>联系电话：13989898989</span></p>
-            <p>备注：全部都要检测全部都要检测全部都要检测全部都要检测全部都要检测全部都要检测全部都要检测</p>
+            <p><span style="display: inline-block;width: 35%">供应商名称：{{info.supply}}</span><span>质检产品名称：{{info.prodNm}}</span></p>
+            <p><span style="display: inline-block;width: 35%">联系人：{{info.contNm}}</span><span>联系电话：{{info.contMob}}</span></p>
+            <p>备注：{{info.rmks}}</p>
           </div>
 
           <!--收货地址-->
           <div class="receiveAdd">
             <span class="dIcon"></span><span class="dTitle_b">收货地址</span>
-            <p><span style="display: inline-block;width: 35%">联系人：张三</span><span>手机号码：13989898989</span></p>
-            <p>详细地址：浙江省宁波市高新区福明路618号 516室</p>
+            <p><span style="display: inline-block;width: 35%">联系人：{{info.addresReceNm}}</span><span>手机号码：{{info.addresReceMob}}</span></p>
+            <p>详细地址：{{info.addresProvNm}}{{info.addresCityNm}}{{info.addresDistNm}}{{info.addresStreetNm}}{{info.addresAddrDtl}}</p>
           </div>
 
           <!--检测报告-->
           <div class="exaRep">
             <span class="dIcon"></span><span class="dTitle_b">检测报告</span>
-            <span class="dowButton"><a href="#">下载报告</a></span>
-            <p><span style="display: inline-block;width: 35%">报告编号：MT0980809</span><span>检测机构：宁波贸信检测</span></p>
-            <p><span style="display: inline-block;width: 35%">供应商名称：宁波食品公司</span><span>质检产品名称：餐盒</span></p>
-            <div class="pdf">pdf</div>
+            <span class="dowButton" @click="down()"><a href="#">下载报告</a></span>
+            <p><span style="display: inline-block;width: 35%">序列号：{{info.checkMxPubCheckPk}}</span><span>检测机构：宁波贸信检测</span></p>
+            <p><span style="display: inline-block;width: 35%">供应商名称：{{info.supply}}</span><span>质检产品名称：{{info.prodNm}}</span></p>
+            <!--<div class="img" v-if="imgList.length>0">-->
+              <!--<img :src="item" v-for="item in imgList"/>-->
+            <!--</div>-->
+            <!--<div v-if="pdfList.length>0">-->
+              <!--<pdf :url="item"  v-for="(item,index) in pdfList" :key="index"></pdf>-->
+            <!--</div>-->
+            <div class="footer">
+              <!--<div>下载报告</div>-->
+              <div class="pdf-reader" v-if="imgList.length>0">
+                <img :src="item" v-for="item in imgList"/>
+              </div>
+              <div class="pdf-reader" v-if="pdfList.length>0">
+                <iframe :src="'/shop/static/pdf/web/viewer.html?file=' + item" height="560" v-for="(item,index) in pdfList" :key="index"
+                        width="100%">
+                </iframe>
+              </div>
+            </div>
           </div>
 
         </div>
@@ -114,10 +137,18 @@
 
 <script>
 import code from "../images/订单二维码.png";
-
+import pdf from "components/contract.md";
+import VueQr from 'vue-qr'
 export default {
   data() {
     return {
+      id:'',
+      logo:'',
+      info:{},
+      url:'',
+      downList:[],
+      imgList:[],
+      pdfList:[],
       tableData: [
         {
           orderNum: "12349099",
@@ -133,10 +164,49 @@ export default {
       ]
     };
   },
+  mounted(){
+    this.id = this.$route.query.ipPk
+    this.getInfo()
+  },
   methods:{
+    down(){
+      this.downList.forEach(item=>{
+        this.FileSaver.saveAs(item.url,item.nm)
+      })
+    },
+    getInfo(){
+      this.until.get('/prod/mxordete/info/'+this.id)
+        .then(res=>{
+          this.info = res.data
+          // console.log(this.info)
+          this.tableData[0] = res.data
+          this.url = this.hostUrl+'/views/code/order.html?code='+ this.tableData[0].repoQrCd
+
+          if(this.tableData[0].repoNo){
+            let urlList = this.tableData[0].repoNo.split(',')
+            urlList.forEach(item=>{
+              let url = item.split('.')
+              this.downList.push({
+                nm:url[0],
+                url:item
+              })
+              if(item.indexOf('.pdf')>-1 || item.indexOf('.PDF')>-1){
+                this.pdfList.push(item)
+              }else {
+                this.imgList.push(item)
+              }
+            })
+          }
+
+        })
+    },
     toOrder(){
       this.$router.back(-1)
     }
+  },
+  components: {
+    pdf,
+    VueQr
   }
 };
 </script>
@@ -170,6 +240,7 @@ export default {
       font-weight: 400;
       margin-left: 40px;
       margin-right: 40px;
+      width: auto;
     }
   }
 
@@ -207,7 +278,7 @@ export default {
     //除表头外行高
     td {
       height: 62px;
-
+      padding: 15px 0;
       .el-table_1_column_1 .cell {
         color: rgb(13, 85, 210);
       }

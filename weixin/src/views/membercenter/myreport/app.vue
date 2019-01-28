@@ -6,9 +6,9 @@
             :immediate-check="false"
             @load="onLoad"
     >
-      <report :edit="edit" :reportList="list" @updateReport="delReport"></report>
+      <report :edit="edit" :code="code" :reportList="list" @updateReport="delReport"></report>
     </van-list>
-    <div class="footer">
+    <div class="footer" @click="upload">
       <foot-button :btnObj="btnObj"></foot-button>
     </div>
   </div>
@@ -18,11 +18,12 @@
  import report from 'components/report'
  import footButton from 'components/footButton'
  import edit from './images/编辑.png'
- 
+ import code from './images/二维码.png'
 export default {
  data(){
    return {
      edit,
+       code,
        loading:false,
        finished:false,
        dataFinish:false,
@@ -42,12 +43,21 @@ export default {
      this.getList()
     },
  methods:{
+     upload(){
+        window.location.href = '../quality/reportupload.html'
+     },
      getList(){
          this.loading = true;
-         let query = new this.Query();
-         query.buildPageClause(this.pageNo,this.pageSize);
+         // let query = new this.Query();
+         // query.buildPageClause(this.pageNo,this.pageSize);
+         let page = {
+             p:{
+                 n:this.pageNo,
+                 s:this.pageSize
+             }
+         }
          let param = {
-             query:query.getParam()
+             query:JSON.stringify(page),
          }
          this.until.get('/prod/mxrepo/pageSelf',param)
              .then(res=>{
@@ -100,6 +110,14 @@ export default {
 
     #app{
       height: 100%;
+      display: flex;
+      display: -webkit-flex;
+      flex-direction: column;
+      overflow: hidden;
+      .van-list{
+        flex: 1;
+        overflow: auto;
+      }
       .load-more{
       text-align: center;
       padding: 0.2rem 0;

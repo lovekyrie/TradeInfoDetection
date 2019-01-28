@@ -1,6 +1,6 @@
 <template>
-  <div id="app">
-    <trade-header :showSearch="showSearch"></trade-header>
+  <div id="app" v-loading="loading">
+    <trade-header :showSearch="showSearch" @search="search" searchText="找服务"></trade-header>
     <div class="content">
       <div class="switch">
         <el-row>
@@ -12,11 +12,14 @@
         <div class="sidebar">
           <ul>
             <li>主营业务</li>
-            <li @click="chooseOption(item)" :class="{active:state==item}" v-for="(item, index) in sidebarList" :key="index">{{item}}</li>
+            <li @click="chooseOption(item.cd)" :class="{active:cd==item.cd}" v-for="(item, index) in sidebarList" :key="index">{{item.nm}}</li>
           </ul>
         </div>
-        <div class="infolist">
-          <detection-list :detectionList="detectionList"></detection-list>
+        <div class="infolist" v-if="ifSearch">
+          <detection-search :detectionList="detectionList" detail="platformdetectiond.html"></detection-search>
+        </div>
+        <div class="infolist" v-else>
+          <detection-list :detectionList="detectionList" num='1' detail="platformdetectiond.html"></detection-list>
         </div>
       </div>
     </div>
@@ -29,13 +32,18 @@ import tradeHeader from "components/tradeHeader";
 import tradeFooter from "components/tradeFooter";
 import productImg from "./images/product_03.png";
 import detectionList from "components/detectionList";
+import detectionSearch from "components/detectionSearch";
+import Vue from "vue"
 
 export default {
   data() {
     return {
+      key:'',
+      ifSearch:false,
       pageName:'平台发布',
-      state:'玩具/婴童用品检测',
       showSearch: true,
+      cd:'',
+      loading:false,
       sidebarList: [
         "玩具/婴童用品检测",
         "食品接触材料检测",
@@ -53,53 +61,114 @@ export default {
       productInfo: {
         productImg,
         name: "河北纺织品制造有限公司四件套检测报告",
-        count:10,
-      }
-    };
+      },
+      count:10,
+     }
+
   },
   methods: {
-    chooseOption(item){
-      this.state=item;
+    //查询
+    search(val){
+      this.key = val
+      this.pageNo = 1
+      this.ifSearch = true
+      this.detectionList = []
+      this.getList()
     },
+
+    getClass1(){
+      this.until.get('/general/cat/listByPrntCd?prntCd=70000')
+        .then(res=>{
+          this.sidebarList = res.data.items
+          this.cd = this.sidebarList[0].cd
+        })
+    },
+    chooseOption(item){
+      this.ifSearch = false
+      this.cd=item;
+
+    },
+    getList(val){
+      // console.log(this.ifSearch)
+      this.loading = true;
+      // let query = new this.Query();
+      // query.buildPageClause(this.pageNo,this.pageSize);
+      let page = {
+        p:{
+          n:this.pageNo,
+          s:this.pageSize
+        }
+      }
+      let param = {
+        query:JSON.stringify(page),
+        value:val,
+        order:false,
+        // query:query.getParam(),
+        pcvalue:this.key
+      }
+      let url = '/prodx/mxpubcheck/page'
+      this.until.get(url,param)
+        .then(res=>{
+          this.loading = false;
+          if(res.status == 200){
+            if(this.ifSearch){
+              this.detectionList = res.data.items
+              // console.log(this.detectionList)
+            }else{
+              this.detectionList.forEach((item,index)=>{
+                if(item.cd == val){
+                  item.list = res.data.items
+                  //更新tableData中的数据
+                  Vue.set(this.detectionList,index,this.detectionList[index])
+                }
+              })
+            }
+
+          }else {
+            this.$message({
+              message:res.message,
+              type:'warning'
+            });
+          }
+        },err=>{});
+    },
+    getClass2(){
+      this.until.get('/general/cat/listByPrntCd?prntCd='+this.cd)
+        .then(res=>{
+          this.detectionList = res.data.items
+          this.detectionList.forEach(item=>{
+            item.list = []
+            this.getList(item.cd)
+          })
+        })
+    },
+
     goToOther(){
       window.location.href='./otherdetection.html'
     }
   },
-  mounted() {
-    let normalObj = {
-      title: "常规玩具安全检测",
-      Arr: []
-    };
-
-    let electricObj = {
-      title: "电动玩具安全测试",
-      Arr: []
-    };
-
-    let childrenObj = {
-      title: "儿童护理用品安全测试",
-      Arr: []
-    };
-
-    for (let index = 0; index < 10; index++) {
-      normalObj.Arr.push(this.productInfo);
-      electricObj.Arr.push(this.productInfo);
-      childrenObj.Arr.push(this.productInfo);
+  watch:{
+    cd:function () {
+      this.getClass2()
     }
-
-    this.detectionList.push(normalObj);
-    this.detectionList.push(electricObj);
-    this.detectionList.push(childrenObj);
+  },
+  mounted() {
+    if(this.until.getQueryString('val')){
+      this.key = this.until.getQueryString('val')
+      this.search(this.key)
+    }
+    this.getClass1()
   },
   components: {
     tradeHeader,
     tradeFooter,
-    detectionList
+    detectionList,
+    detectionSearch
   }
 };
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 html,
 body {
   width: 100%;
@@ -109,12 +178,14 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 50px auto 0px;
+      margin: 20px auto 0px;
       .switch{
         border-bottom: 1px solid #ddd;
         button{
-          padding: 10px 20px;
-          font-size: 20px;
+          padding: 15px 35px;
+          border:0;
+          font-size: 18px;
+          border-radius: 3px 3px 0 0;
           background-color: #ddd;
         }
         button.active{
@@ -141,6 +212,7 @@ body {
              text-align: center;
              border: 1px solid #ddd;
              border-top: none;
+             cursor: pointer;
              &:nth-of-type(1){
                border-left: none;
                border-right: none;
@@ -153,7 +225,7 @@ body {
          }
        }
        .infolist{
-         width: 1200px;
+         width: 1000px;
        }
       }
     }

@@ -15,11 +15,12 @@
       <div class="product-detail">
         <h3>商品详情</h3>
         <div>
-          <span>产品参数：{{proParam}}</span>
+          <span>产品参数：{{info.rmks}}</span>
         </div>
         <span>联系人：{{info.cont}}</span>
         <span>联系电话：{{info.mob}}</span>
       </div>
+      <div v-html="info.intro" class="detail"></div>
     </div>
 
     <div class="footer" @click="submit">
@@ -62,7 +63,9 @@ export default {
               })
       },
       submit(){
-          window.location.href = 'reservationservice.html?pk='+this.pk+'&img='+this.images[0]+'&nm='+this.info.nm
+          if(this.until.ifLogin()) {
+              window.location.href = 'reservationservice.html?pk=' + this.pk + '&img=' + this.images[0] + '&nm=' + this.info.nm
+          }
       }
   },
   components:{
@@ -87,6 +90,10 @@ export default {
       }
       .header{
         img{
+          width: auto;
+          height: auto;
+          max-width: 100%;
+          max-height: 100%;
           vertical-align: bottom;
         }
       }
@@ -120,6 +127,9 @@ export default {
             margin-left: .5rem;
           }
         }
+      }
+      .detail{
+        padding: 0.2rem;
       }
     }
   }

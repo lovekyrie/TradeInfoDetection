@@ -2,18 +2,13 @@
   <div class="platform-detail">
     <div class="info-wrap">
       <div class="title">
-        <p @click="toPrevious">
+        <p @click="toPrevious" class="cursor">
           <i class="el-icon-arrow-left"></i> 返回
         </p>
-        <h4>{{industryDetailObj.title}}</h4>
-        <div>发布日期：{{industryDetailObj.releaseDate}}</div>
+        <h4>{{industryDetailObj.nm}}</h4>
+        <div>发布日期：{{industryDetailObj.releTm}}</div>
       </div>
-      <div class="detail-info">
-        <p>{{industryDetailObj.content}}</p>
-        <div>
-        <img :src="industryDetail" alt="">
-        </div>
-        <p>{{industryDetailObj.desc}}</p>
+      <div class="detail-info" v-html="industryDetailObj.cont">
       </div>
     </div>
   </div>
@@ -26,7 +21,7 @@ export default {
   data() {
     return {
       industryDetail,
-      type: "",
+      pk: "",
       industryDetailObj: {
         title: "【动态分类】检测行业最新标准今早颁布",
         content: `检测行业最新标准今早颁布，所有检测标准都已更新，速看！检测行业最新标准今早颁布，所有检测标准都已更新，速看！检测行业最新标准今早颁布，所有检测标准都已更新，
@@ -38,9 +33,16 @@ export default {
     };
   },
   mounted() {
-    this.type = this.$route.query.type;
+    this.pk = this.$route.query.ipPk;
+    this.getInfo()
   },
   methods:{
+    getInfo(){
+      this.until.get('/sys/news/info/'+this.pk)
+        .then(res=>{
+          this.industryDetailObj = res.data
+        })
+    },
     toPrevious(){
       this.$router.back(-1)
     }
@@ -56,6 +58,11 @@ export default {
     width: 1200px;
     margin: 0 auto;
     .title {
+      width: 100%!important;
+      position: relative;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+      padding-top: 30px;
       p {
         padding: 20px 0 10px;
         font-size: 16px;
@@ -63,13 +70,18 @@ export default {
       }
       h4 {
         padding: 20px 0;
+        width: 100%;
         font-size: 20px;
         text-align: center;
       }
       div{
         text-align: right;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        color: #999999;
         font-size: 14px;
-        margin-bottom: 45px;
+        /*margin-bottom: 45px;*/
       }
     }
     .detail-info{

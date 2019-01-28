@@ -1,16 +1,7 @@
 <template>
-  <div id="container">
+  <div id="container" v-loading="loading">
     <!--顶部-->
-    <div id="header">
-      <ul>
-        <li><a class="login" href="../entry/login.html">登录</a></li>
-        <li><a href="../entry/register.html">注册</a></li>
-      </ul>
-    </div>
-    <!--图标-->
-    <div id="icon">
-      <img src="../../../entry/login/img/logo.png">
-    </div>
+    <trade-header></trade-header>
     <!--中间主体-->
     <div id="main">
       <!--标题-->
@@ -22,44 +13,66 @@
       <!--表单-->
       <div class="inForm">
         <el-form label-position="left" label-width="120px" :rules="rule" ref="ruleForm" :model="ruleForm">
-          <el-form-item id="name" label="真实姓名：" prop="realName">
-            <el-input type="text" v-model="ruleForm.realName"></el-input>
+          <el-form-item id="name" label="真实姓名：" prop="nm">
+            <el-input type="text" v-model="ruleForm.nm"></el-input>
           </el-form-item>
-          <el-form-item label="联系电话：" prop="contactPhone">
-            <el-input v-model="ruleForm.contactPhone"></el-input>
+          <el-form-item label="联系电话：" prop="mob">
+            <el-input v-model="ruleForm.mob"></el-input>
           </el-form-item>
-          <el-form-item label="职称：" prop="job">
-            <el-input v-model="ruleForm.job"></el-input>
+          <el-form-item label="职称：" prop="prof">
+            <el-input v-model="ruleForm.prof"></el-input>
           </el-form-item>
-          <el-form-item label="QQ：" prop="QQ">
-            <el-input v-model="ruleForm.QQ"></el-input>
+          <el-form-item label="QQ：" prop="qq">
+            <el-input v-model="ruleForm.qq"></el-input>
           </el-form-item>
           <el-form-item label="微信：" prop="vx">
-            <el-input v-model="ruleForm.vx"></el-input>
+            <el-input v-model="ruleForm.wx"></el-input>
           </el-form-item>
           <el-form-item label="邮箱地址：" prop="email">
             <el-input v-model="ruleForm.email"></el-input>
           </el-form-item>
-          <el-form-item label="技能特长：" prop="technology">
-            <el-input v-model="ruleForm.technology"></el-input>
+          <el-form-item label="技能特长：" prop="specSkill">
+            <el-input v-model="ruleForm.specSkill"></el-input>
           </el-form-item>
           <el-form-item label="资历证书：" prop="certificate">
-            <el-input v-model="ruleForm.certificate"></el-input>
+              <div class="i-item" v-if="upList.length>0" v-for="(up,i) in upList">
+                <svg class="icon" aria-hidden="true" @click="deletImg(i,1)">
+                  <use xlink:href="#icon-guanbi"></use>
+                </svg>
+                <img :src="up">
+              </div>
+
+            <div class="upload">
+              <i class="el-icon-plus"></i>
+              <input type="file" @change="upImg($event,1)">
+            </div>
           </el-form-item>
           <el-form-item label="培训经历：" prop="experience">
-            <el-input v-model="ruleForm.experience"></el-input>
+            <div>
+                <div class="i-item" v-if="upList2.length>0" v-for="(up,i) in upList2">
+                  <svg class="icon" aria-hidden="true" @click="deletImg(i,2)">
+                    <use xlink:href="#icon-guanbi"></use>
+                  </svg>
+                  <img :src="up">
+                </div>
+
+              <div class="upload">
+                <i class="el-icon-plus"></i>
+                <input type="file" @change="upImg($event,2)">
+              </div>
+            </div>
           </el-form-item>
 
-          <el-form-item label="个人简介：" prop="introduction">
-            <el-input type="textarea" v-model="ruleForm.introduction"></el-input>
+          <el-form-item label="个人简介：" prop="resume">
+            <el-input type="textarea" v-model="ruleForm.resume"></el-input>
           </el-form-item>
 
 
         </el-form>
       </div>
       <!--底部按钮-->
-      <input class="formButton" type="button" value="提交申请">
-      <input class="formButton" type="button" value="取消" style="background-color: white;color: rgb(131,131,131)">
+      <input class="formButton" type="button" value="提交申请"  @click="submit('ruleForm')">
+      <input class="formButton" type="button" value="取消" @click="resetForm('ruleForm')" style="background-color: white;color: rgb(131,131,131);border:1px solid #d2d2d2">
 
 
     </div>
@@ -79,8 +92,7 @@
 
 <script>
   import tradeFooter from 'components/tradeFooterl'
-
-
+  import tradeHeader from "components/tradeHeader";
   export default {
     data(){
       var checkPhone=(rule,value,callback)=>{
@@ -106,24 +118,33 @@
       };
 
       return{
+        loading:false,
+        upList:[],
+        upList2:[],
         ruleForm:{
-          realName:'',
-          contactPhone:'',
-          job:'',
-          QQ:'',
-          vx:'',
+
+          mxperspk:'',
+          dialogVisible: false,
+          userPk:'',
+          nm:'',
+          mob:'',
+          prof:'',
+          qq:'',
+          wx:'',
           email:'',
-          technology:'',
-          certificate:'',
-          experience:'',
-          introduction:'',
+          specSkill:'',
+          qualCertUrl:'',
+          trainExpe:'',
+          resume:'',
+          catCd:'40000.170',
+          statCd:'50000.200',
         },
         rule:{
-          realName:[
+          nm:[
             {required:true,message:'请输入真实姓名',trigger:'blur'}
           ],
-          contactPhone:[
-            {validator:checkPhone,trigger:'blur'}
+          mob:[
+            {required: true, message: '请输入联系电话',validator:checkPhone,trigger:'blur'}
           ],
           email:[
             {validator:checkEmail,trigger:'blur'}
@@ -131,8 +152,116 @@
         }
       }
     },
+    mounted(){
+      let info=JSON.parse(this.until.loGet('userInfo'))
+      if(info){
+        this.ruleForm.userPk = info.sysUserPk
+      }
+      this.getInfo()
+
+    },
+    methods: {
+      getInfo(){
+        this.until.get('/prodx/mxpers/infosize/'+this.ruleForm.userPk)
+          .then(res=>{
+            if(res!=0){
+              let myData = res.data.items[0]
+              this.ruleForm.mxperspk=myData.mxPersPk
+              this.ruleForm.nm=myData.nm
+              this.ruleForm.mob=myData.mob
+              this.ruleForm.prof=myData.prof
+              this.ruleForm.qq=myData.qq,
+                this.ruleForm.wx=myData.wx,
+                this.ruleForm.email=myData.email,
+                this.ruleForm.specSkill=myData.specSkill,
+                this.ruleForm.qualCertUrl=myData.qualCertUrl,
+                this.ruleForm.trainExpe=myData.trainExpe,
+                this.ruleForm.resume=myData.resume
+              this.upList = this.ruleForm.qualCertUrl ? this.ruleForm.qualCertUrl.split(',') : []
+              this.upList2 = this.ruleForm.trainExpe ? this.ruleForm.trainExpe.split(',') : []
+                // this.ruleForm.catCd=myData.catCd,
+                // this.ruleForm.statCd=myData.statCd
+              if(myData.statCd=='50000.200'){
+                this.$message({
+                  message:'入驻审核中……',
+                  type:'warning'
+                });
+              }else if(myData.statCd=='50000.300'){
+                this.$message({
+                  message:'入驻审核未通过，请重新提交！',
+                  type:'warning'
+                });
+              }
+            }
+
+          })
+      },
+      submit(formName){
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.loading = true
+            this.ruleForm.qualCertUrl = this.upList ? this.upList.join(',') : ''
+            this.ruleForm.trainExpe = this.upList2 ? this.upList2.join(',') : ''
+            let param = {
+              mxperspk:this.ruleForm.mxperspk,
+              sysUserPk:this.ruleForm.userPk,
+              nm:this.ruleForm.nm,
+              mob:this.ruleForm.mob,
+              prof:this.ruleForm.prof,
+              qq:this.ruleForm.qq,
+              wx:this.ruleForm.wx,
+              email:this.ruleForm.email,
+              specSkill:this.ruleForm.specSkill,
+              qualCertUrl:this.ruleForm.qualCertUrl,
+              trainExpe:this.ruleForm.trainExpe,
+              resume:this.ruleForm.resume,
+              catCd:this.ruleForm.catCd,
+              statCd:this.ruleForm.statCd
+            }
+            this.until.postData('/prod/mxpers/edit',JSON.stringify(param))
+              .then(res=>{
+                this.loading = false
+                if(res.status=='200'){
+                  window.location.href = 'settleInsuccess.html'
+                }else {
+                  this.$message({
+                    message:res,
+                    type: 'warning'
+                  });
+                }
+              })
+          }
+        })
+
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
+      upImg(e,type){
+        this.loading = true
+        this.until.upImg(e)
+          .then(res=>{
+            this.loading = false
+            let str = res;
+            console.log(res)
+            if(type==1){
+              this.upList.push(str);
+            }else {
+              this.upList2.push(str);
+            }
+          },err=>{ this.Toast(err) });
+      },
+      deletImg(index,type){
+        if(type==1){
+          this.upList.splice(index,1)
+        }else {
+          this.upList2.splice(index,1)
+        }
+      }
+    },
     components:{
       tradeFooter,
+      tradeHeader
     }
   }
 </script>

@@ -29,7 +29,7 @@
           邮箱地址：{{info.email}}
         </div>
         <div>
-          联系方式：{{info.contOther}}
+          <!--联系方式：{{info.contOther}}-->
         </div>
       </div>
     </div>
@@ -50,7 +50,7 @@ export default {
     },
     methods:{
       getInfo(){
-          this.until.get('/prod/mxpubreq/info/'+this.pk)
+          this.until.get('/prod/mxpubres/info/'+this.pk)
               .then(res=>{
                   if(res.status == '200'){
                       this.info = res.data

@@ -105,8 +105,8 @@
         </div>
       </div>
       <div>
-        <div>
-          <button @click="submit">
+        <div @click="submit">
+          <button>
             提交申请
           </button>
         </div>
@@ -121,6 +121,7 @@ import headerTitle from "components/headerTitle";
 export default {
   data() {
     return {
+        mxentppk:'',
         userPk: "",
         title: "合作伙伴入驻",
         upList:[],
@@ -137,10 +138,10 @@ export default {
         contAddr: "",
         busLicUrl: "",  //营业执照
         cmaQualUrl: "",  //CMA
-        cnasQualRul: "",  //CNAS
-        otherQualRul: "",  //其他
+        cnasQualUrl: "",  //CNAS
+        otherQualUrl: "",  //其他
         intro: "",
-        catCd: "40000.150/40000.160",
+        catCd: "40000.150",
         statCd: "50000.200"
     };
   },
@@ -149,15 +150,61 @@ export default {
       if(info){
           this.userPk = info.sysUserPk
       }
+      if(this.until.getQueryString('type')=='edit'){
+          this.getInfo()
+      }
   },
   methods: {
+      getInfo(){
+          this.until.get('/prodx/mxentp/info/'+this.userPk)
+              .then(res=>{
+                  if(res.status=='200'){
+                      let myData = res.data
+                      this.mxentppk = myData.mxEntpPk
+                      this.nm = myData.nm
+                      this.legal = myData.legal
+                      this.email = myData.email
+                      this.contNm = myData.contNm,
+                          this.contMob = myData.contMob,
+                          this.contAddr = myData.contAddr,
+                          this.busLicUrl = myData.busLicUrl,
+                          this.cmaQualUrl = myData.cmaQualUrl,
+                          this.cnasQualUrl = myData.cnasQualUrl,
+                          this.otherQualUrl = myData.otherQualUrl,
+                          this.intro = myData.intro,
+                          this.logoUrl = myData.logoUrl
+                      this.upList = this.busLicUrl ? this.busLicUrl.split(',') : []
+                      this.upList2 = this.cmaQualUrl ? this.cmaQualUrl.split(',') : []
+                      this.upList3 = this.cnasQualUrl ? this.cnasQualUrl.split(',') : []
+                      this.upList4 = this.otherQualUrl ? this.otherQualUrl.split(',') : []
+                      if(myData.statCd=='50000.200'){
+                          this.$hero.msg.show({
+                              text:'入驻审核中……',
+                              times:1500
+                          });
+                      }else if(myData.statCd=='50000.300'){
+                          this.$hero.msg.show({
+                              text:'入驻审核未通过，请重新提交！',
+                              times:1500
+                          });
+                      }
+                  }else {
+                      this.$hero.msg.show({
+                          text:res.message,
+                          times:1500
+                      });
+                  }
+
+              })
+      },
       submit(){
+          this.$dialog.loading.open()
           this.busLicUrl=this.upList.join(',')
           this.cmaQualUrl=this.upList2.join(',')
-          this.cnasQualRul=this.upList3.join(',')
-          this.otherQualRul=this.upList4.join(',')
+          this.cnasQualUrl=this.upList3.join(',')
+          this.otherQualUrl=this.upList4.join(',')
           let param = {
-              mxentppk: "",
+              mxEntpPk: this.mxentppk,
               sysUserPk: this.userPk,
               nm: this.nm,
               legal: this.legal,
@@ -167,14 +214,15 @@ export default {
               contAddr: this.contAddr,
               busLicUrl: this.busLicUrl,
               cmaQualUrl: this.cmaQualUrl,
-              cnasQualRul: this.cnasQualRul,
-              otherQualRul: this.otherQualRul,
+              cnasQualUrl: this.cnasQualUrl,
+              otherQualUrl: this.otherQualUrl,
               intro: this.intro,
               catCd: "40000.150",
               statCd: "50000.200"
           }
           this.until.postData('/prod/mxentp/edit',JSON.stringify(param))
               .then(res=>{
+                  this.$dialog.loading.close()
                   if(res.status=='200'){
                       window.location.href = 'partnerentersuc.html'
                   }else {
@@ -186,20 +234,25 @@ export default {
               })
       },
       upImg(e,type){
+          this.$dialog.loading.open()
           this.until.upImg(e)
               .then(res=>{
+                  this.$dialog.loading.close()
                   var str = res;
-                  var str1 = str.replace('http://127.0.0.1', this.hostUrl);
+                  // var str1 = str.replace('http://127.0.0.1', this.hostUrl);
                   if(type==1){
-                      this.upList.push(str1);
+                      this.upList.push(str);
                   }else if(type==2) {
-                      this.upList2.push(str1);
+                      this.upList2.push(str);
                   }else if(type==3) {
-                      this.upList3.push(str1);
+                      this.upList3.push(str);
                   }else {
-                      this.upList4.push(str1)
+                      this.upList4.push(str)
                   }
-              },err=>{ this.Toast(err) });
+              },err=>{
+                  this.$dialog.loading.close()
+                  this.Toast(err)
+              });
       },
       deletImg(index,type){
           if(type==1){

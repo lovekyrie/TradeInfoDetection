@@ -72,6 +72,9 @@ export default {
       buyerdetection
     };
   },
+  mounted(){
+    // console.log(localStorage.getItem('user'))
+  },
   methods:{
     toQuality(){
       window.location.href='../buyers/qualitymanage.html'
@@ -80,7 +83,7 @@ export default {
       window.location.href='../buyers/purchasequery.html'
     },
     toRequireRelease(){
-      window.location.href='../buyers/requirelist.html'
+      window.location.href='../buyers/requirelist.html?type=1'
     },
     toHumanResource(){
       window.location.href='../buyers/recruitlist.html'
@@ -95,11 +98,11 @@ export default {
 };
 </script>
 
-<style lang='less' scoped>
+<style lang='less'>
 .buyer {
   .top-wrap {
-    width: 1400px;
-    margin: 0 auto;
+    width: 100%;
+    padding: 20px 0;
     background-color: #fff;
     .operate-top {
       width: 820px;
@@ -115,44 +118,51 @@ export default {
         display: -webkit-flex;
         display: flex;
         flex-wrap: nowrap;
-        justify-content: space-between;
         align-items: center;
         > div {
           padding: 20px 0;
           &:nth-of-type(1) {
-            width: 40%;
+            padding-right: 15px;
+            img{
+              width: 75px;
+            }
+            font-size: 24px;
           }
           &:nth-of-type(2) {
             font-size: 20px;
-            width: 55%;
+            font-weight: lighter;
+            color: #666666;
+            /*width: 55%;*/
           }
         }
       }
     }
   }
   .buttom-wrap {
-    width: 1400px;
-    margin: 0 auto;
+    width: 100%;
+    border-top: 1px solid #e3e3e3;
     .operate-buttom {
-      width: 820px;
+      width:1200px;
       margin: 0 auto;
       display: -webkit-flex;
       display: flex;
       flex-wrap: nowrap;
-      justify-content: space-around;
+      justify-content: center;
       align-items: center;
       > div {
-        margin: 30px 0;
-        padding: 15px 0;
-        width: 290px;
+        border: 1px solid #e3e3e3;
+        margin: 40px 20px;
+        height: 125px;
+        width: 350px;
         display: -webkit-flex;
         display: flex;
         flex-wrap: nowrap;
         justify-content: space-around;
         align-items: center;
         background-color: #fff;
+        cursor: pointer;
+
         .item-wrap {
-          cursor: pointer;
           display: -webkit-flex;
           display: flex;
           flex-wrap: nowrap;
@@ -171,6 +181,9 @@ export default {
             }
             &:nth-of-type(2) {
               margin-left: 10px;
+              font-size: 20px;
+              font-weight: lighter;
+              color: #666666;
             }
           }
         }

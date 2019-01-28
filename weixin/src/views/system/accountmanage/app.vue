@@ -3,7 +3,7 @@
     <div class="content">
       <div>
         <span>注册账号：</span>
-        <div><input type="text" v-model="info.usNm"></div>
+        <div><input type="text" v-model="info.usNm" disabled></div>
       </div>
       <div>
         <span>手机号码：</span>
@@ -22,8 +22,8 @@
         <div><input type="text" placeholder="请输入企业地址" v-model="info.arg2"></div>
       </div>
       <div>
-        <div>
-          <button @click="submit">确定</button>
+        <div @click="submit">
+          <button>确定</button>
         </div>
       </div>
     </div>
@@ -66,9 +66,11 @@ export default {
     },
     methods:{
         submit(){
-            this.until.postData('/prod/mxentp/edit',JSON.stringify(this.info))
+            this.$dialog.loading.open();
+            this.until.postData('/sys/user/edit',JSON.stringify(this.info))
                 .then(res=>{
                     if(res.status=='200'){
+                        this.$dialog.loading.close();
                         this.$hero.msg.show({
                             text:'修改成功！',
                             times:1500

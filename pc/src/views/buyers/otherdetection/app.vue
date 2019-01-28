@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="header">
-      <trade-header :showSearch="showSearch"></trade-header>
+      <trade-header :showSearch="showSearch" @search="search"></trade-header>
     </div>
     <div class="content">
       <div class="switch">
@@ -14,11 +14,16 @@
         <div class="sidebar">
           <ul>
             <li>主营业务</li>
-            <li @click="chooseOption(item)" :class="{active:state==item}" v-for="(item, index) in sidebarList" :key="index">{{item}}</li>
+            <li @click="chooseOption(item.cd)" :class="{active:cd==item.cd}" v-for="(item, index) in sidebarList" :key="index">{{item.nm}}</li>
           </ul>
         </div>
         <div class="infolist">
-          <detection-list :detectionList="detectionList"></detection-list>
+          <div class="infolist" v-if="ifSearch">
+            <detection-search :detectionList="detectionList" detail="otherdetectiond.html"></detection-search>
+          </div>
+          <div class="infolist" v-else>
+            <detection-list :detectionList="detectionList" num='0' detail="otherdetectiond.html"></detection-list>
+          </div>
         </div>
       </div>
     </div>
@@ -33,12 +38,16 @@ import tradeHeader from "components/tradeHeader";
 import tradeFooter from "components/tradeFooter";
 import productImg from "./images/product_03.png";
 import detectionList from "components/detectionList";
-
+import detectionSearch from "components/detectionSearch";
+import Vue from "vue"
 export default {
   data() {
     return {
+      showNav:true,
+      key:'',
+      ifSearch:false,
       pageName:'三方检测',
-      state:'玩具/婴童用品检测',
+      cd:'',
       showSearch: true,
       sidebarList: [
         "玩具/婴童用品检测",
@@ -61,48 +70,101 @@ export default {
     };
   },
   methods: {
+    //查询
+    search(val){
+      this.key = val
+      this.pageNo = 1
+      this.ifSearch = true
+      this.detectionList = []
+      this.getList()
+    },
+    getClass1(){
+      this.until.get('/general/cat/listByPrntCd?prntCd=70000')
+        .then(res=>{
+          this.sidebarList = res.data.items
+          this.cd = this.sidebarList[0].cd
+        })
+    },
     chooseOption(item){
-      this.state=item;
+      this.cd=item;
+
+    },
+    getList(val){
+      this.loading = true;
+      // let query = new this.Query();
+      // query.buildPageClause(this.pageNo,this.pageSize);
+      let page = {
+        p:{
+          n:this.pageNo,
+          s:this.pageSize
+        }
+      }
+      let param = {
+        query:JSON.stringify(page),
+        value:val,
+        pcvalue:this.key,
+        // query:query.getParam()
+      }
+      let url = '/prodx/mxpubthrser/page'
+      this.until.get(url,param)
+        .then(res=>{
+          this.loading = false;
+          if(res.status == 200){
+            if(this.ifSearch){
+              this.detectionList = res.data.items
+            }else {
+              this.detectionList.forEach((item,index)=>{
+                if(item.cd == val){
+                  item.list = res.data.items
+                  //更新tableData中的数据
+                  Vue.set(this.detectionList,index,this.detectionList[index])
+                }
+              })
+            }
+
+          }else {
+            this.$message({
+              message:res.message,
+              type:'warning'
+            });
+          }
+        },err=>{});
+    },
+    getClass2(){
+      this.until.get('/general/cat/listByPrntCd?prntCd='+this.cd)
+        .then(res=>{
+          this.detectionList = res.data.items
+          this.detectionList.forEach(item=>{
+            item.list = []
+            this.getList(item.cd)
+          })
+        })
+    },
+    chooseOption(item){
+      this.cd=item;
     },
     goToPlatform(){
       window.location.href='./platformdetection.html'
     }
   },
   mounted() {
-    let normalObj = {
-      title: "常规玩具安全检测",
-      Arr: []
-    };
-
-    let electricObj = {
-      title: "电动玩具安全测试",
-      Arr: []
-    };
-
-    let childrenObj = {
-      title: "儿童护理用品安全测试",
-      Arr: []
-    };
-
-    for (let index = 0; index < 10; index++) {
-      normalObj.Arr.push(this.productInfo);
-      electricObj.Arr.push(this.productInfo);
-      childrenObj.Arr.push(this.productInfo);
+    this.getClass1()
+  },
+  watch:{
+    cd:function () {
+      this.getClass2()
     }
-
-    this.detectionList.push(normalObj);
-    this.detectionList.push(electricObj);
-    this.detectionList.push(childrenObj);
   },
   components: {
     tradeHeader,
     tradeFooter,
-    detectionList
+    detectionList,
+    detectionSearch
   }
 };
 </script>
 
-<style lang='less'>
+<style lang='less'scoped>
 html,
 body {
   width: 100%;
@@ -112,12 +174,14 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 50px auto 0px;
+      margin: 20px auto 0px;
       .switch{
         border-bottom: 1px solid #ddd;
         button{
-          padding: 10px 20px;
-          font-size: 20px;
+          padding: 15px 35px;
+          border:0;
+          font-size: 18px;
+          border-radius: 3px 3px 0 0;
           background-color: #ddd;
         }
         button.active{
@@ -156,7 +220,8 @@ body {
          }
        }
        .infolist{
-         width: 1200px;
+         /*width: 1000px;*/
+         flex: 1;
        }
       }
     }

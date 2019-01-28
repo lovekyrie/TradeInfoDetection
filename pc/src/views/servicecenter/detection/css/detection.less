@@ -29,26 +29,27 @@
 
   //图标行
   #icon {
-    border-top: 1px solid rgb(204, 204, 204);
-    border-bottom: 2px solid rgb(241, 241, 241);
+    //border-top: 1px solid rgb(204, 204, 204);
+    //border-bottom: 2px solid rgb(241, 241, 241);
     height: 70px;
-    min-width: 800px;
     background-color: white;
-    line-height: 70px;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
     text-align: center;
-
+    width: 1200px;
+    margin: 0 auto;
     img {
       width: 90px;
-      position: relative;
-      left: -162px;
       margin-left: 20px;
     }
 
   //  搜索框
     .el-input{
       width: 350px;
-      position: relative;
-      left: 20px;
+      //margin-left: 520px;
+      margin-left: auto;
+      margin-right:30px;
       .el-input__inner{
         border-radius: 0;
       }
@@ -69,8 +70,7 @@
       border-radius: 4px;
       color: rgb(13,85,210);
       border-color: rgb(13,85,210);
-      position: relative;
-      left: 120px;
+      right: 120px;
     }
 
   }
@@ -78,14 +78,23 @@
   //中间主体部分
   #main {
     text-align: center;
-
+    position: relative;
+    p{
+      width: 100%;
+      position: absolute;
+      background-color: rgb(241,241,241);
+      height: 45px;
+    }
     //表格
     .el-table{
+      width: 1200px;
       margin: 0 auto;
       border: none;
       font-size: 16px;
       color: rgb(134,134,134);
-
+      //position: absolute;
+      //top: 0;
+      //z-index: 1;
       //行标题链接
       .buttonText{
         color: rgb(13,85,210);

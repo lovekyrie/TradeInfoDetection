@@ -3,8 +3,11 @@
   <div class="wrap" v-for="(item, index) in reportList" :key="index">
     <div class="header" @click="gotoDetail(item.mxRepoPk)">
       <span>序列号：{{item.no}}</span>
-      <div v-if="edit">
-        <img :src="edit" alt="">
+      <div v-if="code">
+        <img :src="code" alt="" >
+      </div>
+      <div v-if="edit"  @click.stop="toEdit(item)">
+        <img :src="edit" alt=""/>
       </div>
       <div class="time" v-if="!edit">
         <span>上传时间：</span>{{item.crtTm}}
@@ -21,7 +24,7 @@
          <span>质检产品名称：</span>{{item.prodNm}}
       </div>
       <div>
-         <span>质检产品地域：</span>{{item.prodProvNm}}{{item.prodCityNm}}{{item.prodProvNm}}
+         <span>质检产品地域：</span>{{item.prodProvNm}}{{item.prodCityNm}}
       </div>
     </div>
     <div class="footer" v-if="edit">
@@ -39,14 +42,18 @@
 
 <script>
 export default {
-  props: ['reportList','edit'],
+  props: ['reportList','edit','code'],
   data() {
     return {};
   },
   methods:{
+      toEdit(info){
+          window.location.href = '../quality/reportupload.html?info='+JSON.stringify(info)
+      },
     gotoDetail(pk){
       window.location.href='../membercenter/reportdetail.html?pk='+pk
     },
+
     delReport(pk,index){
         this.until.get('/prod/mxrepo/del?pks='+pk)
             .then(res=>{
@@ -82,10 +89,11 @@ export default {
     padding: 0.2rem 0.3rem;
     border-bottom: 1px solid #F2F2F2;
     >span{
-      width: 63%;
+      flex: 1;
     }
     >div{
       width: 5%;
+      margin-left: 0.3rem;
       >img{
         width: auto;
         height: auto;

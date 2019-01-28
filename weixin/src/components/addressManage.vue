@@ -8,7 +8,7 @@
         </div>
         <div>
           <span>
-            收货地址：{{item.addrDtl}}
+            收货地址：{{item.provNm}}{{item.cityNm}}{{item.distNm}}{{item.streetNm}}{{item.addrDtl}}
           </span>
         </div>
       </div>

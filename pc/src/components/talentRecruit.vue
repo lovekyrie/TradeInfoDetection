@@ -1,14 +1,14 @@
 <template>
   <div class="talent-list">
-    <div class="talent-wrap" v-for="(item, index) in talentList" :key="index">
+    <div class="talent-wrap" v-for="(item, index) in talentList" :key="index"  @click="toDetailLink(item.mxPubRecrPk)">
       <div>
         <span></span>
-        <span>{{item.title}}</span>
-        <span>{{item.company}}</span>
+        <span>{{item.nm}}</span>
+        <span>{{item.entpNm}}</span>
       </div>
       <div>
-        <span>{{item.salary}}</span>
-        <span>{{item.linkedPhone}}</span>
+        <span>{{item.frSala}}-{{item.toSala}}元/月</span>
+        <span>{{item.mob}}</span>
       </div>
     </div>
   </div>
@@ -24,6 +24,11 @@ export default {
   },
   data() {
     return {};
+  },
+  methods:{
+    toDetailLink(val){
+      window.location.href='../buyers/recruitdetail.html?pk='+val
+    }
   }
 };
 </script>
@@ -33,7 +38,8 @@ export default {
   width: 1200px;
   margin: 0 auto;
   .talent-wrap {
-    padding: 40px 30px;
+    cursor: pointer;
+    padding: 30px 30px;
     display: -webkit-flex;
     display: flex;
     flex-direction: row;
@@ -45,24 +51,27 @@ export default {
       display: flex;
       flex-direction: row;
       flex-wrap: nowrap;
-      justify-content: space-around;
+      /*justify-content: space-around;*/
       align-items: center;
       font-size: 18px;
       &:nth-of-type(1){
-        margin-bottom: 20px;
+        margin-bottom: 15px;
+        display: flex;
+        display: -webkit-flex;
+        align-items: center;
         >span{
           &:nth-of-type(1){
             width: 5px;
             height: 5px;
             background-color: #0d55d2;
+            margin-right: 21px;
           }
           &:nth-of-type(2){
-            width: 50%;
+            flex: 1;
+            color: #5a7fdb;
           }
           &:nth-of-type(3){
-            width: 46%;
-            text-align: right;
-            color: #5a7fdb;
+
           }
         }
       }
@@ -75,7 +84,7 @@ export default {
           &:nth-last-of-type(1){
             font-size: 16px;
             text-align: right;
-            color: #d0d0d0;
+            /*color: #d0d0d0;*/
           }
         }
       }

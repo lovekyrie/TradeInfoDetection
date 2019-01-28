@@ -8,7 +8,7 @@
             <img :src="quality" alt="">
           </div>
           <div>
-            <span>质控管理</span>
+            <span>产品质控</span>
           </div>
         </div>
         <div @click="toEnterpriseEquipment">
@@ -72,7 +72,7 @@
   import newproduct from '../images/新产品研发人才.png'
   import equipment from '../images/设备分享.png'
   import swiper from '../components/swiper'
-  
+
   export default {
     data() {
       return {
@@ -89,7 +89,7 @@
         window.location.href = '../buyers/qualitymanage.html'
       },
       toRequireRelease() {
-        window.location.href = '../buyers/requirelist.html'
+        window.location.href = '../buyers/requirelist.html?type=2'
       },
       toHumanResource() {
         window.location.href = '../buyers/recruitlist.html'
@@ -110,11 +110,11 @@
   };
 </script>
 
-<style lang='less' scoped>
+<style lang='less'>
   .seller {
     .top-wrap {
-      width: 1400px;
-      margin: 0 auto;
+      width: 100%;
+      /*margin: 0 auto;*/
       background-color: #fff;
       .operate-top {
         width: 820px;
@@ -125,19 +125,25 @@
         justify-content: space-between;
         align-items: center;
         >div {
-          width: 30%;
+          cursor: pointer;
+         flex: 1;
           display: -webkit-flex;
           display: flex;
           flex-wrap: nowrap;
-          justify-content: space-between;
+          /*justify-content: space-between;*/
           align-items: center;
           >div {
-            padding: 20px 0;
+            padding: 40px 0;
             &:nth-of-type(1) {
-              width: 40%;
+              padding-right: 15px;
+              img{
+                width: 75px;
+              }
             }
             &:nth-of-type(2) {
               font-size: 20px;
+              color: #666666;
+              font-weight: lighter;
               width: 55%;
             }
           }
@@ -145,26 +151,31 @@
       }
     }
     .buttom-wrap {
-      width: 1400px;
-      margin: 0 auto;
+      border-top: 1px solid #e3e3e3;
+      /*border-bottom: 1px solid #e3e3e3;*/
+      width: 100%;
+      /*margin: 0 auto;*/
       .operate-buttom {
         width: 1200px;
-        margin: 0 auto;
+        margin: 40px auto;
         display: -webkit-flex;
         display: flex;
         flex-wrap: nowrap;
         justify-content: space-around;
         align-items: center;
         >div {
-          margin: 30px 0;
-          padding: 15px 0;
-          width: 290px;
+          border: 1px solid #e3e3e3;
+          /*margin: 30px 0;*/
+          height: 125px;
+          width: 350px;
           display: -webkit-flex;
           display: flex;
           flex-wrap: nowrap;
           justify-content: space-around;
           align-items: center;
           background-color: #fff;
+          cursor: pointer;
+
           .item-wrap {
             display: -webkit-flex;
             display: flex;
@@ -184,6 +195,11 @@
               }
               &:nth-of-type(2) {
                 margin-left: 10px;
+                span{
+                  font-size: 20px;
+                  font-weight: lighter;
+                  color: #666666;
+                }
               }
             }
           }

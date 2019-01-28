@@ -4,11 +4,11 @@
       <trade-header></trade-header>
     </div>
     <div class="content">
-      <div class="content-title"> 
-        <span>{{detail.job}}</span>
-        <span>{{detail.salary}}</span>
-        <span>{{detail.company}}</span>
-        <span>联系电话：{{detail.linkedPhone}}</span>
+      <div class="content-title">
+        <span>{{detail.nm}}</span>
+        <span>{{detail.frSala}}-{{detail.toSala}}元/月</span>
+        <span>{{detail.entpNm}}</span>
+        <span>联系电话：{{detail.mob}}</span>
         <span>邮箱地址：{{detail.email}}</span>
       </div>
       <div>
@@ -16,10 +16,7 @@
           <span></span>
           <span>职位描述</span>
         </div>
-        <div><span>1、{{detail.first}}</span></div>
-        <div><span>2、{{detail.second}}</span></div>
-        <div><span>3、{{detail.third}}</span></div>
-        <div><span>4、{{detail.fourth}}</span></div>
+        <div v-html="detail.intro"></div>
       </div>
     </div>
     <div class="footer">
@@ -36,19 +33,22 @@ export default {
   data() {
     return {
       detail: {
-        job: "实验室经理助理",
-        salary: "4000-5000元/月",
-        company: "浙江宁波华信质检",
-        linkedPhone:'0574-88889999',
-        email:'2738237829@qq.com',
-        first:'化学专业大学以上学历；',
-        second:'操作过ICP，GC-MS等分析仪器；',
-        third:'英语CET4及以上',
-        fourth:'能熟练的操作办公软件',
       }
     };
   },
-  methods: {},
+  mounted(){
+    this.userPk = this.until.getQueryString('pk')
+    this.getInfo()
+  },
+  methods: {
+    getInfo(){
+      this.until.get('/prod/mxpubrecr/info/'+this.userPk)
+        .then(res=>{
+          this.detail = res.data
+          this.detail.intro=this.detail.intro.replace(/\n/gm,"<br/>")
+        })
+    }
+  },
   components: {
     tradeHeader,
     tradeFooter
@@ -56,7 +56,7 @@ export default {
 };
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
 html,
 body {
   width: 100%;
@@ -65,7 +65,7 @@ body {
     width: 100%;
     .content {
       width: 1200px;
-      margin: 55px auto 0px;
+      margin: 0px auto;
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
@@ -107,11 +107,11 @@ body {
                  width: 8px;
                  height: 20px;
                  background-color: #0d55d2;
-               } 
+               }
                &:nth-of-type(2){
                  font-size: 22px;
                  margin-left: 15px;
-               }  
+               }
               }
             }
             &:not(:nth-of-type(1)){

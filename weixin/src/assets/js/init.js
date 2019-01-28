@@ -11,7 +11,7 @@ import 'element-ui/lib/theme-default/index.css';
 import ElementUI from 'element-ui';
 
 import "babel-polyfill";// 解决 IE11 Promise对象未定义
-// import axios from 'axios';
+import axios from 'axios';
 import './vueFilter';  	//全局过滤器
 import {until,reg,hostUrl} from 'assets/js/until'
 import {msg,confirm,loading} from 'hero'
@@ -23,7 +23,7 @@ import {Query} from 'assets/js/query'
 // import 'assets/js/Ios';
 // import 'assets/js/WebViewJavascriptBridge';
 
-//YDUI
+//YDUIVconsole
 import {DateTime} from 'vue-ydui/dist/lib.rem/datetime';
 import {TimeLine, TimeLineItem} from 'vue-ydui/dist/lib.rem/timeline';
 import {Radio, RadioGroup} from 'vue-ydui/dist/lib.rem/radio';
@@ -32,10 +32,17 @@ import { Confirm, Alert, Toast, Notify, Loading } from 'vue-ydui/dist/lib.rem/di
 import {CellGroup, CellItem} from 'vue-ydui/dist/lib.rem/cell';
 import {TextArea} from 'vue-ydui/dist/lib.rem/textarea';
 
+
+import EXIF  from 'exif-js';  //获取图片信息，如果上传的图片有旋转则调整过来
+
+// import  from 'vconsole'
+
 export default{
   install(Vue){
     Vue.use(ElementUI)
-    // Vue.prototype.axios = axios;
+      // Vue.prototype.Vconsole = new Vconsole()
+      Vue.prototype.EXIF  = EXIF;
+    Vue.prototype.axios = axios;
     Vue.prototype.until = new until();
     Vue.prototype.reg = new reg();
       Vue.prototype.hostUrl = hostUrl;

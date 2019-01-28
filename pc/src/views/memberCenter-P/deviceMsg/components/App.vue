@@ -135,7 +135,7 @@
     methods: {
       //删除当前行
       handleDelete(index, row) {
-        console.log(index, row);
+        // console.log(index, row);
       },
     }
   }

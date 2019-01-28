@@ -1,5 +1,5 @@
 <template>
-   <div class="collect">
+   <div class="collect" v-loading="loading">
 
           <!--搜索框-->
           <div class="mainSearch">
@@ -13,71 +13,140 @@
               <el-form-item>
                 <el-input class="searchInput_a" v-model="search.supplierName" placeholder="供应商名称"></el-input>
               </el-form-item>
-              <el-form-item>
-                <el-input class="searchInput_b" v-model="search.place" placeholder="质检产品地域省、市"></el-input>
+              <el-form-item  class="searchInput_b">
+                <addr @setAddr="getAddr" distCd="0"></addr>
+                <!--<el-input class="searchInput_b" v-model="search.place" placeholder="质检产品地域省、市"></el-input>-->
               </el-form-item>
               <el-form-item>
-                <el-button type="primary">搜索</el-button>
+                <el-button type="primary" @click="toSearch">搜索</el-button>
               </el-form-item>
             </el-form>
           </div>
           <!--收藏信息-->
-          <el-table  :data="tableData" style="width: 100%"  align="left" padding="5px">
-            <el-table-column prop="id" label="序列号" width="200"></el-table-column>
-            <el-table-column prop="name" label="质检产品名称"></el-table-column>
-            <el-table-column prop="supplierName" label="供应商名称"> </el-table-column>
-            <el-table-column prop="place" label="质检产品地域"  align="center" > </el-table-column>
+          <el-table  :data="list" style="width: 100%"  align="left" padding="5px" @row-click="toDetail"  class="cursor">
+            <el-table-column prop="rpNo" label="序列号" width="200"></el-table-column>
+            <el-table-column prop="rpProdNm" label="质检产品名称"></el-table-column>
+            <el-table-column prop="rpSupply" label="供应商名称"> </el-table-column>
+            <el-table-column prop="rpProdProvNm rpProdCityNm" label="质检产品地域"  align="center" >
+              <template slot-scope="scope">
+              {{list[scope.$index].rpProdProvNm}}
+                {{list[scope.$index].rpProdCityNm}}
+              </template>
+            </el-table-column>
             <el-table-column align="center"  prop="Toperation" label="操作" width="130" >
               <template slot-scope="scope">
                 <el-button
                   size="small"
-                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                  @click.stop="handleDelete(scope.$index, scope.row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
 
-
+         <div class="block">
+           <el-pagination
+             @current-change="handleCurrentChange"
+             :current-page="pageNo"
+             :page-size="pageSize"
+             layout="total, prev, pager, next, jumper"
+             :total="total">
+           </el-pagination>
+         </div>
         </div>
 
 </template>
 
 <script>
+  import addr from 'components/addr';
 export default {
   data() {
     return {
+      loading:false,
+      total:0,
+      pageNo:1,
+      pageSize:20,
+      list:[],
+      userPk:'',
       search: {
+        prodProvCd:'',
+        prodCityCd:'',
         id: "",
         name: "",
         supplierName: "",
         place: ""
       },
-      tableData: [
-        {
-          id: "1100023232142311",
-          name: "防晒衣",
-          supplierName: "宁波贸信检测",
-          place: "浙江 - 宁波"
-        },
-        {
-          id: "1100023232142311",
-          name: "防晒衣",
-          supplierName: "宁波贸信检测",
-          place: "浙江 - 宁波"
-        },
-        {
-          id: "1100023232142311",
-          name: "防晒衣",
-          supplierName: "宁波贸信检测",
-          place: "浙江 - 宁波"
-        }
-      ]
+      tableData: []
     };
   },
+  mounted(){
+    this.userPk = JSON.parse(this.until.loGet('userInfo')).sysUserPk
+    this.getList()
+  },
   methods: {
+    toSearch(){
+      this.pageNo = 1
+      this.list = []
+      this.getList()
+    },
+    getAddr:function(val){
+      let cd = JSON.parse(val)
+      this.search.prodProvCd = cd.cd1
+      this.search.prodCityCd = cd.cd2
+    },
+    //跳转详情页面
+    toDetail(row){
+      this.$router.push({
+        path:'/reportdetail',
+        query:{
+          id:row.subPk
+        }
+      })
+    },
+    handleCurrentChange(val){
+      this.pageNo = val
+      this.getList()
+    },
+    getList(){
+      this.loading = true;
+      let query = new this.Query();
+      query.buildWhereClause('no',this.search.id,'LK');
+      query.buildWhereClause('prodNm',this.search.name,'LK');
+      query.buildWhereClause('supply',this.search.supplierName,'LK');
+      query.buildWhereClause('prodProvCd',this.search.prodProvCd,'LK');
+      query.buildWhereClause('prodCityCd',this.search.prodCityCd,'LK');
+      // query.buildWhereClause('prodCityCd',this.cityCode2,'LK');
+
+      query.buildPageClause(this.pageNo,this.pageSize);
+      let param = query.getParam();
+      this.until.get('/prod/mxusercoll/pageSelf',param)
+        .then(res=>{
+          this.loading = false;
+          if(res.status == 200){
+            this.total = res.page.total
+            res.data.items.forEach(item=>{
+              item.crtTm = item.crtTm.split(' ')[0]
+            })
+            this.list = res.data.items
+          }else {
+
+          }
+        },err=>{});
+    },
     //删除当前行
     handleDelete(index, row) {
-      console.log(index, row);
+      this.until.get('/prodx/mxusercoll/canselcoll?subPk='+row.subPk+'&sysUserPk='+this.userPk)
+        .then(res=>{
+          if(res.status=='200'){
+            this.list.splice(index,1)
+            this.$message({
+              message:'删除成功！',
+              type:'success'
+            })
+          }
+        })
     }
+  },
+  components: {
+    addr
   }
 };
 </script>
@@ -88,11 +157,13 @@ export default {
   background-color: white;
   padding-top: 30px;
   padding-bottom: 50px;
-
+  .block{
+    margin-top: 20px;
+  }
   //搜索框
   .mainSearch {
-    text-align: center;
-
+    /*text-align: center;*/
+    padding-left: 20px;
     .el-input__inner {
       border-radius: 0;
     }
@@ -102,6 +173,9 @@ export default {
     }
     .searchInput_b {
       width: 180px;
+      .el-form-item__content{
+        width: 100%;
+      }
     }
 
     .el-button {

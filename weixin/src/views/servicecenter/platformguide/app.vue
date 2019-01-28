@@ -2,15 +2,14 @@
   <div id="app">
     <div class="header">
       <header-title :title="title"></header-title>
-      <div><img :src="swiper" alt=""></div>
+      <div><van-swipe :autoplay="3000">
+        <van-swipe-item v-for="(image, index) in images" :key="index">
+          <img v-lazy="image.srcUrl" />
+        </van-swipe-item>
+      </van-swipe></div>
     </div>
     <div class="content">
-      <div><span>制度合作要求</span></div>
-      <div><span>注意事项</span></div>
-      <div><span>平台声明</span></div>
-      <div><span>送检流程介绍</span></div>
-      <div><span>检测服务机构入驻流程</span></div>
-      <div><span>送检流程介绍</span></div>
+      <div v-for="item in list" @click="toDetail(item.sysNewsPk)"><span>{{item.nm}}</span></div>
     </div>
   </div>
 </template>
@@ -24,11 +23,46 @@ export default {
     return {
       title:"平台指引",
       swiper,
-
+        pageNo:1,
+        pageSize:999,
+        images:[],
+        list:[]
     }
   },
+    mounted(){
+        this.getImg()
+        this.getList()
+    },
   methods:{
-
+      toDetail(pk){
+        window.location.href = 'platformguidedetail.html?pk='+pk
+      },
+      //获取轮播图
+      getImg(){
+          this.until.get('/sys/ad/list?catCd=30040.150')
+              .then(res=>{
+                  this.images = res.data.items
+              })
+      },
+      getList(){
+          // let query = new this.Query();
+          // query.buildPageClause(this.pageNo,this.pageSize);
+          let page = {
+              p:{
+                  n:this.pageNo,
+                  s:this.pageSize
+              }
+          }
+          let param = {
+              query:JSON.stringify(page),
+              value:'30040.160',
+              // query:query.getParam()
+          }
+          this.until.get('/sys/news/page',param)
+              .then(res=>{
+                  this.list = res.data.items
+              })
+      }
   },
   components:{
     headerTitle,
@@ -50,8 +84,13 @@ html,body{
           height: auto;
           max-width: 100%;
           max-width: 100%;
-          vertical-align: middle;
         }
+      }
+    }
+    .van-swipe__indicators{
+      justify-content: center;
+      i{
+        display: inline-block!important;
       }
     }
     .content{

@@ -4,34 +4,34 @@
       <div>
         <span>职位名称：</span>
         <div>
-          <input type="text" placeholder="无机分析工程师" v-model="info.nm">
+          <input type="text" placeholder="" v-model="info.nm">
         </div>
       </div>
       <div>
         <span>薪资：</span>
         <div>
-          <input type="text" placeholder="4000" v-model="info.frSala">
+          <input type="text" placeholder="" v-model="info.frSala">
           <span>~</span>
-          <input type="text" placeholder="6000" v-model="info.toSala">
+          <input type="text" placeholder="" v-model="info.toSala">
           <span>元／月</span>
         </div>
       </div>
       <div>
         <span>联系电话：</span>
         <div>
-          <input type="number" placeholder="13599990000" v-model="info.mob">
+          <input type="number" placeholder="" v-model="info.mob">
         </div>
       </div>
       <div>
         <span>邮箱地址：</span>
         <div>
-          <input type="text" placeholder="请输入邮箱地址" v-model="info.email">
+          <input type="text" placeholder="" v-model="info.email">
         </div>
       </div>
       <div>
         <span>职位描述：</span>
         <div>
-          <textarea name="" id="" placeholder="1、操作过ICP，GC-MS等分析仪器；2、英语CET4及以上；3、能熟练的操作办公软件。" v-model="info.intro">
+          <textarea name="" id="" placeholder="" v-model="info.intro">
 
           </textarea>
         </div>
@@ -62,33 +62,61 @@ export default {
     },
     mounted(){
         let info=JSON.parse(this.until.loGet('userInfo'))
-        console.log(info)
         if(info){
             this.info.sysUserPk = info.sysUserPk
             this.info.entpPk = info.entpPk
             this.info.entpNm = info.entpNm
         }
-        console.log(this.info)
     },
     methods:{
+        verification(){
+            if(this.info.nm==''){
+                return false
+            }
+            if(this.info.frSala==''){
+                return false
+            }
+            if(this.info.toSala==''){
+                return false
+            }
+            if(this.info.mob==''){
+                return false
+            }
+            if(this.info.email==''){
+                return false
+            }
+            if(this.info.intro==''){
+                return false
+            }
+            return true
+        },
         submit(){
-            this.until.postData('/prod/mxpubrecr/edit',JSON.stringify(this.info))
-                .then(res=>{
-                    if(res.status=='200'){
-                        this.$hero.msg.show({
-                            text:res.message,
-                            times:1500
-                        });
-                        setTimeout(()=>{
-                            window.location.href = 'humanresource.html'
-                        },1500)
-                    }else {
-                        this.$hero.msg.show({
-                            text:res.message,
-                            times:1500
-                        });
-                    }
-                })
+            if(this.verification()){
+                this.$dialog.loading.open()
+                this.until.postData('/prod/mxpubrecr/edit',JSON.stringify(this.info))
+                    .then(res=>{
+                        this.$dialog.loading.close()
+                        if(res.status=='200'){
+                            this.$hero.msg.show({
+                                text:res.message,
+                                times:1500
+                            });
+                            window.history.go(-1)
+
+                        }else {
+                            this.$hero.msg.show({
+                                text:res.message,
+                                times:1500
+                            });
+                        }
+                    })
+            }else {
+                this.$hero.msg.show({
+                    text:'请补全信息！',
+                    times:1500
+                });
+            }
+
         }
     }
 }
@@ -156,6 +184,7 @@ export default {
               padding: .2rem 0 .2rem .3rem;
               width: 100%;
               height: 100%;
+              -webkit-appearance: none;
               border:1px solid #F3F3F3;
             }
             >textarea{

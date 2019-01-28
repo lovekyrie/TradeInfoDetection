@@ -1,5 +1,5 @@
 <template>
-<div id="container">
+<div id="container" v-loading="loading">
   <!--顶部-->
   <div id="header">
     <ul>
@@ -9,7 +9,7 @@
   </div>
   <!--图标-->
   <div id="icon">
-    <img src="../img/logo.png">
+    <a href="../home/index.html"><img src="../img/logo.png"></a>
   </div>
   <!--中间主体-->
   <div id="main">
@@ -24,8 +24,8 @@
       <div><img src="../img/账号.png"><input type="text" placeholder="请输入账号" v-model="user"> </div>
       <div><img src="../img/密码.png"><input type="password" placeholder="请输入密码" v-model="password"> </div>
       <div style="margin-bottom: 10px"><img src="../img/验证码.png"><input style="width: 200px" type="text" v-model="code">
-        <span class="modified">
-          <p>{{myCode}}</p>
+        <span class="modified" @click="changeCode">
+          {{myCode}}
         </span>
       </div>
       <div style="margin-top: 10px"><a href="./forgetPassword.html">忘记密码？</a></div>
@@ -51,6 +51,7 @@
     export default {
         data(){
           return{
+            loading:false,
             user:'admin',
             password:'1124',
             code:'',
@@ -62,14 +63,18 @@
         this.getCode()
       },
       methods:{
+        changeCode(){
+          this.getCode()
+        },
         submit(){
-          console.log(this.code.toUpperCase)
+          // console.log(this.code.toUpperCase)
           if(this.code.toUpperCase()!=this.myCode.toUpperCase()){
             this.$message({
               message: '请输入正确的验证码！',
               type: 'warning'
             });
           }else {
+            this.loading = true
             this.codeRight = true
             let param = {
               username:this.user,
@@ -78,6 +83,7 @@
             }
             this.until.post('/general/access/appLogin',param)
               .then(res=>{
+                this.loading = false
                 if(res.status == 200){
                   let myInfo = res.data.userInfo
                   this.until.loSave('user',JSON.stringify(myInfo));
@@ -91,7 +97,7 @@
 
                 }else {
                   this.$message({
-                    message: res.data,
+                    message: res.message,
                     type: 'warning'
                   });
                 }

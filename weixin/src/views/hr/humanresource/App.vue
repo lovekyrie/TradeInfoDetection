@@ -70,6 +70,7 @@ export default {
     };
   },
   mounted() {
+      this.until.pushHistory();
       this.getList()
   },
   methods: {
@@ -83,15 +84,24 @@ export default {
           this.getList()
       },
       getList(){
+          this.$dialog.loading.open()
           this.loading = true;
-          let query = new this.Query();
-          query.buildPageClause(this.pageNo,this.pageSize);
+          // let query = new this.Query();
+          // query.buildPageClause(this.pageNo,this.pageSize);
+          let page = {
+              p:{
+                  n:this.pageNo,
+                  s:this.pageSize
+              }
+          }
           let param = {
+              query:JSON.stringify(page),
               value:this.key,
-              query:query.getParam()
+              // query:query.getParam()
           }
           this.until.get('/prod/mxpubrecr/page',param)
               .then(res=>{
+                  this.$dialog.loading.close()
                   this.loading = false;
                   if(res.status == 200){
                       this.total = res.page.total
@@ -122,7 +132,9 @@ export default {
           }, 500);
       },
       submit(){
-          window.location.href = 'recruitrelease.html'
+          if(this.until.ifLogin()){
+              window.location.href = 'recruitrelease.html'
+          }
       }
   },
   components: {

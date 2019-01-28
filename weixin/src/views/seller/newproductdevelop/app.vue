@@ -50,16 +50,25 @@ export default {
           this.getList()
       },
       getList(){
+          this.$dialog.loading.open()
           this.loading = true;
-          let query = new this.Query();
-          query.buildPageClause(this.pageNo,this.pageSize);
+          // let query = new this.Query();
+          // query.buildPageClause(this.pageNo,this.pageSize);
+          let page = {
+              p:{
+                  n:this.pageNo,
+                  s:this.pageSize
+              }
+          }
           let param = {
+              query:JSON.stringify(page),
               value:this.key,
-              query:query.getParam()
+              // query:query.getParam()
           }
           let url = '/prodx/mxpubtale/page'
           this.until.get(url,param)
               .then(res=>{
+                  this.$dialog.loading.close()
                   this.loading = false;
                   if(res.status == 200){
                       this.total = res.page.total
