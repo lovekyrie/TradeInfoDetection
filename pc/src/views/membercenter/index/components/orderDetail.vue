@@ -111,7 +111,7 @@
           <div class="exaRep">
             <span class="dIcon"></span><span class="dTitle_b">检测报告</span>
             <span class="dowButton" @click="down()"><a href="#">下载报告</a></span>
-            <p><span style="display: inline-block;width: 35%">序列号：{{info.checkMxPubCheckPk}}</span><span>检测机构：宁波贸信检测</span></p>
+            <p><span style="display: inline-block;width: 35%">序列号：{{info.repoQrCd}}</span><span>检测机构：宁波贸信检测</span></p>
             <p><span style="display: inline-block;width: 35%">供应商名称：{{info.supply}}</span><span>质检产品名称：{{info.prodNm}}</span></p>
             <!--<div class="img" v-if="imgList.length>0">-->
               <!--<img :src="item" v-for="item in imgList"/>-->
