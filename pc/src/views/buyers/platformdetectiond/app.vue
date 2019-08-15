@@ -24,7 +24,7 @@
                 <el-input-number v-model="qty" controls-position="right" @change="handleChange" :min="1" :max="10"></el-input-number>
                 件
               <el-row>
-                <el-button @click="submit">立即购买</el-button>
+                <el-button @click="submit">立即预约</el-button>
               </el-row>
             </div>
           </div>

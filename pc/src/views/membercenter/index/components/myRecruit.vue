@@ -1,5 +1,5 @@
 <template>
-   <div class="equipment" v-loading="loading">
+   <div class="myreport" v-loading="loading">
     <!--搜索框-->
     <div class="mainSearch">
       <el-form :inline="true" class="demo-form-inline">
@@ -34,7 +34,10 @@
         <template slot-scope="scope">
           <el-button
             size="small"
-            @click.stop="handleDelete(scope.$index, scope.row)">删除</el-button>
+            @click.stop="handleEdit(scope.$index, scope.row)"><i class="el-icon-edit"></i></el-button>
+          <el-button
+            size="small"
+            @click.stop="handleDelete(scope.$index, scope.row)"><i class="el-icon-delete"></i></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -64,26 +67,47 @@ export default {
         }
       })
     },
+    handleEdit(index, row){
+      this.$router.push({
+        path:'/addrecruit',
+        query:{
+          info:JSON.stringify(row)
+        }
+      })
+      // window.location.href = '/addrecruit?info='+JSON.stringify(row)
+    },
     //删除当前行
     handleDelete(index, row) {
-      this.loading = true;
-      // console.log(index, row);
-      this.until.get('/prod/mxpubrecr/del?pks='+row.mxPubRecrPk)
-        .then(res=>{
-          this.loading = false;
-          if(res.status=='200'){
-            this.tableData.splice(index,1)
-            this.$message({
-              message:'删除成功！',
-              type:'success'
-            });
-          }else {
-            this.$message({
-              message:res.message,
-              type:'warning'
-            });
-          }
-        })
+      this.$confirm('确定删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.loading = true;
+        // console.log(index, row);
+        this.until.get('/prod/mxpubrecr/del?pks='+row.mxPubRecrPk)
+          .then(res=>{
+            this.loading = false;
+            if(res.status=='200'){
+              this.tableData.splice(index,1)
+              this.$message({
+                message:'删除成功！',
+                type:'success'
+              });
+            }else {
+              this.$message({
+                message:res.message,
+                type:'warning'
+              });
+            }
+          })
+      }).catch(() => {
+        // this.$message({
+        //   type: 'info',
+        //   message: '已取消删除'
+        // });
+      });
+
     },
     getList(){
       this.loading = true;
@@ -128,5 +152,12 @@ export default {
 };
 </script>
 
-<style>
+<style lang="less">
+  .myreport{
+    .el-button {
+      border: none;
+      font-size: 14px;
+    }
+  }
+
 </style>

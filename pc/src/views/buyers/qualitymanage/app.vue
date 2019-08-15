@@ -6,13 +6,13 @@
     <div class="content">
       <div class="search">
         <el-form>
-            <el-form-item label="质检产品名称：">
+            <el-form-item label="产品名称：">
               <el-input placeholder="产品名称" v-model="searchGdno"></el-input>
             </el-form-item>
             <el-form-item label="供应商名称：">
               <el-input placeholder="供应商名称" v-model="searchCustName"></el-input>
             </el-form-item>
-            <el-form-item label="质检产品地域：">
+            <el-form-item label="产品地域：">
               <addr @setAddr="getAddr" distCd="0"></addr>
             </el-form-item>
             <el-form-item label="序列号：">
@@ -29,12 +29,12 @@
       <div class="list">
         <div>
           <span>序列号</span>
-          <span>质检产品名称</span>
+          <span>产品名称</span>
           <span>报告类别</span>
           <span>供应商名称</span>
-          <span>质检产品地域</span>
+          <span>产品地域</span>
         </div>
-        <div v-for="(item, index) in searchBot" :key="index" @click="toDetail(item.mxRepoPk)" class="myList">
+        <div v-for="(item, index) in searchBot" :key="index" @click="toDetail(item.mxRepoPk,item.no)" class="myList">
           <span>{{item.no}}</span>
           <span>{{item.prodNm}}</span>
           <span>{{item.catNm}}</span>
@@ -74,61 +74,12 @@ export default {
       searchGdno: "",
       searchSn: "",
       searchCustName: "",
-      searchBot:[
-        {
-          serialNo:'110000919282392312',
-          productName:'防晒衣',
-          vendor:'宁波太平鸟服饰',
-          address:'浙江-宁波'
-        },
-         {
-          serialNo:'110000919282392312',
-          productName:'防晒衣',
-          vendor:'宁波太平鸟服饰',
-          address:'浙江-宁波'
-        },
-         {
-          serialNo:'110000919282392312',
-          productName:'防晒衣',
-          vendor:'宁波太平鸟服饰',
-          address:'浙江-宁波'
-        },
-         {
-          serialNo:'110000919282392312',
-          productName:'防晒衣',
-          vendor:'宁波太平鸟服饰',
-          address:'浙江-宁波'
-        },
-         {
-          serialNo:'110000919282392312',
-          productName:'防晒衣',
-          vendor:'宁波太平鸟服饰',
-          address:'浙江-宁波'
-        },
-         {
-          serialNo:'110000919282392312',
-          productName:'防晒衣',
-          vendor:'宁波太平鸟服饰',
-          address:'浙江-宁波'
-        },
-         {
-          serialNo:'110000919282392312',
-          productName:'防晒衣',
-          vendor:'宁波太平鸟服饰',
-          address:'浙江-宁波'
-        },
-         {
-          serialNo:'110000919282392312',
-          productName:'防晒衣',
-          vendor:'宁波太平鸟服饰',
-          address:'浙江-宁波'
-        },
-      ]
+      searchBot:[]
     };
   },
   mounted(){
     if(this.until.getQueryString('val')){
-      this.searchGdno = this.until.getQueryString('val')
+      this.searchSn = this.until.getQueryString('val')
     }
     this.getList()
   },
@@ -139,8 +90,15 @@ export default {
       }
     },
     //详情
-    toDetail(val){
-      window.location.href = '../buyers/reportdetail.html?pk='+val
+    toDetail(val,no){
+      console.log(this.searchSn)
+      if(this.searchSn){
+        window.location.href = '../buyers/reportdetail.html?pk='+val+'&no='+this.searchSn
+
+      }else {
+        window.location.href = '../buyers/reportdetail.html?pk='+val
+
+      }
     },
     getAddr:function(val){
       let cd = JSON.parse(val)
@@ -152,7 +110,7 @@ export default {
       this.loading = true;
 
       let query = new this.Query();
-      query.buildWhereClause('no',this.searchSn,'LK');
+      // query.buildWhereClause('no',this.searchSn,'LK');
       query.buildWhereClause('prodNm',this.searchGdno,'LK');
       query.buildWhereClause('supply',this.searchCustName,'LK');
       query.buildWhereClause('prodProvCd',this.cityCode1,'LK');
@@ -164,6 +122,7 @@ export default {
       // console.log(myParam)
       let param = {
         type:1,
+        no:this.searchSn,
         query:myParam.query
       }
       this.until.get('/prodx/mxrepo/page',param)
@@ -171,6 +130,9 @@ export default {
           this.loading = false;
           if(res.status == 200){
             this.total = res.page.total
+            // res.data.items.forEach(item=>{
+              // item.catNm = item.catNm.indexOf('、')>=0 ? item.catNm.substring(0,item.catNm.length-1) : item.catNm
+            // })
             this.searchBot=res.data.items
             // console.log(this.searchBot)
 
@@ -284,6 +246,15 @@ body {
           >span{
             width:20%;
             text-indent: 25px;
+            &:first-child{
+              /*width: 15%;*/
+            }
+            &:nth-of-type(3){
+              width: 25%;
+            }
+            &:last-of-type{
+              width: 15%;
+            }
           }
         }
       }

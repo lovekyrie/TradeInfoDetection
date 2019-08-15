@@ -44,15 +44,14 @@
         :margin="0"
       ></vue-qr>
     </div>
-    <div class="pdf-reader" v-if="imgList.length>0">
-      <img :src="item.url" v-for="item in imgList"/>
+    <div class="pdf-reader" v-if="urlList.length>0" v-for="(item,index) in urlList" :key="index"  width="100%">
+      <p>报告分类：{{item.catCd}}</p>
+      <iframe :src="item.url" height="560" v-if="item.type.toLowerCase()=='pdf'" width="100%">  </iframe>
+      <img :src="item.url" v-else />
     </div>
-    <div v-if="pdfList.length>0">
-
-      <iframe :src="'/shop/static/pdf/web/viewer.html?file=' + item.url" height="560" v-for="(item,index) in pdfList" :key="index"
-              width="100%">
-      </iframe>
-    </div>
+    <!--<div v-if="pdfList.length>0">-->
+      <!--<iframe :src="item.url" height="560" v-for="(item,index) in pdfList" :key="index"  width="100%">  </iframe>-->
+    <!--</div>-->
     <div class="footer">
       <trade-footer></trade-footer>
     </div>
@@ -73,9 +72,10 @@ export default {
       logo:'',//二维码上的logo
       state:0,
       userPk:'',
-      collectNo,
-      hasCollect,
-      download,
+
+      collectNo:'',
+      hasCollect:"",
+      download:"",
       // downList:[], //下载列表，包含文件Url及文件名称
       urlList:[], //附件列表
       imgList:[],
@@ -95,15 +95,31 @@ export default {
   },
   mounted(){
     this.pk = this.until.getQueryString('pk')
-    this.userPk = JSON.parse(this.until.loGet('userInfo')).sysUserPk
+    this.no = this.until.getQueryString('no')?this.until.getQueryString('no'):''
+    this.userPk = this.until.loGet('userInfo')? JSON.parse(this.until.loGet('userInfo')).sysUserPk:''
     this.getInfo();
-    this.ifCollect()
+    this.ifCollect();
+    this.getLogo();
   },
   methods: {
+    getLogo(){
+      let query = new this.Query();
+      query.buildWhereClause("sysUserPk",this.userPk,"EQ");
+      this.until.get('/prod/mxentp/list',{query:query.toString()})
+        .then(res=>{
+         this.logo = res.data.items[0].logoUrl;
+        })
+    },
+
     getInfo(){
-      this.until.get('/prodx/mxrepo/info/'+this.pk)
+      let param={
+        pk:this.pk,
+        no:this.no,
+      }
+      this.until.get('/prodx/mxrepo/infox',param)
         .then(res=>{
           this.reportDetail = res.data
+          // this.reportDetail.catNm = this.reportDetail.catNm.indexOf('、')>=0 ? this.reportDetail.catNm.substring(0,this.reportDetail.catNm.length-1) : this.reportDetail.catNm
           this.urlList = JSON.parse(this.reportDetail.pdfUrl)
           this.urlList.forEach(item=>{
             if(item.type.toLowerCase()=='pdf'){
@@ -136,7 +152,6 @@ export default {
       if(this.state){  //已经收藏了，要取消
         this.until.get('/prodx/mxusercoll/canselcoll?subPk='+this.pk+'&sysUserPk='+this.userPk)
           .then(res=>{
-
             this.state = res.status=='200' ? 0: 1
           })
       }else {
@@ -246,9 +261,16 @@ body {
     }
     .pdf-reader{
       width: 1200px;
-      height: 900px;
-      margin: 0 auto 150px;
+      height: auto;
+      padding: 15px;
+      margin: 0 auto 20px;
+      text-align: center;
       background-color: #f2f2f2;
+      p{
+        width: 100%;
+        text-align: left;
+        padding-bottom: 40px;
+      }
       img{
         max-width: 100%;
         max-height: 100%;

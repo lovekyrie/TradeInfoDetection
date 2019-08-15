@@ -5,8 +5,11 @@
           <!--右边上半部分-->
           <div class="rightTop">
             <div class="right_a">
-              <img :src="defaultHead">
-
+              <!-- 头像上传组件 -->
+                <my-upload field="img" :width="300" :height="300"  v-model="show"  url="/general/file/upload"
+                      @crop-upload-success="cropUploadSuccess" img-format="png">
+                </my-upload>
+              <img :src="myInfo.imgUrl" @click="toggleShow" :width="136" :height="136">
             </div>
             <div class="right_b">
               <p>账号：{{myInfo.usNm}}</p>
@@ -114,9 +117,13 @@ import mygold from "../images/我的金币.png";
 import defaultHead from "../images/默认头像.png";
 import fabu from "../images/我的发布.png";
 import VueQr from 'vue-qr'
+import myUpload from 'vue-image-crop-upload';
 export default {
   data(){
     return {
+      show: false,
+      imgDataUrl: '',
+      imgUrl:'',
       talent,
       fabu,
       joinIn,
@@ -150,11 +157,40 @@ export default {
     }
   },
   methods:{
+    //显示头像上传
+    toggleShow() {
+				this.show = !this.show;
+      },
+      //完成上传
+      cropUploadSuccess(jsonData, field){
+       if(jsonData.status == '200'){
+          let param ={imgUrl:jsonData.data}
+          console.log(JSON.stringify(param));
+           this.until.postData('/sys/user/updUser',JSON.stringify(param))
+              .then(res=>{
+            if(res.status=='200'){
+           
+            location.reload()
+            }
+            this.$message({
+              message:res.message,
+            });
+          })
+        
+
+
+       }
+        this.show = false;
+		
+        
+			},
     //获取个人信息
     getInfo(){
       this.until.get('/sys/user/info/'+this.userPk)
         .then(res=>{
           if(res.status == '200'){
+            console.log(res.data);
+            
             this.myInfo = res.data
             this.type = this.myInfo.arg1
             // console.log(this.type)
@@ -223,7 +259,8 @@ export default {
     },
   },
   components:{
-    VueQr
+    VueQr,
+    'my-upload': myUpload
   },
 }
 </script>

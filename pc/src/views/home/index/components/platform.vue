@@ -1,7 +1,7 @@
 <template>
   <div class="platform">
     <div class="plat-info">
-      <div><img :src="platform" alt=""></div>
+      <div><img :src="imgUrl"></div>
       <div @click="toPlatformDetail(item.sysNewsPk)" v-for="(item,index) in list" :key="index" class="cursor"><span>{{item.nm}}</span></div>
     </div>
   </div>
@@ -16,16 +16,33 @@ export default {
       platform,
       pageNo:1,
       pageSize:999,
-      list:[]
+      list:[],
+      imgUrl:''
     }
   },
   mounted(){
-    this.getList()
+    this.getList();
+    this.getPlatFromImg();
+
   },
   methods:{
+
+
+    //获取平台指引广告图
+    getPlatFromImg(){
+      let query = new this.Query();
+      query.buildWhereClause("catCd","30040.160","EQ");
+      this.until.get('/sys/ad/list',{query:query.toString()})
+        .then(res=>{
+          this.imgUrl = res.data.items[0].srcUrl;
+
+        })
+
+    },
+
+
+
     getList(){
-      // let query = new this.Query();
-      // query.buildPageClause(this.pageNo,this.pageSize);
       let page = {
         p:{
           n:this.pageNo,
@@ -35,12 +52,17 @@ export default {
       let param = {
         query:JSON.stringify(page),
         value:'30040.160',
-        // query:query.getParam()
       }
       this.until.get('/sys/news/page',param)
         .then(res=>{
-          // console.log(res)
-          this.list = res.data.items
+          if(res.status === '200'){
+            this.list = res.data.items
+          }else {
+            this.$message({
+              message:res.message,
+              type: 'warning'
+            });
+          }
         })
     },
     toPlatformDetail(type){
@@ -68,8 +90,8 @@ export default {
         padding-top: 60px;
         margin: 0 10px;
         img{
-          height: auto;
-          width: auto;
+          height: 350px;
+          width: 1168px;
         }
       }
       &:not(:nth-of-type(1)){

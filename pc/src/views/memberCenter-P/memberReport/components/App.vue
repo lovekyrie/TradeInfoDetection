@@ -41,7 +41,7 @@
                 <el-input class="searchInput_a" v-model="search.testingAgency" placeholder="检测机构"></el-input>
               </el-form-item>
               <el-form-item>
-                <el-input class="searchInput_a" v-model="search.testingName" placeholder="质检产品名称"></el-input>
+                <el-input class="searchInput_a" v-model="search.testingName" placeholder="产品名称"></el-input>
               </el-form-item>
               <br/>
               <el-form-item label="性质：">
@@ -93,7 +93,7 @@
             </el-table-column>
             <el-table-column
               prop="testingName"
-              label="质检产品名称"
+              label="产品名称"
               align="center"
             >
             </el-table-column>

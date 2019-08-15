@@ -21,7 +21,7 @@ class until{
   down(obj){
     let objArr=obj.split('/')
     let name = objArr[objArr.length-1]
-    let url = 'http://mx.jiaxiangtech.com/upload/201812/5b24f0422eb24717a37f08d43c529713.jpg'
+    let url = 'http://www.mxjob.com.cn/upload/201812/5b24f0422eb24717a37f08d43c529713.jpg'
     // for(let i=0; i<objArr.length-1;i++){
     //   name+=objArr[i]
     // }
@@ -152,6 +152,9 @@ class until{
         cache:false,
         dataType:'json',
         success(data){
+          if(data.status=='401'){
+            data.message = "您还没登录，请注册登录！"
+          }
           resolve(data);
         },
         error(data){
@@ -172,6 +175,9 @@ class until{
                 dataType:'json',
                 headers:{"Content-Type":"application/json"},
                 success(data){
+                  if(data.status=='401'){
+                    data.message = "您还没登录，请注册登录！"
+                  }
                     resolve(data);
                 },
                 error(data){
@@ -192,6 +198,9 @@ class until{
         contentType:'application/json;charset=UTF-8',
         dataType:'json',
         success(data){
+          if(data.status=='401'){
+            data.message = "您还没登录，请注册登录！"
+          }
           resolve(data);
         },
         error(data){
@@ -212,7 +221,11 @@ class until{
         dataType:'json',
         processData,
         success(data){
-          resolve(data);
+          if(data.status=='401'){
+            data.message = "您还没登录，请注册登录！"
+          }
+            resolve(data);
+
         },
         error(data){
           reject(data);

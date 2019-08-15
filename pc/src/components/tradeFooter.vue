@@ -1,17 +1,17 @@
 <template>
   <div class="footer-wrap">
     <div>
-      <span>版权所有：宁波贸信检测技术服务有限公司 信息产业部备案/许可证编号：浙ICP备16007937号</span>
+      <span>版权所有：贸信科技 信息产业部备案/许可证编号：浙ICP备16007937号</span>
     </div>
+    <!--<div>-->
+      <!--<span>浙江贸信科技有限公司</span>-->
+      <!--<span>地址：宁波市鄞州区富强路555号四楼</span>-->
+      <!--<span>电话：+86-574-83025100</span>-->
+    <!--</div>-->
     <div>
-      <span>宁波贸信检测技术服务有限公司</span>
-      <span>地址：宁波市鄞州区富强路555号三、四楼</span>
-      <span>电话：+86-574-89201299</span>
-    </div>
-    <div>
-      <span>传真：+86-574-89017298</span>
-      <span>E-mail:info@gig-lab.com</span>
-      <span>http://www.gig-lab.com</span>
+      <!--<span>传真：+86-574-89017298</span>-->
+      <span>E-mail:info@mdxd.com</span>
+      <span>全国热线电话:400-826-1805</span>
     </div>
   </div>
 </template>

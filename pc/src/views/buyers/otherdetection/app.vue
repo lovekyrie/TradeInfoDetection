@@ -19,7 +19,7 @@
         </div>
         <div class="infolist">
           <div class="infolist" v-if="ifSearch">
-            <detection-search :detectionList="detectionList" detail="otherdetectiond.html"></detection-search>
+            <detection-search :detectionList="detectionList"  num='0' detail="otherdetectiond.html"></detection-search>
           </div>
           <div class="infolist" v-else>
             <detection-list :detectionList="detectionList" num='0' detail="otherdetectiond.html"></detection-list>
@@ -110,6 +110,9 @@ export default {
         .then(res=>{
           this.loading = false;
           if(res.status == 200){
+            res.data.items.forEach(item=>{
+              item.imgUrl = item.imgUrl ? item.imgUrl.split(',')[0] : ''
+            })
             if(this.ifSearch){
               this.detectionList = res.data.items
             }else {

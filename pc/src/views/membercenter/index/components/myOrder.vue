@@ -343,23 +343,35 @@ export default {
        },
        cancel(info){
          // console.log(info)
-         info.statCd = '80020.005'
-         info.statNm = '已取消'
-         this.until.postData('/prod/mxordete/edit',JSON.stringify(info))
-           .then(res=>{
-             if(res.status=='200'){
-               this.$message({
-                 message:'取消成功',
-                 type:'success'
-               });
-             }else {
-               this.$message({
-                 message:res.message,
-                 type:'warning'
-               });
-             }
+         this.$confirm('确定取消该订单?', '提示', {
+           confirmButtonText: '确定',
+           cancelButtonText: '取消',
+           type: 'warning'
+         }).then(() => {
+           info.statCd = '80020.005'
+           info.statNm = '已取消'
+           this.until.postData('/prod/mxordete/edit',JSON.stringify(info))
+             .then(res=>{
+               if(res.status=='200'){
+                 this.$message({
+                   message:'取消成功',
+                   type:'success'
+                 });
+               }else {
+                 this.$message({
+                   message:res.message,
+                   type:'warning'
+                 });
+               }
 
-           })
+             })
+         }).catch(() => {
+           // this.$message({
+           //   type: 'info',
+           //   message: '已取消删除'
+           // });
+         });
+
        },
       //编辑当前行
       handleEdit(index, row) {

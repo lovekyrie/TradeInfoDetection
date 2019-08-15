@@ -1,6 +1,6 @@
 <template>
   <div id="app" v-loading="loading">
-    <trade-header :showSearch="showSearch"></trade-header>
+    <trade-header :showSearch="showSearch"  @search="search"></trade-header>
     <div class="content">
       <div class="el-row">
         <button class="active">企业发布</button>
@@ -38,6 +38,7 @@ export default {
     return {
       loading:false,
       showSearch: true,
+      key:'',
       equipmentImg,
       equipmentList: [],
       total:0,
@@ -65,6 +66,11 @@ export default {
     handleCurrentChange(val){
         this.pageNo = val
         this.getEnterpriseEquipementList()
+    },
+    search(val){
+      this.key = val
+      this.pageNo = 1
+      this.getEnterpriseEquipementList()
     },
     getEnterpriseEquipementList() {
       this.loading = true;

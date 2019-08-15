@@ -38,8 +38,11 @@
           <el-form-item label="下载金币数：" prop="email">
             <el-input v-model.number.trim="ruleForm.price"></el-input>
           </el-form-item>
-
+          <!--<el-form-item label="备注：" prop="email">-->
+            <!--<el-input v-model="ruleForm.rmks"></el-input>-->
+          <!--</el-form-item>-->
         </el-form>
+
       </div>
       <!--底部按钮-->
       <input class="formButton" type="button" value="发布" @click="submit('ruleForm')">
@@ -72,6 +75,7 @@
           pdfUrl:'',
           price:'',
           intro:'', //简介描述
+          rmks:'',
           sysUserPk: "",
         },
         rule: {

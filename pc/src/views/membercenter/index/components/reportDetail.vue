@@ -7,6 +7,12 @@
             <span class="dIcon"></span><span class="dTitle">报告详情</span>
             <!--标题-->
             <h1>{{info.nm}}</h1>
+            <div class="down">
+              <p @click="down()">
+                <img :src="download" alt="">
+                <span>下载报告</span>
+              </p>
+            </div>
             <div class="repDetail_p1">
               <p>序列号：{{info.no}}</p>
               <p>供应商名称：{{info.supply}}</p>
@@ -26,15 +32,19 @@
               </vue-qr>
             </div>
           </div>
-          <div class="img" v-if="imgList.length>0">
-            <img :src="item.url" v-for="item in imgList"/>
-          </div>
-          <div v-if="pdfList.length>0">
-
-            <iframe :src="'/shop/static/pdf/web/viewer.html?file=' + item.url" height="560" v-for="(item,index) in pdfList" :key="index"
+          <div class="img" v-if="urlList.length>0" v-for="(item,index) in urlList" :key="index">
+            <p>报告分类：{{item.catCd}}</p>
+            <iframe :src="'/shop/static/pdf/web/viewer.html?file=' + item.url" height="560" v-if="item.type.toUpperCase()=='PDF'"
                     width="100%">
             </iframe>
+            <img :src="item.url" v-else/>
           </div>
+          <!--<div v-if="pdfList.length>0">-->
+
+            <!--<iframe :src="'/shop/static/pdf/web/viewer.html?file=' + item.url" height="560" v-for="(item,index) in pdfList" :key="index"-->
+                    <!--width="100%">-->
+            <!--</iframe>-->
+          <!--</div>-->
 
 
         </div>
@@ -42,30 +52,49 @@
 
 <script>
   import pdf from "components/contract.md";
+  import download from "../images/下载小.png";
   import VueQr from 'vue-qr'
 export default {
   data(){
     return {
       id:'',
+      userPk:'',
+      download,
       info:{},
       imgList:[],
       pdfList:[],
+      urlList:[], //附件列表
       logo:'',
       url:''
     }
   },
 
   mounted(){
+    this.userPk = this.until.loGet('userInfo')? JSON.parse(this.until.loGet('userInfo')).sysUserPk:''
     this.id = this.$route.query.id
-    this.getInfo()
+    this.getInfo();
+    this.getLogo()
   },
   methods:{
+    getLogo(){
+      let query = new this.Query();
+      query.buildWhereClause("sysUserPk",this.userPk,"EQ");
+      this.until.get('/prod/mxentp/list',{query:query.toString()})
+        .then(res=>{
+          this.logo = res.data.items[0].logoUrl;
+        })
+    },
+    down(){
+      this.urlList.forEach(item=>{
+        this.FileSaver.saveAs(item.url,item.name)
+      })
+    },
     getInfo(){
       this.until.get('/prodx/mxrepo/info/'+this.id)
         .then(res=>{
           this.info = res.data
-          let urlList = JSON.parse(this.info.pdfUrl)
-          urlList.forEach(item=>{
+          this.urlList = JSON.parse(this.info.pdfUrl)
+          this.urlList.forEach(item=>{
             if(item.type.toUpperCase()=='PDF'){
               this.pdfList.push(item)
             }else {
@@ -92,7 +121,22 @@ export default {
         background-color: white;
         padding: 20px 20px;
         text-align: center;
-
+        .img{
+          width: 100%;
+          border: 1px solid #f4f4f4;
+          margin: 10px 0;
+          padding: 20px;
+          text-align: center;
+          p{
+            padding-bottom: 50px;
+            text-align: left;
+          }
+          img{
+            width: auto;
+            height: auto;
+            max-width: 100%;
+          }
+        }
         //子标题
         .dTitle {
           display: inline-block;
@@ -106,7 +150,17 @@ export default {
         .repDetail {
           padding: 20px 0;
           text-align: left;
+          position: relative;
 
+          .down{
+            position: absolute;
+            top:50px;
+            right:50px;
+            cursor: pointer;
+            img{
+              margin-right: 8px;
+            }
+          }
           h1 {
             line-height: 2em;
             margin-bottom: 12px;

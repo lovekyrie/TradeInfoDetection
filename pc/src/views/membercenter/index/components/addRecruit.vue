@@ -70,7 +70,21 @@
     },
     mounted(){
       let info=JSON.parse(this.until.loGet('userInfo'))
+      if(this.$route.query.info){
+        this.title = '编辑招聘信息'
+        let myForm = JSON.parse(this.$route.query.info)
+        // console.log(myForm)
+        this.form.mxPubRecrPk = myForm.mxPubRecrPk
+        this.form.nm = myForm.nm
+        this.form.frSala = myForm.frSala
+        this.form.toSala = myForm.toSala
+        this.form.mob = myForm.mob
+        this.form.email = myForm.email
+        this.form.intro = myForm.intro
+        // console.log(this.form)
+      }
       if(info){
+        // console.log(info)
         this.form.sysUserPk = info.sysUserPk
         this.form.entpPk = info.entpPk
         this.form.entpNm = info.entpNm

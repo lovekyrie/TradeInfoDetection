@@ -7,7 +7,7 @@
             <!--<img :src="product.imgUrl" alt="">-->
           </div>
           <span>{{product.nm}}</span>
-          <span>销量：{{product.sela}}</span>
+          <span v-if="num==1">销量：{{product.sela}}</span>
         </div>
       </div>
     <!--</div>-->
@@ -16,7 +16,7 @@
 
 <script>
   export default {
-    props:['detectionList','detail'],
+    props:['detectionList','detail','num'],
     data(){
       return {
       }

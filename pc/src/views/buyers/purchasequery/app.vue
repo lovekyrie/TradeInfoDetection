@@ -29,12 +29,14 @@
         <div>
           <span>序列号</span>
           <span>质检产品名称</span>
+          <span>报告类别</span>
           <span>供应商名称</span>
           <span>质检产品地域</span>
         </div>
         <div v-for="(item, index) in searchBot" :key="index" @click="toDetail(item.mxRepoPk)" class="cursor">
           <span>{{item.no}}</span>
           <span>{{item.prodNm}}</span>
+          <span>{{item.catNm}}</span>
           <span>{{item.supply}}</span>
           <span>{{item.prodProvNm}} {{item.prodCityNm}}</span>
         </div>
@@ -80,7 +82,14 @@ export default {
   methods: {
     //详情
     toDetail(val){
-      window.location.href = '../buyers/purchaseDetail.html?pk='+val
+      // window.location.href = '../buyers/purchaseDetail.html?pk='+val
+      if(this.searchSn){
+        window.location.href = '../buyers/purchaseDetail.html?pk='+val+'&no='+this.searchSn
+
+      }else {
+        window.location.href = '../buyers/purchaseDetail.html?pk='+val
+
+      }
     },
     getAddr:function(val){
       let cd = JSON.parse(val)
@@ -94,7 +103,7 @@ export default {
     getList(){
       this.loading = true;
       let query = new this.Query();
-      query.buildWhereClause('no',this.searchSn,'LK');
+      // query.buildWhereClause('no',this.searchSn,'LK');
       query.buildWhereClause('prodNm',this.searchGdno,'LK');
       query.buildWhereClause('supply',this.searchCustName,'LK');
       query.buildWhereClause('prodProvCd',this.cityCode1,'LK');
@@ -106,6 +115,7 @@ export default {
       // console.log(myParam)
       let param = {
         type:2,
+        no:this.searchSn,
         query:myParam.query
       }
       this.until.get('/prodx/mxrepo/page',param)
@@ -217,6 +227,13 @@ body {
           }
           >span{
             width:20%;
+            text-indent: 25px;
+            &:nth-of-type(3){
+              width: 25%;
+            }
+            &:last-of-type{
+              width: 15%;
+            }
           }
         }
       }

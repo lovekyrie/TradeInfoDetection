@@ -442,7 +442,7 @@ body {
       }
     }
     .el-dialog {
-      width: 490px;
+      width: 490px!important;
       border-radius: 10px;
       .el-dialog__header,
       .el-dialog__footer {

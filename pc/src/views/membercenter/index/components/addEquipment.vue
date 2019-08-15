@@ -35,7 +35,7 @@
                   <input type="file" @change="upImg($event)">
                 </div>
               </el-form-item>
-              <el-form-item label="产品描述：">
+              <el-form-item label="产品描述：" prop="intro">
                 <el-input type="textarea" v-model="ruleForm.intro"></el-input>
               </el-form-item>
 
@@ -47,7 +47,7 @@
                 <el-input v-model="ruleForm.contMob"></el-input>
               </el-form-item>
 
-              <el-form-item label="邮箱地址：" prop="email">
+              <el-form-item label="邮箱地址：" prop="contEmail">
                 <el-input v-model="ruleForm.contEmail"></el-input>
               </el-form-item>
 
@@ -91,6 +91,12 @@ export default {
         rules:{
           nm: [
             { required: true, message: '请输入设备名称', trigger: 'blur' },
+          ],
+          contEmail: [
+            { required: true, message: '请输入邮箱', trigger: 'blur' },
+          ],
+          intro: [
+            { required: true, message: '请输入产品描述', trigger: 'blur' },
           ],
           contNm: [
             { required: true, message: '请输入联系人', trigger: 'blur' }
@@ -185,7 +191,7 @@ export default {
 };
 </script>
 
-<style lang='less'>
+<style lang='less' scoped>
   .i-item{
     float: left;
     width: 100px;
@@ -284,7 +290,7 @@ export default {
       .el-input__inner {
         height: 45px;
         border-radius: 0;
-        border: 2px solid rgb(234, 234, 234);
+        border: 1px solid rgb(234, 234, 234);
       }
 
       label {

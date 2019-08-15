@@ -22,7 +22,8 @@
              <div>
                <img :src="item.imgUrl" alt="">
              </div>
-             <span>{{item.nm}}</span>
+             <p>{{item.nm}}</p>
+             <p>{{item.statNm}}</p>
            </div>
          </div>
          <div class="block">
@@ -168,12 +169,14 @@ export default {
      flex-wrap: wrap;
 
      >div{
-       width: 285px;
+       width: 275px;
+       padding-bottom: 20px;
        display: -webkit-flex;
        display: flex;
        flex-direction: row;
        flex-wrap: wrap;
        text-align: center;
+       margin-left: 40px;
        div{
          height: 200px;
          display: flex;
@@ -187,13 +190,20 @@ export default {
            max-width: 100%;
          }
        }
-       div,span{
+       div{
          width: 100%;
          margin-bottom: 20px;
        }
-       span{
-         margin-left: 20px;
+
+       p:first-of-type{
+         padding-right: 15px;
+         flex: 1;
+         text-align: left;
        }
+       p:last-of-type{
+         float: right;
+       }
+
      }
    }
 

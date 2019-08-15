@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "author": "wyh",
   "scripts": {
-    "dev": "node --max_old_space_size=4096 build/dev-server.js --proxy=http://114.115.250.83",
+    "dev": "node --max_old_space_size=5120 build/dev-server.js --proxy=http://www.mxjob.com.cn",
     "build": "node build/build.js",
     "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "node test/e2e/runner.js",
@@ -21,6 +21,7 @@
     "store": "^2.0.4",
     "vue": "^2.5.16",
     "vue-awesome-swiper": "^3.1.3",
+    "vue-image-crop-upload": "^2.5.0",
     "vue-qr": "^1.5.2",
     "vue-router": "^2.2.0",
     "vue-ydui": "^1.2.0",

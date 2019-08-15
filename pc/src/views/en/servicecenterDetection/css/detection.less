@@ -1,0 +1,182 @@
+#container {
+  //顶部
+  #header {
+    height: 30px;
+    min-width: 800px;
+    background-color: rgb(241, 241, 241);
+    ul {
+      display: block;
+      float: right;
+      margin-right: 20%;
+
+      li {
+        display: inline-block;
+        padding: 6px 0;
+        a {
+          display: block;
+          font-size: 14px;
+          margin-right: 20px;
+        }
+        //登录注册中间的竖线
+        .login {
+          border-right: 1px solid rgb(204, 204, 204);
+          padding-right: 20px;
+        }
+
+      }
+    }
+  }
+
+  //图标行
+  #icon {
+    //border-top: 1px solid rgb(204, 204, 204);
+    //border-bottom: 2px solid rgb(241, 241, 241);
+    height: 70px;
+    background-color: white;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    text-align: center;
+    width: 1200px;
+    margin: 0 auto;
+    img {
+      width: 90px;
+      margin-left: 20px;
+    }
+
+  //  搜索框
+    .el-input{
+      width: 350px;
+      //margin-left: 520px;
+      margin-left: auto;
+      margin-right:30px;
+      .el-input__inner{
+        border-radius: 0;
+      }
+    }
+
+  //  搜索按钮
+    .el-input-group__append{
+      border-radius: 0;
+      color: white;
+      background-color: rgb(13,85,210);
+    }
+
+  //  发布资源按钮
+    .releaseButton{
+      display: inline-block;
+      width: 120px;
+      height: 34px;
+      border-radius: 4px;
+      color: rgb(13,85,210);
+      border-color: rgb(13,85,210);
+      right: 120px;
+    }
+
+  }
+
+  //中间主体部分
+  #main {
+    text-align: center;
+    position: relative;
+    p{
+      width: 100%;
+      position: absolute;
+      background-color: rgb(241,241,241);
+      height: 45px;
+    }
+    //表格
+    .el-table{
+      width: 1200px;
+      margin: 0 auto;
+      border: none;
+      font-size: 16px;
+      color: rgb(134,134,134);
+      //position: absolute;
+      //top: 0;
+      //z-index: 1;
+      //行标题链接
+      .buttonText{
+        color: rgb(13,85,210);
+      }
+
+
+      //表头背景颜色
+      .el-table__footer-wrapper thead div, .el-table__header-wrapper thead div{
+        background-color: rgb(241,241,241);
+      }
+
+      //表头行高
+      th{
+        background-color: rgb(241,241,241);
+        height: 45px;
+      }
+
+      //表头字体颜色
+      tr .cell{
+        color: rgb(134,134,134);
+      }
+
+      //表格底边框
+      td,th.is-leaf{
+        border-bottom: 2px solid rgb(241, 241, 241);
+      }
+      //除表头外行高
+      td {
+        height: 58px;
+        .el-table_1_column_1 .cell{
+          color: rgb(13,85,210);
+        }
+      }
+
+      //编辑删除按钮样式
+      .el-button--mini{
+        font-size: 16px;
+        border: none;
+      }
+
+
+
+    }
+
+    //elui表格后的细线消除
+    .el-table::after{
+      width: 0;
+    }
+    //表格内颜色消除
+    .el-table--enable-row-hover .el-table__body tr:hover>td{
+      background-color: white;
+    }
+
+    //分页选框
+    .block{
+      padding-top: 30px;
+      margin-bottom: 40px;
+      .el-pager li.active{
+        background-color: rgb(13,85,210);
+        border-color: rgb(13,85,210);
+      }
+    }
+
+
+  }
+
+  //页脚
+  //#footer {
+  //  background-color: white;
+  //  text-align: center;
+  //  border-top: 2px solid rgb(241, 241, 241);
+  //  padding-top: 20px;
+  //  //页脚字体
+  //  p {
+  //    display: block;
+  //    margin-top: 10px;
+  //    margin-bottom: 10px;
+  //    font-weight: 300;
+  //    font-size: 10px;
+  //    font-family: "Microsoft Sans Serif";
+  //    color: rgb(133, 133, 133);
+  //  }
+  //}
+
+}

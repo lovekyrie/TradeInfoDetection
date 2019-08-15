@@ -3,7 +3,7 @@
       <el-carousel :interval="5000" arrow="always">
         <el-carousel-item v-for="item in swipperList" :key="item.sysAdPk">
           <div>
-            <img :src="item.srcUrl" alt="">
+            <img @click="goImg(item)" :src="item.srcUrl" alt="">
           </div>
         </el-carousel-item>
       </el-carousel>
@@ -19,10 +19,21 @@ export default {
     }
   },
   mounted(){
-    this.until.get('/sys/ad/list?catCd=30040.150')
+    let query = new this.Query();
+    query.buildWhereClause("catCd","30040.150","EQ");
+    this.until.get('/sys/ad/list',{query:query.toString()})
       .then(res=>{
         this.swipperList = res.data.items
       })
+  },
+  methods: {
+    //轮播图跳转链接方法
+    goImg(img){
+      if(img.tgtUrl != null && img.tgtUrl != ''){
+        window.open(img.tgtUrl);
+      }
+
+    }
   }
 }
 </script>

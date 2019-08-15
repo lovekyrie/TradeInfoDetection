@@ -2,12 +2,23 @@
   <div class="myHeader">
     <div class="header-wrap">
       <div class="account-wrap">
+
         <div class="account" v-if="!login">
+          <div class="language">
+            <a href="../home/index.html">简体中文</a>
+            <span>|</span>
+            <a href="../en/index.html">ENGLISH</a>
+          </div>
           <span><a href="../entry/login.html">登录</a></span>
           <span>|</span>
           <span><a href="../entry/register.html">注册</a></span>
         </div>
         <div class="account" v-else>
+          <div class="language">
+            <a href="../home/index.html">简体中文</a>
+            <span>|</span>
+            <a href="../en/index.html">ENGLISH</a>
+          </div>
         <span  v-if="showNav2">
           <a @click="choose('个人中心','/center')" class="cursor">{{myInfo.usNm}}</a>
           <!--<a href="../membercenter/index.html#center" >-->
@@ -111,12 +122,12 @@ export default {
       tradeLog,
       login:false,
       myInfo:{},
-      searchType:1, //搜索类型
+      searchType:2, //搜索类型
       findList: [
-        {
-          ID: 1,
-          content: "找服务"
-        },
+        // {
+        //   ID: 1,
+        //   content: "找服务"
+        // },
         {
           ID: 2,
           content: "找报告"
@@ -163,7 +174,7 @@ export default {
   mounted(){
     // console.log(this.butNm)
     let info=JSON.parse(this.until.loGet('user'))
-    this.userPk = info.sysUserPk
+    this.userPk = info?info.sysUserPk:''
     this.getInfo()
     // console.log(this.state)
   },
@@ -298,6 +309,14 @@ export default {
       margin: 0 auto;
       padding: 5px 0;
       text-align: right;
+      .language{
+        float: left;
+        font-size: 12px;
+        span{
+          color: #e1e1e1;
+          margin: 0 0.8rem;
+        }
+      }
       > span {
         font-size: 12px;
         &:not(:nth-last-of-type(1)) {

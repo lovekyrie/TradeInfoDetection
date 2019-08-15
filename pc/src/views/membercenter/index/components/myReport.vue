@@ -162,21 +162,33 @@ export default {
       //删除当前行
       handleDelete(index, row) {
         // console.log(index, row);
-        this.until.get('/prod/mxrepo/del?pks='+row.mxRepoPk)
-          .then(res=>{
-            if(res.status=='200'){
-              this.list.splice(index,1)
-              this.$message({
-                message:'删除成功！',
-                type:'success'
-              });
-            }else {
-              this.$message({
-                message:res.message,
-                type:'warning'
-              });
-            }
-          })
+        this.$confirm('确定删除该报告?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.until.get('/prod/mxrepo/del?pks='+row.mxRepoPk)
+            .then(res=>{
+              if(res.status=='200'){
+                this.list.splice(index,1)
+                this.$message({
+                  message:'删除成功！',
+                  type:'success'
+                });
+              }else {
+                this.$message({
+                  message:res.message,
+                  type:'warning'
+                });
+              }
+            })
+        }).catch(() => {
+          // this.$message({
+          //   type: 'info',
+          //   message: '已取消删除'
+          // });
+        });
+
       },
       //跳转详情页面
       toReportDetail(row){

@@ -2,11 +2,21 @@
   <div class="header-wrap">
     <div class="account-wrap">
       <div class="account" v-if="!login">
+        <div class="language">
+          <a href="../home/index.html">简体中文</a>
+          <span>|</span>
+          <a href="../en/index.html">ENGLISH</a>
+        </div>
         <span><a href="../entry/login.html">登录</a></span>
         <span>|</span>
         <span><a href="../entry/register.html">注册</a></span>
       </div>
       <div class="account" v-else>
+        <div class="language">
+          <a href="../home/index.html">简体中文</a>
+          <span>|</span>
+          <a href="../en/index.html">ENGLISH</a>
+        </div>
         <span>
           <a href="../home/index.html#membercenter">{{myInfo.usNm}}</a>
         </span>
@@ -161,6 +171,14 @@ export default {
       margin: 0 auto;
       padding: 5px 0;
       text-align: right;
+      .language{
+        float: left;
+        font-size: 12px;
+        span{
+          color: #e1e1e1;
+          margin: 0 0.8rem;
+        }
+      }
       > span {
         font-size: 12px;
         &:not(:nth-last-of-type(1)) {

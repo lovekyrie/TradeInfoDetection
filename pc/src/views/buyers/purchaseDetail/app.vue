@@ -41,7 +41,7 @@
       <img :src="item.url" v-for="item in imgList"/>
     </div>
     <div class="pdf-reader" v-if="pdfList.length>0">
-      <iframe :src="'/shop/static/pdf/web/viewer.html?file=' + item.url" height="560" v-for="(item,index) in pdfList" :key="index"
+      <iframe :src="item.url" height="560" v-for="(item,index) in pdfList" :key="index"
               width="100%">
       </iframe>
     </div>
@@ -62,6 +62,7 @@ export default {
   data() {
     return {
       state:0,
+      no:'',
       userPk:'',
       collectNo,
       hasCollect,
@@ -83,6 +84,7 @@ export default {
   },
   mounted(){
     this.pk = this.until.getQueryString('pk')
+    this.no = this.until.getQueryString('no')?this.until.getQueryString('no'):''
     this.userPk = JSON.parse(this.until.loGet('userInfo')).sysUserPk
     this.getInfo();
     this.ifCollect()
@@ -92,7 +94,11 @@ export default {
       window.location.href = 'productionprocess.html?nm='+val
     },
     getInfo(){
-      this.until.get('/prodx/mxrepo/info/'+this.pk)
+      let param={
+        pk:this.pk,
+        no:this.no,
+      }
+      this.until.get('/prodx/mxrepo/infox',param)
         .then(res=>{
           this.reportDetail = res.data
           this.downList = JSON.parse(this.reportDetail.pdfUrl)

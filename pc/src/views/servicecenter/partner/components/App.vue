@@ -17,7 +17,7 @@
         <img src="../../../entry/login/img/logo.png">
       </a>
       <!--搜索框-->
-      <el-input placeholder="找设备">
+      <el-input placeholder="">
         <el-button slot="append">搜索</el-button>
       </el-input>
       <input class="releaseButton" type="button" value="发布资源" @click="submit">
@@ -151,7 +151,7 @@
           query:JSON.stringify(page),
           value:this.key
         }
-        let url = '/prod/mxpubres/pageSelf'
+        let url = '/prod/mxpubreq/pageSelf'
         this.until.get(url,param)
           .then(res=>{
             this.loading = false;

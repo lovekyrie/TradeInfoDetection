@@ -47,7 +47,7 @@
               <img :src="newproduct" alt="">
             </div>
             <div>
-              <span>新产品研发人才</span>
+              <span>研发人才</span>
             </div>
           </div>
         </div>

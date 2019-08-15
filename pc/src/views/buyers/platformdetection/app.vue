@@ -111,19 +111,23 @@ export default {
         .then(res=>{
           this.loading = false;
           if(res.status == 200){
+            res.data.items.forEach(item=>{
+              item.imgUrl = item.imgUrl ? item.imgUrl.split(',')[0] : ''
+            })
             if(this.ifSearch){
               this.detectionList = res.data.items
               // console.log(this.detectionList)
             }else{
               this.detectionList.forEach((item,index)=>{
                 if(item.cd == val){
+
                   item.list = res.data.items
                   //更新tableData中的数据
                   Vue.set(this.detectionList,index,this.detectionList[index])
                 }
               })
             }
-
+            console.log(this.detectionList)
           }else {
             this.$message({
               message:res.message,

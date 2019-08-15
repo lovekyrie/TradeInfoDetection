@@ -33,6 +33,9 @@
         <div>
           下载金币数：<span>{{requireDetail.price}}金币</span>
         </div>
+        <!--<div>-->
+          <!--备注：<span>{{requireDetail.rmks}}</span>-->
+        <!--</div>-->
       </div>
     </div>
     <div class="footer">
@@ -166,8 +169,8 @@ body {
         display: flex;
         flex-direction: row;
         flex-wrap: nowrap;
-        justify-content: space-between;
-        align-items: center;
+        /*justify-content: space-between;*/
+        /*align-items: center;*/
         &:nth-of-type(1) {
           span{
             &:nth-of-type(1){
@@ -187,6 +190,10 @@ body {
           flex-wrap: wrap;
           >div{
             width: 100%;
+            &:not(:nth-of-type(1)){
+              font-size: 16px;
+              margin-bottom: 10px;
+            }
             &:nth-of-type(1){
               display: flex;
               flex-direction: row;
@@ -210,10 +217,10 @@ body {
             }
           }
         }
-        &:nth-of-type(3){
+        &:nth-of-type(4){
+          flex-direction: column;
           >div{
-            &:not(:nth-of-type(1)){
-              font-size: 16px;
+            &:nth-of-type(1){
               margin-bottom: 10px;
             }
           }

@@ -61,12 +61,20 @@ export default {
       }
       this.until.get('/sys/news/page',param)
         .then(res=>{
+          if(res.status==='200'){
+            this.total = res.page.total
+            this.industryList = res.data.items
+            this.industryList.forEach(item=>{
+              item.cont = item.cont.replace(/<\/?[^>]*>/g, "").substring(0,120)+'...';
+            })
+          }else {
+            this.$message({
+              message:res.message,
+              type: 'warning'
+            });
+          }
           // console.log(res)
-          this.total = res.page.total
-          this.industryList = res.data.items
-          this.industryList.forEach(item=>{
-            item.cont = item.cont.replace(/<\/?[^>]*>/g, "").substring(0,120)+'...';
-          })
+
         })
     },
      //跳转到详情页面

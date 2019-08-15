@@ -87,20 +87,12 @@ export default {
       }
     }
     .detail-info{
-      p{
-        font-size: 16px;
-        color: #bfbfbf;
-        &:nth-last-of-type(1){
-          text-indent: 40px;
-          padding-bottom: 40px;
-        }
-      }
-      div{
-        margin: 20px 0;
-        img{
-          height: auto;
-          width: auto;
-        }
+      font-size: 16px;
+      padding-bottom: 40px;
+      color: #303030;
+      img{
+        height: auto;
+        width: auto;
       }
     }
   }

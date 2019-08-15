@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <trade-header :showSearch="showSearch"></trade-header>
+    <trade-header :showSearch="showSearch"  @search="search"></trade-header>
     <div class="content">
       <div class="el-row">
         <button @click="toEnterprise">企业发布</button>
@@ -34,7 +34,8 @@ import tradeFooter from 'components/tradeFooter'
 export default {
   data(){
     return{
-      showSearch:false,
+      showSearch:true,
+      key:'',
       total:0,
       pageNo:1,
       pageSize:20,
@@ -50,6 +51,11 @@ export default {
     },
     handleCurrentChange(val){
       this.pageNo = val
+      this.getList()
+    },
+    search(val){
+      this.key = val
+      this.pageNo = 1
       this.getList()
     },
     getList(){

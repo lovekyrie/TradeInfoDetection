@@ -16,10 +16,10 @@
 <template>
   <div class="address">
     <el-select v-model="cityCode" placeholder="省份">
-      <el-option v-for="item in cityList" :key="item.cd" :label="item.nm" :value="item.cd"></el-option>
+      <el-option v-for="(item,index) in cityList" :key="index" :label="item.nm" :value="item.cd"></el-option>
     </el-select>
     <el-select v-model="cityCode2" placeholder="城市">
-      <el-option v-for="item in cityList2" :key="item.cd" :label="item.nm" :value="item.cd"></el-option>
+      <el-option v-for="(item,index) in cityList2" :key="index" :label="item.nm" :value="item.cd"></el-option>
     </el-select>
 
     <!--<select v-model="cityCode">-->

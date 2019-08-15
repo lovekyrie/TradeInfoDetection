@@ -125,8 +125,7 @@
                 <img :src="item" v-for="item in imgList"/>
               </div>
               <div class="pdf-reader" v-if="pdfList.length>0">
-                <iframe :src="'/shop/static/pdf/web/viewer.html?file=' + item" height="560" v-for="(item,index) in pdfList" :key="index"
-                        width="100%">
+                <iframe :src="item" height="560" v-for="(item,index) in pdfList" :key="index" width="100%">
                 </iframe>
               </div>
             </div>

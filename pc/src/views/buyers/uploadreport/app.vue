@@ -5,40 +5,14 @@
     </div>
     <div class="content">
       <div class="content-concept">
-        <div class="upload-demo">
-          <div class="imgList">
-            <div class="i-item" v-if="imgUrl.length>0" v-for="(up,i) in imgUrl">
-              <svg class="icon" aria-hidden="true" @click="deletImg(i)">
-                <use xlink:href="#icon-guanbi"></use>
-              </svg>
-              <img :src="pdf" v-if="up.type.toLowerCase()=='pdf'">
-              <img :src="up.url" v-else>
-            </div>
-          </div>
-          <div class="upload">
-            <img :src="uploadlog" alt>
-            <input ref="upload" type="file" name="file" value="上传报告" id @change="upImg($event)">
-            <span>上传报告</span>
-          </div>
-          <div class="el-upload__text">每成功上传一份文档，可获取金币奖励</div>
-          <div>注意事项：您可以上传≤10MB的PDF报告。</div>
-        </div>
+
         <div class="content">
           <el-form label-width="180px" ref="info" :model="info" :rules="rules">
             <trade-title :title="title"></trade-title>
             <el-form-item label="报告标题：" prop="nm">
               <el-input v-model="info.nm"></el-input>
             </el-form-item>
-            <el-form-item label="报告分类：" prop="catCd">
-              <el-select v-model="info.catCd" placeholder="请选择报告分类">
-                <el-option
-                  :label="item.nm"
-                  :value="item.cd"
-                  v-for="item in catCdList"
-                  :key="item.cd"
-                ></el-option>
-              </el-select>
-            </el-form-item>
+
             <!--<el-form-item label="序列号：">-->
             <!--<el-input v-model="form.serialNo"></el-input>-->
             <!--</el-form-item>-->
@@ -67,6 +41,48 @@
             <el-form-item label="检测项目：" prop="rmks">
               <el-input type="textarea" v-model="info.rmks"></el-input>
             </el-form-item>
+
+        <div class="upload-demo">
+
+          <div class="catCdSelect">
+            报告分类：
+            <el-select v-model="catCd" placeholder="请选择报告分类">
+              <el-option
+                v-for="(item,index) in catCdList"
+                :key="item.cd"
+                :label="item.nm"
+                :value="item.cd">
+              </el-option>
+            </el-select>
+          </div>
+          <div class="upload">
+            <img :src="uploadlog" alt>
+            <input ref="upload" type="file" name="file" value="上传报告" id @change="upImg($event)">
+            <span>上传报告</span>
+          </div>
+          <div class="el-upload__text">每成功上传一份文档，可获取金币奖励</div>
+          <div>注意事项：您可以上传≤10MB的PDF报告。</div>
+        </div>
+        <div class="imgList">
+          <div class="i-item" v-if="imgUrl.length>0" v-for="(up,i) in imgUrl">
+            <div class="catCdSelect">
+              报告分类：
+              <el-select v-model="up.catCd" placeholder="请选择报告分类">
+                <el-option
+                  v-for="item in catCdList"
+                  :key="item.cd"
+                  :label="item.nm"
+                  :value="item.cd">
+                </el-option>
+              </el-select>
+            </div>
+            <svg class="icon" aria-hidden="true" @click="deletImg(i)">
+              <use xlink:href="#icon-guanbi"></use>
+            </svg>
+            <iframe :src="up.url" height="560" v-if="up.type.toLowerCase()=='pdf'" width="100%">  </iframe>
+            <img :src="up.url" v-else />
+          </div>
+        </div>
             <el-form-item>
               <el-button type="primary" @click="onSubmit('info')">确认上传</el-button>
               <el-button @click="cancel('info')">取消</el-button>
@@ -91,6 +107,7 @@ import pdf from "components/images/pdf.png";
 export default {
   data() {
     return {
+      catCd:'',//上传时所选的分类
       loading: false, //加载中
       title: "完善信息",
       uploadlog,
@@ -118,9 +135,9 @@ export default {
       catCdList: [],
       rules: {
         nm: [{ required: true, message: "请输入报告标题", trigger: "blur" }],
-        catCd: [
-          { required: true, message: "请选择报告分类", trigger: "change" }
-        ],
+        // catCd: [
+        //   { required: true, message: "请选择报告分类", trigger: "change" }
+        // ],
         deteOrg: [
           { required: true, message: "请输入检测机构", trigger: "blur" }
         ],
@@ -143,7 +160,7 @@ export default {
       this.imgUrl = myInfo.pdfUrl ? JSON.parse(myInfo.pdfUrl) : "";
       this.info.statCd = myInfo.statCd;
       this.info.nm = myInfo.nm;
-      this.info.catCd = myInfo.catCd;
+      // this.info.catCd = myInfo.catCd;
       this.info.no = myInfo.no;
       this.info.deteOrg = myInfo.deteOrg;
       this.info.pdfUrl = myInfo.pdfUrl;
@@ -159,6 +176,7 @@ export default {
     this.info.sysUserPk = JSON.parse(this.until.loGet("userInfo")).sysUserPk;
     this.getStatCd();
     this.getCatCd();
+
   },
   methods: {
     getAddr: function(val) {
@@ -176,6 +194,16 @@ export default {
     getCatCd() {
       this.until.get("/general/cat/listByPrntCd?prntCd=60005").then(res => {
         this.catCdList = res.data.items;
+        if(this.imgUrl.length>0){
+          this.imgUrl.forEach(item=>{
+            console.log(item.catCd)
+            for( let val of this.catCdList){
+              if(item.catCd==val.nm){
+                item.catCd = val.cd
+              }
+            }
+          })
+        }
       });
     },
     cancel(formName) {
@@ -203,7 +231,7 @@ export default {
                   type: "success"
                 });
                 setTimeout(() => {
-                  // window.location.href = '../buyers/qualitymanage.html'
+                  window.location.href = '../buyers/qualitymanage.html'
                   window.history.go(-1);
                 }, 1500);
               } else {
@@ -223,21 +251,37 @@ export default {
       this.imgUrl.splice(index, 1);
     },
     upImg(e) {
+
+      if(this.catCd==''){
+        this.$message({
+          message: '请选择报告分类',
+          type: "warning"
+        });
+        this.$refs.upload.value = ''
+        return false
+      }
       let blob = e.target.files[0];
-      // console.log(blob)
       this.loading = true;
 
       this.until.upImg(e).then(
         res => {
           this.loading = false;
           var str = res;
-          // this.name = blob.name
-          // var str1 = str.replace('http://127.0.0.1', this.hostUrl);
-          this.imgUrl.push({
+          let newImg={
             name: blob.name.split(".")[0],
             url: str,
-            type: blob.name.split(".")[1]
-          });
+            type: blob.name.split(".")[1],
+            catCd:this.catCd
+          }
+          this.catCd = ''
+          let myIndex = this.imgUrl.findIndex(item=>{
+            return item.catCd===newImg.catCd
+          })
+          if(myIndex!='-1'){
+            this.imgUrl.splice(myIndex,0,newImg)
+          }else {
+            this.imgUrl.push(newImg)
+          }
         },
         err => {
           this.loading = false;
@@ -270,68 +314,81 @@ body {
     }
     .content {
       // margin-bottom: 130px;
+      .imgList {
+        width: 100%;
+        padding-top: 15px;
+        .i-item {
+          width: 100%;
+          text-align: center;
+          padding: 20px;
+          margin-bottom: 20px;
+          border: 1px solid #f4f4f4;
+          align-items: center;
+          /*justify-content: center;*/
+          position: relative;
+          .catCdSelect{
+            margin-bottom: 40px;
+            text-align: left;
+          }
+          img {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 100%;
+          }
+          svg {
+            cursor: pointer;
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            top: -10px;
+            right: -10px;
+            color: #f00;
+          }
+        }
+      }
       .upload-demo {
         /*width: 1200px;*/
         width: 100%;
         max-width: 1200px;
         min-width: 1000px;
         padding: 30px 0;
-        margin: 0 auto;
-        margin-top: 35px;
-        border: 1px dashed #d9d9d9;
-        border-radius: 5px;
+        margin: 35px auto;
+        border: 1px solid #d9d9d9;
+        /*border-radius: 5px;*/
         text-align: center;
-        .imgList {
-          margin-bottom: 30px;
-          overflow: hidden;
-          width: 100%;
-          padding-top: 15px;
-          .i-item {
-            float: left;
-            margin-bottom: 5px;
-            margin-left: 5px;
-            width: 150px;
-            height: 150px;
-            border: 1px solid #f4f4f4;
-            border-radius: 3px;
-            display: flex;
-            display: -webkit-flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            img {
-              width: auto;
-              height: auto;
-              max-width: 100%;
-              max-height: 100%;
-            }
-            svg {
-              cursor: pointer;
-              position: absolute;
-              width: 15px;
-              height: 15px;
-              top: -5px;
-              right: -5px;
-              color: #f00;
-            }
+        .catCdSelect{
+          display: flex;
+          display: -webkit-flex;
+          height: 50px;
+          align-items: center;
+          float: left;
+          margin-left: 180px;
+          margin-right: 100px;
+          /deep/ .el-select{
+            width: 326px;
           }
         }
+
         .upload {
-          float: none !important;
+          float: left;
           position: relative;
-          margin: 0 auto;
-          margin-bottom: 40px;
-          padding: 30px 0;
+          /*margin: 0 auto;*/
+          border-radius: 3px;
+          height: 50px;
           background-color: #2a8af2;
-          width: 330px;
+          width: 240px;
           display: -webkit-flex;
           display: flex;
           flex-direction: row;
           justify-content: center;
           align-items: center;
+          img{
+            width: 20px;
+          }
           > span {
             margin-left: 20px;
-            font-size: 22px;
+            font-size: 18px;
             color: #fff;
           }
           /*&:nth-last-of-type(1){*/
@@ -340,6 +397,8 @@ body {
           /*}*/
         }
         .el-upload__text {
+          padding-top: 40px;
+          clear: both;
           font-size: 18px;
           color: #000;
           margin-bottom: 30px;
@@ -354,14 +413,12 @@ body {
         }
       }
       .el-form {
-        width: 600px;
+        width: 1200px;
         margin: 0 auto;
         .el-form-item {
-          /*display: -webkit-flex;*/
-          /*display: flex;*/
-          /*flex-direction: row;*/
-          /*flex-wrap: nowrap;*/
-          /*justify-content: space-between;*/
+          width: 600px;
+          margin: 0 auto;
+          margin-bottom: 22px;
           &:nth-last-of-type(1) {
             textarea {
               height: 80px;

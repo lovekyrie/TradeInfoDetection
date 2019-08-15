@@ -162,8 +162,13 @@
 <style>
   h2{
     font-size: 18px;
-    margin: 20px 0;
+    margin-top: 50px;
+    margin-bottom: 20px;
     text-align: left;
+  }
+  .inForm{
+    width: 50%;
+    margin: 20px auto;
   }
   .formButton {
     width: 110px;

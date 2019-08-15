@@ -126,16 +126,25 @@ export default {
        },
       //删除当前行
       handleDelete(index, row) {
-        this.until.get('/prod/mxpubdev/del?pks='+row.mxPubDevPk)
-          .then(res=>{
-            if(res.status=='200'){
-              this.$message({
-                message:'删除成功！',
-                type:'success'
-              })
-              this.list.splice(index,1)
-            }
-          })
+        this.$confirm('确定删除?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.until.get('/prod/mxpubdev/del?pks='+row.mxPubDevPk)
+            .then(res=>{
+              if(res.status=='200'){
+                this.$message({
+                  message:'删除成功！',
+                  type:'success'
+                })
+                this.list.splice(index,1)
+              }
+            })
+        }).catch(() => {
+
+        });
+
         // console.log(index, row);
       },
       toAddEquipment(){

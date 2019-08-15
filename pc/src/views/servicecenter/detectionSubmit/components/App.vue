@@ -94,7 +94,7 @@
         imgList:[],
         //表单逻辑验证
         ruleForm:{
-          mxpubthrserpk:'',//主键
+          mxPubThrserPk:'',//主键
           sysUserPk:'',//用户pk
           nm:'',//检测服务标题
           imgUrl:'',//服务图片
@@ -198,7 +198,7 @@
     created(){
       if(this.until.getQueryString('info')){
         let info = JSON.parse(this.until.getQueryString('info'))
-        this.ruleForm.mxpubthrserpk = info.mxpubthrserpk
+        this.ruleForm.mxPubThrserPk = info.mxPubThrserPk
         this.ruleForm.nm = info.nm
         this.ruleForm.imgUrl = info.imgUrl
         this.ruleForm.statCd = info.statCd
@@ -207,6 +207,7 @@
         this.ruleForm.twoCd = info.twoCd
         this.imgList = this.ruleForm.imgUrl.split(',')
       }
+      console.log(this.ruleForm)
     }
   }
 </script>

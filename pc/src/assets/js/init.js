@@ -23,7 +23,7 @@ import {Query} from 'assets/js/query'
 // import 'assets/js/Ios';
 // import 'assets/js/WebViewJavascriptBridge';
 // import Router from 'vue-router'
-const hostUrl='http://mx.jiaxiangtech.com/wechat';
+const hostUrl='http://www.mxjob.com.cn/wechat';
 import saveAs from 'file-saver';
 var FileSaver = require('file-saver');
 export default{

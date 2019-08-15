@@ -14,7 +14,7 @@
       <div class="inForm">
         <el-form label-position="left" label-width="100px" :model="ruleForm" :rules="rule" ref="ruleForm">
           <el-form-item label="资源类型：">
-            <el-select v-model="ruleForm.catCd" placeholder="请选择业务资源">
+            <el-select v-model="ruleForm.catCd" placeholder="">
               <el-option :label="item.nm" :value="item.cd" v-for="(item,index) in catCdList" :key="index"></el-option>
             </el-select>
           </el-form-item>
@@ -144,7 +144,7 @@
             this.loading = true
             let myDate = this.until.formatDate(this.ruleForm.rcdTm.getTime())
             this.ruleForm.rcdTm = myDate.year+'-'+myDate.month+'-'+myDate.day+' 00:00:00'
-            this.until.postData('/prod/mxpubres/edit',JSON.stringify(this.ruleForm))
+            this.until.postData('/prod/mxpubreq/edit',JSON.stringify(this.ruleForm))
               .then(res=>{
                 this.loading = false
                 if(res.status=='200'){
