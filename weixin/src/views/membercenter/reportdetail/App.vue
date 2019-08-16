@@ -16,9 +16,10 @@ body {
 .detailinfo {
   flex: 1;
   overflow: auto;
-  background-color: #fff;
+
   .detail-wrap {
     padding: .25rem;
+    background-color: #fff;
     button{
       background: #f9f9f9;
       border: 1px solid #d4d4d4;
@@ -62,6 +63,14 @@ footer{
   color: #666666;
 }
 .img{
+  background-color: #fff;
+  border-top: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
+  padding: 0.2rem;
+  margin: 0.1rem 0;
+  p{
+    padding: 0.2rem 0;
+  }
   img{
     width: auto;
     max-width: 100%;
@@ -128,21 +137,25 @@ footer{
 
             </vue-qr>
             </div>
-          <div class="img" v-if="imgList.length>0">
-              <img :src="item.url" v-for="item in imgList"/>
+          <div class="img" v-if="downList.length>0" v-for="item in downList">
+              <p>报告类别：{{item.catCd}}</p>
+              <iframe :src="'/wechat/static/pdf/web/viewer.html?file=' + item.url" height="560" :key="index"
+                      width="100%" v-if="item.type.toUpperCase()=='PDF'" >
+              </iframe>
+              <!--<img :src="item.url" v-if="item.type.toUpperCase()=='PDF'" />-->
+              <img :src="item.url" v-else />
           </div>
 
-          <div v-if="pdfList.length>0">
+          <!--<div v-if="pdfList.length>0">-->
 
-            <iframe :src="'/wechat/static/pdf/web/viewer.html?file=' + item.url" height="560" v-for="(item,index) in pdfList" :key="index"
-                    width="100%">
-            </iframe>
-            <!--<pdf :url="item"  v-for="(item,index) in pdfList" :key="index"></pdf>-->
-          </div>
+            <!--<iframe :src="'/wechat/static/pdf/web/viewer.html?file=' + item.url" height="560" v-for="(item,index) in pdfList" :key="index"-->
+                    <!--width="100%">-->
+            <!--</iframe>-->
+          <!--</div>-->
         </div>
-      <footer @click="collect" :class="{collectFooter:state}">
-        {{state | ifState}}
-      </footer>
+        <footer @click="collect" :class="{collectFooter:state}">
+          {{state | ifState}}
+        </footer>
 
         <!-- <div class="imginfo">
             <img src="" alt="1">
@@ -157,6 +170,7 @@ import VueQr from 'vue-qr'
 export default {
   data() {
     return {
+        no:'',
         url:'',
         logo:'',
       obj: {
@@ -183,21 +197,26 @@ export default {
   },
   mounted() {
     this.pk = this.until.getQueryString('pk')
+      this.no = this.until.getQueryString('no')?this.until.getQueryString('no'):''
       this.userPk = JSON.parse(this.until.loGet('userInfo')).sysUserPk
     this.getInfo();
       this.ifCollect()
   },
   methods: {
       down(){
-          window.location.href = '../down/downList.html?urlList='+this.downList
+          window.location.href = '../down/downList.html?urlList='+JSON.stringify(this.downList)
       },
       getInfo(){
-          this.until.get('/prodx/mxrepo/info/'+this.pk)
+          let param={
+              pk:this.pk,
+              no:this.no,
+          }
+          this.until.get('/prodx/mxrepo/infox',param)
               .then(res=>{
                   this.detail = res.data
-                  this.downList = this.detail.pdfUrl
-                  let down = JSON.parse(this.downList)
-                  down.forEach(item=>{
+                  this.downList = JSON.parse(this.detail.pdfUrl)
+                  // let down = JSON.parse(this.downList)
+                  this.downList.forEach(item=>{
                       if(item.type.toUpperCase()=='PDF'){
                           this.pdfList.push(item)
                       }else {

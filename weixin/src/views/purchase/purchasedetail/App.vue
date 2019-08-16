@@ -123,7 +123,7 @@
                 <iframe :src="'/wechat/static/pdf/web/viewer.html?file=' + item.url" height="560" v-for="(item,index) in pdfList" :key="index"
                         width="100%">
                 </iframe>
-                <!--<pdf :url="item"  v-for="(item,index) in pdfList" :key="index"></pdf>-->
+                <!--<pdf :url="item.url"  v-for="(item,index) in pdfList" :key="index"></pdf>-->
             </div>
         </div>
 
@@ -140,6 +140,7 @@
 
         data() {
             return {
+                no:'',
                 pk:'',
                 imgList:[],
                 pdfList:[],
@@ -165,6 +166,7 @@
         },
         mounted() {
             this.pk = this.until.getQueryString('pk')
+            this.no = this.until.getQueryString('no')?this.until.getQueryString('no'):''
             this.userPk = JSON.parse(this.until.loGet('userInfo')).sysUserPk
             this.getInfo();
             this.ifCollect()
@@ -174,7 +176,11 @@
               window.location.href = 'productiondetail.html?nm='+val
             },
             getInfo(){
-                this.until.get('/prodx/mxrepo/info/'+this.pk)
+                let param={
+                    pk:this.pk,
+                    no:this.no,
+                }
+                this.until.get('/prodx/mxrepo/info',param)
                     .then(res=>{
                         this.detail = res.data
                         this.downList = this.detail.pdfUrl

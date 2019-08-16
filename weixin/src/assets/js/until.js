@@ -6,6 +6,7 @@ const postImgUrl = 'http://118.178.121.34:8080/uploads/';
 // const hostUrl = 'http://192.168.2.123';
 const hostUrl = 'http://mx.jiaxiangtech.com/wechat';
 
+
 var $dialog={
     confirm: Confirm,
     alert: Alert,
@@ -235,15 +236,16 @@ class until{
             $dialog.loading.close()
           if(data.code=='401'){
               $dialog.toast({
-              mes: data.msg,
+              mes: '您还没登录，请注册登录！',
               timeout: 1500,
               icon: 'error',
               callback: () => {
                 // window.location.href = '../system/login.html'
-              }
-          });
+                }
+              });
+          }else {
+              resolve(data);
           }
-          resolve(data);
         },
         error(data){
             $dialog.loading.close()
@@ -286,10 +288,10 @@ class until{
                 dataType:'json',
                 success(data){
                     $dialog.loading.close()
-                    resolve(data);
+
                     if(data.status=='401') {
                         $dialog.toast({
-                            mes: data.message,
+                            mes: '您还没登录，请注册登录！',
                             timeout: 1500,
                             icon: 'error',
                             callback: () => {
@@ -298,6 +300,8 @@ class until{
                         });
                         return false
 
+                    }else {
+                        resolve(data);
                     }
                 },
                 error(data){

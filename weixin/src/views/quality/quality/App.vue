@@ -156,7 +156,7 @@
         <div class="container">
             <div class="search">
                 <div>
-                    <span>质检产品名称：</span>
+                    <span>产品名称：</span>
                     <div>
                         <input type="text" placeholder="产品名称" v-model="searchGdno">
                     </div>
@@ -168,7 +168,7 @@
                     </div>
                 </div>
                 <div>
-                    <span>质检产品地域：</span>
+                    <span>产品地域：</span>
                     <addr @setAddr="getAddr"></addr>
 
                 </div>
@@ -203,8 +203,8 @@
                             <p>{{item.nm}}</p>
                             <p>报告类别：{{item.catNm}}</p>
                             <p>检测机构：{{item.deteOrg}}</p>
-                            <p>质检产品名称：{{item.prodNm}}</p>
-                            <p>质检产品地域：{{item.prodProvNm}} {{item.prodCityNm}}</p>
+                            <p>产品名称：{{item.prodNm}}</p>
+                            <p>产品地域：{{item.prodProvNm}} {{item.prodCityNm}}</p>
                         </div>
                     </tempApp>
                 </van-list>
@@ -262,7 +262,14 @@
             },
             //详情
             toDetail(val){
-                window.location.href = '../membercenter/reportdetail.html?pk='+val
+                // window.location.href = '../membercenter/reportdetail.html?pk='+val
+                if(this.searchSn){
+                    window.location.href = '../membercenter/reportdetail.html?pk='+val+'&no='+this.searchSn
+
+                }else {
+                    window.location.href = '../membercenter/reportdetail.html?pk='+val
+
+                }
             },
             //上传
             upLoad(){
@@ -273,7 +280,7 @@
             getList(){
                 this.loading = true;
                 let query = new this.Query();
-                query.buildWhereClause('no',this.searchSn,'LK');
+                // query.buildWhereClause('no',this.searchSn,'LK');
                 query.buildWhereClause('prodNm',this.searchGdno,'LK');
                 query.buildWhereClause('supply',this.searchCustName,'LK');
                 query.buildWhereClause('prodProvCd',this.cityCode1,'LK');
@@ -284,6 +291,7 @@
                 // console.log(myParam)
                 let param = {
                     type:1,
+                    no:this.searchSn,
                     query:myParam.query
                 }
 
@@ -300,6 +308,7 @@
                                 this.dataNo = false
                                 res.data.items.forEach(item=>{
                                     item.crtTm = item.crtTm?item.crtTm.split(' ')[0]:''
+                                    // item.catNm = item.catNm.indexOf('、')>=0 ? item.catNm.substring(0,item.catNm.length-1) : item.catNm
                                 })
                                 this.searchBot.push(...res.data.items)
 

@@ -29,12 +29,11 @@ export default {
             phone:'',
             code:'',
             getCodeShow:true,
-            time:60,
+            time:300,
             num:0,
         }
     },
     mounted(){
-
     },
     methods:{
         submit(){

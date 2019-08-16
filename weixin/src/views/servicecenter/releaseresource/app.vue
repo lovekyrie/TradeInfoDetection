@@ -55,8 +55,8 @@
         <!--<span>联系方式：</span>-->
         <!--<input type="text" placeholder="请输入其他联系方式">-->
       <!--</div>-->
-      <div>
-        <button @click="submit">
+      <div @click="submit">
+        <button >
           确认
         </button>
       </div>

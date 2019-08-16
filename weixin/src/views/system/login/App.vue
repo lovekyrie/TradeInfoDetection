@@ -92,6 +92,7 @@ export default {
                 // remberMe:this.codeRight
               }
               this.until.post('/wxMp/access/login',param)
+             // this.until.post('/general/access/appLogin',param)
                   .then(res=>{
                       if(res.status == 200){
                           let myInfo = res.data.userInfo
@@ -110,7 +111,6 @@ export default {
                           });
                       }
                   },err=>{});
-
           }
       },
       register(){

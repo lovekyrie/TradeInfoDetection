@@ -156,7 +156,7 @@ footer{
         <div class="container">
             <div class="search">
                 <div>
-                    <span>质检产品名称：</span>
+                    <span>产品名称：</span>
                     <div>
                         <input type="text" placeholder="产品名称" v-model="searchGdno">
                     </div>
@@ -168,7 +168,7 @@ footer{
                     </div>
                 </div>
                 <div>
-                    <span>质检产品地域：</span>
+                    <span>产品地域：</span>
                     <addr @setAddr="getAddr"></addr>
 
                 </div>
@@ -203,8 +203,8 @@ footer{
                             <p>{{item.nm}}</p>
                             <p>报告类别：{{item.catNm}}</p>
                             <p>检测机构：{{item.deteOrg}}</p>
-                            <p>质检产品名称：{{item.prodNm}}</p>
-                            <p>质检产品地域：{{item.prodProvNm}} {{item.prodCityNm}}</p>
+                            <p>产品名称：{{item.prodNm}}</p>
+                            <p>产品地域：{{item.prodProvNm}} {{item.prodCityNm}}</p>
                         </div>
                     </tempApp>
                 </van-list>

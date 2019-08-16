@@ -23,7 +23,7 @@ import productDevelop from "components/productDevelop";
 export default {
   data(){
     return {
-      title:'新产品研发人才',
+      title:'研发人才',
       show: "block",
       show2: "none",
         loading:false,

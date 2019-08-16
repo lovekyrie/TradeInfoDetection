@@ -257,7 +257,13 @@
             },
             //详情
             toDetail(val){
-                window.location.href = '../purchase/purchasedetail.html?pk='+val
+                if(this.searchSn){
+                    window.location.href = '../purchase/purchasedetail.html?pk='+val+'&no='+this.searchSn
+
+                }else {
+                    window.location.href = '../purchase/purchasedetail.html?pk='+val
+
+                }
             },
             //上传
             upLoad(){
@@ -285,7 +291,7 @@
                 //     // query:query.getParam()
                 // }
                 let query = new this.Query();
-                query.buildWhereClause('no',this.searchSn,'LK');
+                // query.buildWhereClause('no',this.searchSn,'LK');
                 query.buildWhereClause('prodNm',this.searchGdno,'LK');
                 query.buildWhereClause('supply',this.searchCustName,'LK');
                 query.buildWhereClause('prodProvCd',this.cityCode1,'LK');
@@ -296,6 +302,7 @@
                 // console.log(myParam)
                 let param = {
                     type:2,
+                    no:this.searchSn,
                     query:myParam.query
                 }
                 this.until.get('/prodx/mxrepo/page',param)

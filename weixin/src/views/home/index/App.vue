@@ -140,13 +140,21 @@ body {
               &:nth-of-type(1){
                 width: 30%;
                 height: 1.4rem;
-                background: url("./img/头像.png") no-repeat;
-                background-size: cover;
+               // background: url("./img/头像.png") no-repeat;
+               // background-size: cover;
                input{
                  border: 0;
                  width: 100%;
                  height: 100%;
                  opacity: 0;
+               }
+               img{
+                // border: 0;
+                 width: 100%;
+                 height: 100%;
+                 //border-radius:50%;
+                // overflow:hidden;
+                // opacity: 0;
                }
               }
               &:nth-of-type(2){
@@ -231,7 +239,8 @@ body {
     }
   }
     .commu{
-      margin-top: 0.2rem;
+        margin-top: 0.2rem;
+        margin-bottom: 0.2rem;
         border-top: 1px solid #F0F0F0;
         border-bottom: 1px solid #F0F0F0;
         height: 1.6rem;
@@ -251,6 +260,23 @@ body {
             margin-right: 0.5rem;
             width: 0.4rem!important;
             height: 0.4rem !important;
+        }
+    }
+    .contact{
+        border-top: 1px solid #F0F0F0;
+        border-bottom: 1px solid #F0F0F0;
+        display: flex;
+        display: -webkit-flex;
+        align-items: center;
+        background: #ffffff;
+        p{
+            flex: 1;
+            text-align: center;
+            padding: 0.3rem 0;
+            color: #666666;
+            &:first-of-type{
+                border-right: 1px solid #f0f0f0;
+            }
         }
     }
   .seller-content,
@@ -329,7 +355,7 @@ body {
                 <div class="swipper">
                     <van-swipe :autoplay="3000">
                         <van-swipe-item v-for="(image, index) in images" :key="index">
-                            <img v-lazy="image.srcUrl+'?imageView2/q/<Quality>'" />
+                            <img @click="goImg(image)" v-lazy="image.srcUrl+'?imageView2/q/<Quality>'" />
                         </van-swipe-item>
                     </van-swipe>
                 </div>
@@ -407,7 +433,7 @@ body {
                                 <div>
                                     <img :src="newproductdevelop">
                                 </div>
-                                <div>新产品研发人才</div>
+                                <div>研发人才</div>
                                 <svg class="icon" aria-hidden="true">
                                     <use xlink:href="#icon-gengduo"></use>
                                 </svg>
@@ -452,19 +478,29 @@ body {
                             <use xlink:href="#icon-gengduo"></use>
                         </svg>
                     </div>
+                    <div class="contact">
+                        <p>客服热线：400-826-1805</p><p>E-mail:info@mdxd.com</p>
+                    </div>
                 </div>
                 <div class="center" v-if="state==='会员中心'">
                     <div class="person-info">
                         <div>
                             <div>
                                 <div>
-                                    <input type="file">
+                                    <!-- <input type="file"> -->
+                                    
+                                    <simple-cropper :initParam="uploadParam" :successCallback="uploadHandle" ref="cropper">
+                                        <img :src="myInfo.imgUrl" @click="upload">
+                                    </simple-cropper>
+
+                                    <!-- <img :src="myInfo.imgUrl"> -->
                                 </div>
                                 <div>
                                     <h3>{{myInfo.usNm}}</h3>
                                     <span @click="countManger">账号管理></span>
                                 </div>
                             </div>
+                           
                             <div><span>手机号：{{myInfo.mob}}</span></div>
                             <div><span>邮箱：{{myInfo.email}}</span></div>
                         </div>
@@ -666,9 +702,17 @@ import headerimg from './img/头像.png'
 import comImg from './img/交流讨论区.png'
 // import QRCode from 'qrcodejs2'
 import VueQr from 'vue-qr'
+import SimpleCropper from '@/components/SimpleCropper'
+
+
 export default {
   data() {
     return {
+        uploadParam: {
+        uploadURL: 'http://mx.jiaxiangtech.com/general/file/upload', // 上传地址
+        scale: 4  // 相对手机屏幕放大的倍数: 4倍
+      },
+
         comImg,
         url: '',
       state:"买家中心",
@@ -744,13 +788,13 @@ export default {
   },
   components:{
       // QRCode
-      VueQr
+      VueQr,
+      SimpleCropper
   },
   created(){
       this.getImg()
   },
   mounted() {
-
       let wxCode = this.until.getQueryString('code')
 
       if(wxCode){
@@ -760,7 +804,7 @@ export default {
       // console.log(this.until.seGet('wxCode'))
       this.state = this.until.loGet('state')?this.until.loGet('state'):'买家中心'
       let info=JSON.parse(this.until.loGet('user'))
-      console.log(info)
+     // console.log(info)
       if(info){
           this.userPk = info.sysUserPk
           this.url = this.hostUrl+'/views/system/register.html?recomCode='+this.userPk
@@ -771,6 +815,26 @@ export default {
 
   },
   methods: {
+      // 上传头像
+    upload () {
+      this.$refs['cropper'].upload()
+    },
+    // 上传头像成功回调
+    uploadHandle (data) {
+      if (data.state === 'SUCCESS') {
+          console.log(data);
+          
+       // this.userImg = this.form.headImgUrl = data.fileId
+      }
+    },
+
+      //轮播图跳转方法
+      goImg(image){
+          if(image.tgtUrl != null && image.tgtUrl != ''){
+             window.open(image.tgtUrl);
+          }
+      },
+
       //获取轮播图
       getImg(){
           this.$dialog.loading.open()
@@ -778,6 +842,7 @@ export default {
             .then(res=>{
                 this.$dialog.loading.close()
                 this.images = res.data.items
+
             })
 
       },
@@ -790,7 +855,7 @@ export default {
                   if(res.status == '200'){
                       this.myInfo = res.data
                       this.type = this.myInfo.arg1
-                      // console.log(this.type)
+                       console.log(this.myInfo)
                       if(this.type==2){
                           this.getType()
                       }else {

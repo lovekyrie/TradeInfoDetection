@@ -28,7 +28,7 @@
       <div class="verify">
         <span>手机验证码：</span>
         <div>
-          <input type="number" v-model.number="info.rmks">
+          <input type="number" v-model="info.rmks">
           <button @click="getCode" v-if="getCodeShow"><span>获取验证码</span></button>
           <p v-else><span>重新发送({{num}}S)</span></p>
         </div>
@@ -77,7 +77,7 @@ export default {
     return {
         getCodeShow:true, //是否禁止发送验证码
         num:'',//倒计时
-        time:60,//倒计时时间
+        time:300,//倒计时时间
         info:{
             usNm:'',//账号名称
             nkNm:'',//企业名称

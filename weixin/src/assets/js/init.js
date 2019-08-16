@@ -35,7 +35,7 @@ import {TextArea} from 'vue-ydui/dist/lib.rem/textarea';
 
 import EXIF  from 'exif-js';  //获取图片信息，如果上传的图片有旋转则调整过来
 
-// import  from 'vconsole'
+// import Vconsole from 'vconsole'
 
 export default{
   install(Vue){
